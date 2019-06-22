@@ -10,23 +10,29 @@ contract ClaimVerification {
     Provider[] providers;
     Insurer[] insurers;
 
-    mapping (uint256=>string) serviceMap;
+    mapping (uint256=>Service) serviceMap;
     mapping (uint256=>Claim) claimMap;
     mapping (bytes32=>Patient) patientMap;
+
+
+    struct Service {
+        uint256 id;
+        string name;
+    }
 
     struct Claim {
         uint256 id;
         uint256 amount;
-        string service;
+        Service service;
         bool verified;
     }
 
     struct Patient {
         bytes32 id;
         string name;
-        uint256[] services;
+        Service[] services;
+        Claim[] claims;
     }
-
 
     struct Provider {
         bytes32 id;
@@ -41,6 +47,11 @@ contract ClaimVerification {
     }
 
 
+
+    function provideService(uint256 _id, bytes32 _name) public returns(uint256 serviceID) {
+        Service memory newService = Service(_id, _name);
+        return newService.id;
+    }
     function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
         Patient storage cPatient = patientMap[_patient];
