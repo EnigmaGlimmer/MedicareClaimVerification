@@ -47,7 +47,6 @@ contract ClaimVerification {
     }
 
 
-
     function provideService(uint256 _id, bytes32 _name) public returns(uint256 serviceID) {
         Service memory newService = Service(_id, _name);
         return newService.id;
