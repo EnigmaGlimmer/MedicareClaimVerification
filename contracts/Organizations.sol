@@ -1,39 +1,34 @@
 pragma solidity ^0.5.0;
 
-contract ClaimVerification {
+contract Organizations {
     
     uint storedData;
 
     event ClaimCreated(uint256 id, uint256 amount, uint256 service, bytes32 patient);
-    
-    uint256 claimId = 0;
+    event PatientCreated();
+    event ProviderCreated();
+    event InsurerCreated();
 
-    Patient[] patients;
-    Provider[] providers;
+    uint256 claimId;
+
+    //Patient[] patients;
+    //Provider[] providers;
     Insurer[] insurers;
 
-    mapping (uint256=>Service) serviceMap;
-    mapping (uint256=>Claim) claimMap;
+    //mapping (uint256=>Service) serviceMap;
+    //mapping (uint256=>Claim) claimMap;
     mapping (bytes32=>Patient) patientMap;
+    mapping (bytes32=>Provider) providerMap;
+    mapping (bytes32=>Insurer) insurerMap;
 
-
-    struct Service {
-        uint256 id;
-        string name;
-    }
-
-    struct Claim {
-        uint256 id;
-        uint256 amount;
-        Service service;
-        bool verified;
-    }
+    mapping (bytes32=>address) claimsMap;
 
     struct Patient {
         bytes32 id;
         string name;
-        Service[] services;
-        Claim[] claims;
+        address[] claimsList;
+        //Service[] services;
+        //Claim[] claims;
     }
 
     struct Provider {
@@ -52,8 +47,9 @@ contract ClaimVerification {
     // ------------------------------ Adds Users to Network --------------------------- //
     function addPatient(string memory _name) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
-        uint256[] memory emptyList;
-        Patient memory newPatient = Patient(id, _name, emptyList, []);
+        //Service[] memory serviceList;
+        address[] memory claimList;
+        Patient memory newPatient = Patient(id, _name, claimList);
         patients.push(newPatient);
         return id;
     }
@@ -78,7 +74,8 @@ contract ClaimVerification {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function provideService(uint256 _id, bytes32 _name) public returns(uint256 serviceID) {
+    function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
+        //string memory name = string(_name);
         Service memory newService = Service(_id, _name);
         return newService.id;
     }
@@ -91,16 +88,5 @@ contract ClaimVerification {
         emit ClaimCreated(claimId, _amount, _service, _patient);
         return newClaim.id;
     }
-
-    function verifyClaim(bytes32 _pID, uint256 _cID) public {
-        //Check if claim was provided to the Patient
-        ClaimVerification.Claim storage claim = claimMap[_cID];
-        claim.verified = true;
-    }
-
-
-
-
-
 
 }
