@@ -1,5 +1,8 @@
 pragma solidity ^0.5.0;
 
+import "./SafeMath.sol";
+import "./ServiceClaim.sol";
+
 contract Organizations {
     
     uint storedData;
@@ -50,7 +53,9 @@ contract Organizations {
         //Service[] memory serviceList;
         address[] memory claimList;
         Patient memory newPatient = Patient(id, _name, claimList);
-        patients.push(newPatient);
+        bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
+        patientMap[patientHash] = newPatient;
+        //patients.push(newPatient);
         return id;
     }
 
@@ -87,6 +92,12 @@ contract Organizations {
         cPatient.claims.push(newClaim);
         emit ClaimCreated(claimId, _amount, _service, _patient);
         return newClaim.id;
+    }
+
+    // insurer, provider, patient, serviceProvided
+    // put address in claimsMap and patients claimList
+    function newServiceClaim() public {
+        return 1;
     }
 
 }

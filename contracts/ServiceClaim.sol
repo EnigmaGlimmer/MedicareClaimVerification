@@ -1,6 +1,10 @@
 pragma solidity ^0.5.0;
 
-contract ClaimVerification {
+
+import "./SafeMath.sol";
+
+
+contract ServiceClaim {
     
     uint storedData;
 
@@ -29,8 +33,14 @@ contract ClaimVerification {
 
 
     Claim claim;
+    bytes32 insurerID;
+    bytes32 providerID;
+    bytes32 patientID;
 
-    constructor(uint256 _id, string memory _name, bytes32 _providerID) public {
+    constructor(bytes32 _insID, bytes32 _proID, bytes32 _patID, uint256 _id, string memory _name, bytes32 _providerID) public {
+        insurerID = _insID;
+        providerID = _proID;
+        patientID = _patID;
         Service memory newService = Service(_id, _name, _providerID);
         claim = new Claim(_id, 0, newService, false, false);
         //return claim;
