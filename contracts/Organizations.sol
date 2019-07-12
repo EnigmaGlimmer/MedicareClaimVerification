@@ -80,7 +80,6 @@ contract Organizations {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    //REMOVE THIS FUNCTION AND KEEP IN SERVICECLAIM.SOL????
     function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
         //string memory name = string(_name);
         Service memory newService = Service(_id, _name);

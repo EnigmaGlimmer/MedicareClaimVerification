@@ -37,7 +37,7 @@ contract ServiceClaim {
         providerID = _proID;
         patientID = _patID;
         Service memory newService = Service(_id, _name, _providerID);
-        claim = new Claim(_id, 0, newService, false, false);
+        claim = Claim(_id, 0, newService, false, false);
         //return claim;
     }
 
