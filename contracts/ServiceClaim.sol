@@ -5,6 +5,11 @@ import "./SafeMath.sol";
 
 
 contract ServiceClaim {
+
+    Claim claim;
+    bytes32 insurerID;
+    bytes32 providerID;
+    bytes32 patientID;
     
     uint storedData;
 
@@ -12,10 +17,6 @@ contract ServiceClaim {
 
     mapping (uint256=>Service) serviceMap;
     mapping (uint256=>Claim) claimMap;
-    //mapping (bytes32=>Patient) patientMap;
-    //mapping (bytes32=>Provider) providerMap;
-    //mapping (bytes32=>Insurer) insurerMap;
-
 
     struct Service {
         uint256 id;
@@ -30,12 +31,6 @@ contract ServiceClaim {
         bool verified;
         bool paid;
     }
-
-
-    Claim claim;
-    bytes32 insurerID;
-    bytes32 providerID;
-    bytes32 patientID;
 
     constructor(bytes32 _insID, bytes32 _proID, bytes32 _patID, uint256 _id, string memory _name, bytes32 _providerID) public {
         insurerID = _insID;
@@ -55,7 +50,7 @@ contract ServiceClaim {
         return newService.id;
     }
 
-
+    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
     function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
         Patient storage cPatient = patientMap[_patient];
@@ -64,13 +59,14 @@ contract ServiceClaim {
         return newClaim.id;
     }
 
+    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
     function verifyClaim(bytes32 _pID, uint256 _cID) public {
         //Check if claim was provided to the Patient
         ClaimVerification.Claim storage claim = claimMap[_cID];
         claim.verified = true;
     }
 
-
+    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
     function payProvider(uint256 _pID, uint256 _amount) public {
         Provider storage provider = providers[_pID];
         return(provider);

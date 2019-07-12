@@ -8,9 +8,9 @@ contract Organizations {
     uint storedData;
 
     event ClaimCreated(uint256 id, uint256 amount, uint256 service, bytes32 patient);
-    event PatientCreated();
-    event ProviderCreated();
-    event InsurerCreated();
+    event PatientCreated(bytes32 id, string name);
+    event ProviderCreated(bytes32 id, string name);
+    event InsurerCreated(bytes32 id, string name);
 
     uint256 claimId;
 
@@ -18,8 +18,6 @@ contract Organizations {
     //Provider[] providers;
     Insurer[] insurers;
 
-    //mapping (uint256=>Service) serviceMap;
-    //mapping (uint256=>Claim) claimMap;
     mapping (bytes32=>Patient) patientMap;
     mapping (bytes32=>Provider) providerMap;
     mapping (bytes32=>Insurer) insurerMap;
@@ -56,6 +54,7 @@ contract Organizations {
         bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[patientHash] = newPatient;
         //patients.push(newPatient);
+        emit PatientCreated(id, _name);
         return id;
     }
 
@@ -64,6 +63,7 @@ contract Organizations {
         Patient[] memory emptyList;
         Provider memory newProvider = Provider(id, _name, emptyList);
         providers.push(newProvider);
+        emit ProviderCreated(id, _name);
         return id;
     }
 
@@ -72,6 +72,7 @@ contract Organizations {
         Provider[] memory emptyList;
         Insurer memory newInsurer = Insurer(id, _name, emptyList);
         insurers.push(newInsurer);
+        emit InsurerCreated(id, _name);
         return id;
     }
 
@@ -79,12 +80,12 @@ contract Organizations {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
+    //REMOVE THIS FUNCTION AND KEEP IN SERVICECLAIM.SOL????
     function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
         //string memory name = string(_name);
         Service memory newService = Service(_id, _name);
         return newService.id;
     }
-
 
     function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
@@ -96,8 +97,11 @@ contract Organizations {
 
     // insurer, provider, patient, serviceProvided
     // put address in claimsMap and patients claimList
-    function newServiceClaim() public {
-        return 1;
+    function newServiceClaim(string _name, bytes32 _insurerID, bytes32 _providerID, bytes32 _patientID) public {
+        uint256 id = uint(keccak256(abi.encodePacked(_name)));
+        ServiceClaim storage serviceClaim = ServiceClaim(_insurerID, _providerID, _patientID, id, _name, _providerID);
+        bytes32 serviceClaimHash = keccak256(abi.encodePacked(serviceClaim));
+        claimsMap[serviceClaimHash] = address(serviceClaim);
     }
 
 }
