@@ -44,32 +44,6 @@ contract ServiceClaim {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
-        //string memory name = string(_name);
-        Service memory newService = Service(_id, _name);
-        return newService.id;
-    }
 
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
-        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
-        Patient storage cPatient = patientMap[_patient];
-        cPatient.claims.push(newClaim);
-        emit ClaimCreated(claimId, _amount, _service, _patient);
-        return newClaim.id;
-    }
-
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function verifyClaim(bytes32 _pID, uint256 _cID) public {
-        //Check if claim was provided to the Patient
-        ClaimVerification.Claim storage claim = claimMap[_cID];
-        claim.verified = true;
-    }
-
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function payProvider(uint256 _pID, uint256 _amount) public {
-        Provider storage provider = providers[_pID];
-        return(provider);
-    }
 
 }

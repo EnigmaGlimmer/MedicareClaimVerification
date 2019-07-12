@@ -104,4 +104,17 @@ contract Organizations {
         claimsMap[serviceClaimHash] = address(serviceClaim);
     }
 
+    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
+    function verifyClaim(bytes32 _pID, uint256 _cID) public {
+        //Check if claim was provided to the Patient
+        ClaimVerification.Claim storage claim = claimMap[_cID];
+        claim.verified = true;
+    }
+
+    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
+    function payProvider(uint256 _pID, uint256 _amount) public {
+        Provider storage provider = providers[_pID];
+        return(provider);
+    }
+
 }
