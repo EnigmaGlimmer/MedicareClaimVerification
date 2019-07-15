@@ -46,8 +46,9 @@ contract ServiceClaim {
         return claim.id;
     }
 
-    function verifyClaim() public {
+    function verifyClaim() public returns(bytes32 proID, bytes32 patID) {
         //Check if claim was provided to the Patient
         claim.verified = true;
+        return (providerID,patientID);
     }
 }

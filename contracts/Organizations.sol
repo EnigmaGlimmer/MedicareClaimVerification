@@ -74,7 +74,7 @@ contract Organizations {
     function addClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Patient storage cPatient = patientMap[_patient];
         ServiceClaim storage myServiceClaim = ServiceClaim(cPatient.serviceClaimsList[serviceClaimsMap[_serviceClaimID]]);
-        uint256 memory newClaimID = myServiceClaim.addClaim(claimId++,_amount,_service,_patient);
+        uint256 memory newClaimID = myServiceClaim.addClaim(claimId++,_amount);
         emit ClaimCreated(newClaimID, _amount, _service, _patient);
         return newClaimID;
     }
@@ -91,13 +91,13 @@ contract Organizations {
 
     function payProvider(uint256 _pID, uint256 _amount) public returns(Provider providing) {
         Provider storage provider = providers[_pID];
-
+        provider.patients[]
         return(provider);
     }
 
-    function verifyClaim(bytes32 _serviceClaimID, uint256 _cID) public {
+    function verifyClaim(bytes32 _serviceClaimID,uint256 _cID) public {
         ServiceClaim storage myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        claim.
+        bytes32 providerID, patientID = myServiceClaim.verifyClaim();
+        payProvider(providerID, patientID);
     }
-
 }
