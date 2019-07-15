@@ -1,20 +1,17 @@
 pragma solidity ^0.5.0;
 
-
 import "./SafeMath.sol";
-
 
 contract ServiceClaim {
 
-    Claim claim;
     bytes32 insurerID;
     bytes32 providerID;
     bytes32 patientID;
 
-    uint256 claimId;
+    //uint256 claimId;
 
-    mapping (uint256=>Service) serviceMap;
-    mapping (uint256=>Claim) claimMap;
+    //mapping (uint256=>Service) serviceMap;
+    //mapping (uint256=>Claim) claimMap;
 
     struct Service {
         uint256 id;
@@ -25,7 +22,7 @@ contract ServiceClaim {
     struct Claim {
         uint256 id;
         uint256 amount;
-        Service service;
+        //Service service;
         bool verified;
         bool paid;
     }
@@ -42,23 +39,15 @@ contract ServiceClaim {
         //return claim;
     }
 
-
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    //REMOVE THIS FUNCTION COMPLETELY???
-    //This function does not do anything other than create a new claim which is already done 
-    //by the constructor, I think we should turn this into a modifier type function
-    function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
-        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false, false);
-        //Patient storage cPatient = patientMap[_patient];
-        cPatient.claims.push(newClaim);
-        emit ClaimCreated(claimId, _amount, _service, _patient);
-        return newClaim.id;
+    function addClaim(uint256 _claimId, uint256 _amount) public returns(uint256 ClaimID) {
+        claim = Claim(_claimId, _amount, false, false);
+        return claim.id;
     }
 
-    function verifyClaim(bytes32 _pID, uint256 _cID) public {
+    function verifyClaim() public {
         //Check if claim was provided to the Patient
-        claim = claimMap[_cID];
         claim.verified = true;
     }
 }

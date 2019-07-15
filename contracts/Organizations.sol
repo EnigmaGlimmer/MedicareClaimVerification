@@ -14,20 +14,16 @@ contract Organizations {
 
     uint256 claimId;
 
-    //Patient[] patients;
-    //Provider[] providers;
-    //Insurer[] insurers;
-
     mapping (bytes32=>Patient) patientMap;
     mapping (bytes32=>Provider) providerMap;
     mapping (bytes32=>Insurer) insurerMap;
 
-    mapping (bytes32=>address) claimsMap;
+    mapping (bytes32=>address) serviceClaimsMap;
 
     struct Patient {
         bytes32 id;
         string name;
-        address[] claimsList;
+        address[] serviceClaimsList;
     }
 
     struct Provider {
@@ -41,7 +37,6 @@ contract Organizations {
         string name;
         Provider[] providers;
     }
-
 
     // ------------------------------ Adds Users to Network --------------------------- //
     function addPatient(string memory _name) public returns(bytes32 pID) {
@@ -74,38 +69,35 @@ contract Organizations {
         return id;
     }
 
-
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
-        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
+    function addClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Patient storage cPatient = patientMap[_patient];
-        cPatient.claims.push(newClaim);
-        emit ClaimCreated(claimId, _amount, _service, _patient);
-        return newClaim.id;
+        ServiceClaim storage myServiceClaim = ServiceClaim(cPatient.serviceClaimsList[serviceClaimsMap[_serviceClaimID]]);
+        uint256 memory newClaimID = myServiceClaim.addClaim(claimId++,_amount,_service,_patient);
+        emit ClaimCreated(newClaimID, _amount, _service, _patient);
+        return newClaimID;
     }
 
-    // insurer, provider, patient, serviceProvided
-    // put address in claimsMap and patients claimList
-    function newServiceClaim(string _name, bytes32 _providerID, bytes32 _patientID) public {
+    function newServiceClaim(string _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
         uint256 id = uint(keccak256(abi.encodePacked(_name)));
         address serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name, _providerID);
-        bytes32 serviceClaimHash = keccak256(abi.encodePacked(serviceClaim));
-        claimsMap[serviceClaimHash] = address(serviceClaim);
+        bytes32 serviceClaimID = keccak256(abi.encodePacked(serviceClaim));
+        serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
-        patient.claimsList.push(address(serviceClaim));
+        patient.serviceClaimsList.push(address(serviceClaim));
+        return serviceClaimID;
     }
 
     function payProvider(uint256 _pID, uint256 _amount) public returns(Provider providing) {
         Provider storage provider = providers[_pID];
+
         return(provider);
     }
 
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function verifyClaim(bytes32 _pID, uint256 _cID) public {
-        //Check if claim was provided to the Patient
-        ClaimVerification.Claim storage claim = claimMap[_cID];
-        claim.verified = true;
+    function verifyClaim(bytes32 _serviceClaimID, uint256 _cID) public {
+        ServiceClaim storage myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+        claim.
     }
 
 }
