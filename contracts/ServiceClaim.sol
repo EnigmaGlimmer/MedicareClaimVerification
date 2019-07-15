@@ -10,8 +10,6 @@ contract ServiceClaim {
     bytes32 insurerID;
     bytes32 providerID;
     bytes32 patientID;
-    
-    uint storedData;
 
     uint256 claimId;
 
@@ -44,6 +42,26 @@ contract ServiceClaim {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
+    function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
+        //string memory name = string(_name);
+        Service memory newService = Service(_id, _name);
+        return newService.id;
+    }
 
+    //REMOVE THIS FUNCTION COMPLETELY???
+    //This function does not do anything other than create a new claim which is already done 
+    //by the constructor, I think we should turn this into a modifier type function
+    function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
+        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false, false);
+        cPatient = patientMap[_patient];
+        cPatient.claims.push(newClaim);
+        emit ClaimCreated(claimId, _amount, _service, _patient);
+        return newClaim.id;
+    }
 
+    function verifyClaim(bytes32 _pID, uint256 _cID) public {
+        //Check if claim was provided to the Patient
+        claim = claimMap[_cID];
+        claim.verified = true;
+    }
 }

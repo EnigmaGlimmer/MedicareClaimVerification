@@ -16,7 +16,7 @@ contract Organizations {
 
     //Patient[] patients;
     //Provider[] providers;
-    Insurer[] insurers;
+    //Insurer[] insurers;
 
     mapping (bytes32=>Patient) patientMap;
     mapping (bytes32=>Provider) providerMap;
@@ -28,8 +28,6 @@ contract Organizations {
         bytes32 id;
         string name;
         address[] claimsList;
-        //Service[] services;
-        //Claim[] claims;
     }
 
     struct Provider {
@@ -48,12 +46,10 @@ contract Organizations {
     // ------------------------------ Adds Users to Network --------------------------- //
     function addPatient(string memory _name) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
-        //Service[] memory serviceList;
         address[] memory claimList;
         Patient memory newPatient = Patient(id, _name, claimList);
         bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[patientHash] = newPatient;
-        //patients.push(newPatient);
         emit PatientCreated(id, _name);
         return id;
     }
@@ -62,7 +58,8 @@ contract Organizations {
         bytes32 id = keccak256(abi.encodePacked(_name));
         Patient[] memory emptyList;
         Provider memory newProvider = Provider(id, _name, emptyList);
-        providers.push(newProvider);
+        bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
+        providerMap[providerHash] = newProvider;
         emit ProviderCreated(id, _name);
         return id;
     }
@@ -71,12 +68,11 @@ contract Organizations {
         bytes32 id = keccak256(abi.encodePacked(_name));
         Provider[] memory emptyList;
         Insurer memory newInsurer = Insurer(id, _name, emptyList);
-        insurers.push(newInsurer);
+        bytes32 insurerHash = keccak256(abi.encodePacked(newInsurer));
+        insurerMap[insurerHash] = newInsurer;
         emit InsurerCreated(id, _name);
         return id;
     }
-
-
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
@@ -101,6 +97,13 @@ contract Organizations {
         ServiceClaim storage serviceClaim = ServiceClaim(_insurerID, _providerID, _patientID, id, _name, _providerID);
         bytes32 serviceClaimHash = keccak256(abi.encodePacked(serviceClaim));
         claimsMap[serviceClaimHash] = address(serviceClaim);
+        Patient storage patient = patientMap[_patientID];
+        patient.claimsList.push(address(serviceClaim));
+    }
+
+    function payProvider(uint256 _pID, uint256 _amount) public returns(Provider providing) {
+        Provider storage provider = providers[_pID];
+        return(provider);
     }
 
     //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
