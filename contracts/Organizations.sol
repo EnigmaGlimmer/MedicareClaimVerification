@@ -74,13 +74,8 @@ contract Organizations {
         return id;
     }
 
-    // ------------------------------ Functionality of the Network --------------------------- //
 
-    function provideService(uint256 _id, string memory _name) public returns(uint256 serviceID) {
-        //string memory name = string(_name);
-        Service memory newService = Service(_id, _name);
-        return newService.id;
-    }
+    // ------------------------------ Functionality of the Network --------------------------- //
 
     function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
@@ -92,9 +87,9 @@ contract Organizations {
 
     // insurer, provider, patient, serviceProvided
     // put address in claimsMap and patients claimList
-    function newServiceClaim(string _name, bytes32 _insurerID, bytes32 _providerID, bytes32 _patientID) public {
+    function newServiceClaim(string _name, bytes32 _providerID, bytes32 _patientID) public {
         uint256 id = uint(keccak256(abi.encodePacked(_name)));
-        ServiceClaim storage serviceClaim = ServiceClaim(_insurerID, _providerID, _patientID, id, _name, _providerID);
+        address serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name, _providerID);
         bytes32 serviceClaimHash = keccak256(abi.encodePacked(serviceClaim));
         claimsMap[serviceClaimHash] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
@@ -111,12 +106,6 @@ contract Organizations {
         //Check if claim was provided to the Patient
         ClaimVerification.Claim storage claim = claimMap[_cID];
         claim.verified = true;
-    }
-
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function payProvider(uint256 _pID, uint256 _amount) public {
-        Provider storage provider = providers[_pID];
-        return(provider);
     }
 
 }
