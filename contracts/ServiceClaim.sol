@@ -10,8 +10,6 @@ contract ServiceClaim {
     bytes32 insurerID;
     bytes32 providerID;
     bytes32 patientID;
-    
-    uint storedData;
 
     uint256 claimId;
 
@@ -50,26 +48,20 @@ contract ServiceClaim {
         return newService.id;
     }
 
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
+    //REMOVE THIS FUNCTION COMPLETELY???
+    //This function does not do anything other than create a new claim which is already done 
+    //by the constructor, I think we should turn this into a modifier type function
     function addClaim(uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
-        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false);
+        Claim memory newClaim = Claim(claimId++, _amount, serviceMap[_service], false, false);
         Patient storage cPatient = patientMap[_patient];
         cPatient.claims.push(newClaim);
         emit ClaimCreated(claimId, _amount, _service, _patient);
         return newClaim.id;
     }
 
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
     function verifyClaim(bytes32 _pID, uint256 _cID) public {
         //Check if claim was provided to the Patient
-        ClaimVerification.Claim storage claim = claimMap[_cID];
+        Claim storage claim = claimMap[_cID];
         claim.verified = true;
     }
-
-    //REMOVE THIS FUNCTION AND ADD TO ORGANIZATIONS.SOL????
-    function payProvider(uint256 _pID, uint256 _amount) public {
-        Provider storage provider = providers[_pID];
-        return(provider);
-    }
-
 }
