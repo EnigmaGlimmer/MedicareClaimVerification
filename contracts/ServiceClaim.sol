@@ -30,13 +30,10 @@ contract ServiceClaim {
     Service service;
     Claim claim;
 
-    constructor(bytes32 _proID, bytes32 _patID, uint256 _id, string memory _name, bytes32 _providerID) public {
-        //insurerID = _insID;
+    constructor(bytes32 _proID, bytes32 _patID, uint256 _id, string memory _name) public {
         providerID = _proID;
         patientID = _patID;
         service = Service(_id, _name);
-        //claim = Claim(_id, 0, newService, false, false);
-        //return claim;
     }
 
     // ------------------------------ Functionality of the Network --------------------------- //
@@ -46,9 +43,13 @@ contract ServiceClaim {
         return claim.id;
     }
 
-    function verifyClaim() public returns(bytes32 proID, bytes32 patID) {
+    function verifyClaim() public {
         //Check if claim was provided to the Patient
         claim.verified = true;
-        return (providerID,patientID);
+    }
+
+    function payProvider() public returns(uint256 payment) {
+        claim.paid = true;
+        return claim.amount;
     }
 }

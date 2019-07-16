@@ -39,22 +39,24 @@ contract Organizations {
     }
 
     // ------------------------------ Adds Users to Network --------------------------- //
-    function addPatient(string memory _name) public returns(bytes32 pID) {
+    function addPatient(string memory _name, bytes32 _providerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
         address[] memory claimList;
         Patient memory newPatient = Patient(id, _name, claimList);
         bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[patientHash] = newPatient;
+        providerMap[_providerID].patients.push(newPatient);
         emit PatientCreated(id, _name);
         return id;
     }
 
-    function addProvider(string memory _name) public returns(bytes32 pID) {
+    function addProvider(string memory _name, bytes32 _insurerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
         Patient[] memory emptyList;
         Provider memory newProvider = Provider(id, _name, emptyList);
         bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
         providerMap[providerHash] = newProvider;
+        insurerMap[_insurerID].providers.push(newProvider);
         emit ProviderCreated(id, _name);
         return id;
     }
@@ -89,15 +91,13 @@ contract Organizations {
         return serviceClaimID;
     }
 
-    function payProvider(uint256 _pID, uint256 _amount) public returns(Provider providing) {
-        Provider storage provider = providers[_pID];
-        provider.patients[]
-        return(provider);
+    function payProvider(ServiceClaim _serviceClaim) public {
+        _serviceClaim.payProvider();
     }
 
     function verifyClaim(bytes32 _serviceClaimID,uint256 _cID) public {
         ServiceClaim storage myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        bytes32 providerID, patientID = myServiceClaim.verifyClaim();
-        payProvider(providerID, patientID);
+        myServiceClaim.verifyClaim();
+        payProvider(myServiceClaim);
     }
 }
