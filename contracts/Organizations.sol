@@ -29,13 +29,13 @@ contract Organizations {
     struct Provider {
         bytes32 id;
         string name;
-        Patient[] patients;
+        bytes32[] patients;
     }
 
     struct Insurer {
         bytes32 id;
         string name;
-        Provider[] providers;
+        bytes32[] providers;
     }
 
     // ------------------------------ Adds Users to Network --------------------------- //
@@ -43,30 +43,30 @@ contract Organizations {
         bytes32 id = keccak256(abi.encodePacked(_name));
         address[] memory claimList;
         Patient memory newPatient = Patient(id, _name, claimList);
-        bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
-        patientMap[patientHash] = newPatient;
-        providerMap[_providerID].patients.push(newPatient);
+        //bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
+        patientMap[id] = newPatient;
+        providerMap[_providerID].patients.push(newPatient.id);
         emit PatientCreated(id, _name);
         return id;
     }
 
     function addProvider(string memory _name, bytes32 _insurerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
-        Patient[] memory emptyList;
+        bytes32[] memory emptyList;
         Provider memory newProvider = Provider(id, _name, emptyList);
-        bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
-        providerMap[providerHash] = newProvider;
-        insurerMap[_insurerID].providers.push(newProvider);
+        //bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
+        providerMap[id] = newProvider;
+        insurerMap[_insurerID].providers.push(newProvider.id);
         emit ProviderCreated(id, _name);
         return id;
     }
 
     function addInsurer(string memory _name) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
-        Provider[] memory emptyList;
+        bytes32[] memory emptyList;
         Insurer memory newInsurer = Insurer(id, _name, emptyList);
-        bytes32 insurerHash = keccak256(abi.encodePacked(newInsurer));
-        insurerMap[insurerHash] = newInsurer;
+        //bytes32 insurerHash = keccak256(abi.encodePacked(newInsurer));
+        insurerMap[id] = newInsurer;
         emit InsurerCreated(id, _name);
         return id;
     }
@@ -75,29 +75,31 @@ contract Organizations {
 
     function addClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _service, bytes32 _patient) public returns(uint256 ClaimID) {
         Patient storage cPatient = patientMap[_patient];
-        ServiceClaim storage myServiceClaim = ServiceClaim(cPatient.serviceClaimsList[serviceClaimsMap[_serviceClaimID]]);
-        uint256 memory newClaimID = myServiceClaim.addClaim(claimId++,_amount);
+        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+        uint256 newClaimID = myServiceClaim.addClaim(claimId++,_amount);
         emit ClaimCreated(newClaimID, _amount, _service, _patient);
         return newClaimID;
     }
 
-    function newServiceClaim(string _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
+    function newServiceClaim(string memory _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
         uint256 id = uint(keccak256(abi.encodePacked(_name)));
-        address serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name, _providerID);
-        bytes32 serviceClaimID = keccak256(abi.encodePacked(serviceClaim));
+        ServiceClaim serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name);
+        bytes32 serviceClaimID = keccak256(abi.encodePacked(address(serviceClaim)));
         serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
         patient.serviceClaimsList.push(address(serviceClaim));
         return serviceClaimID;
     }
 
-    function payProvider(ServiceClaim _serviceClaim) public {
+    function payProvider(ServiceClaim _serviceClaim) internal {
+        //require(_serviceClaim.claim().verified == true, "User has not verified service");
         _serviceClaim.payProvider();
     }
 
-    function verifyClaim(bytes32 _serviceClaimID,uint256 _cID) public {
-        ServiceClaim storage myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+    function verifyClaim(bytes32 _serviceClaimID) public {
+        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         myServiceClaim.verifyClaim();
         payProvider(myServiceClaim);
     }
+    
 }

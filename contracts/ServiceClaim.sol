@@ -44,7 +44,6 @@ contract ServiceClaim {
     }
 
     function verifyClaim() public {
-        //Check if claim was provided to the Patient
         claim.verified = true;
     }
 
