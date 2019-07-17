@@ -1,4 +1,15 @@
 # Medicare-Claim-Verification
 
 ### AEEC
-Danny
+
+#### Setup
+```
+ganache-cli
+```
+(In a separate terminal)
+```
+truffle console
+truffle compile
+truffle migrate
+```
+
