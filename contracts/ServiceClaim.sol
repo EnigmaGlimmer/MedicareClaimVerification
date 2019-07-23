@@ -42,6 +42,7 @@ contract ServiceClaim {
     }
 
 
+    // -------------------------------- Getters ----------------------------------------- // 
     function getAmount() public view returns (uint256){
         return amount;
     }

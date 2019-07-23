@@ -124,7 +124,7 @@ C    @param _name name of the service
     */
     function verifyClaim(bytes32 _serviceClaimID) public {
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        myServiceClaim.verifyClaim();
+        require(myServiceClaim.verifyClaim(), "Claim was not verified");
         payProvider(myServiceClaim);
     }
 
