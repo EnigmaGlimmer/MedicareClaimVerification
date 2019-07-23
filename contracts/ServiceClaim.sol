@@ -4,51 +4,45 @@ import "./SafeMath.sol";
 
 contract ServiceClaim {
 
+    // Entity Information
     bytes32 insurerID;
     bytes32 providerID;
     bytes32 patientID;
 
-    //uint256 claimId;
+    // ServiceClaim Information
+    bytes32 serviceClaimID;
+    string name;
+    uint256 amount;
+    bool verified;
+    bool paid;
 
-    //mapping (uint256=>Service) serviceMap;
-    //mapping (uint256=>Claim) claimMap;
 
-    struct Service {
-        uint256 id;
-        string name;
-        //bytes32 providerID;
-    }
-
-    struct Claim {
-        uint256 id;
-        uint256 amount;
-        //Service service;
-        bool verified;
-        bool paid;
-    }
-
-    Service service;
-    Claim claim;
-
-    constructor(bytes32 _proID, bytes32 _patID, uint256 _id, string memory _name) public {
+    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {
         providerID = _proID;
         patientID = _patID;
-        service = Service(_id, _name);
+        serviceClaimID = _id;
+        name = _name;
     }
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function addClaim(uint256 _claimId, uint256 _amount) public returns(uint256 ClaimID) {
-        claim = Claim(_claimId, _amount, false, false);
-        return claim.id;
+    function addClaim(uint256 _amount) public returns(uint256) {
+        amount = _amount;
+        return amount;
     }
 
-    function verifyClaim() public {
-        claim.verified = true;
+    function verifyClaim() public returns(bool verifySuccess) {
+        verified = true;
+        return true;
     }
 
-    function payProvider() public returns(uint256 payment) {
-        claim.paid = true;
-        return claim.amount;
+    function payProvider() public returns(bool paySuccess) {
+        paid = true;
+        return true;
+    }
+
+
+    function getAmount() public view returns (uint256){
+        return amount;
     }
 }
