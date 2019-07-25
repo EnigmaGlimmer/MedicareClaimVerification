@@ -8,10 +8,10 @@ contract Organizations {
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data
 
-    mapping (bytes32=>Patient) patientMap; //ID of patient to specific provider -
-    mapping (bytes32=>Provider) providerMap; //ID of provider to specific provider -
-    mapping (bytes32=>Insurer) insurerMap; //ID of insurance provider to specific insurer
-    mapping (bytes32=>address) serviceClaimsMap; //ID of serviceClaim to the specific ServiceClaim contract instance
+    mapping (bytes32=>Patient) public patientMap; //ID of patient to specific provider -
+    mapping (bytes32=>Provider) public providerMap; //ID of provider to specific provider -
+    mapping (bytes32=>Insurer) public insurerMap; //ID of insurance provider to specific insurer
+    mapping (bytes32=>address) public serviceClaimsMap; //ID of serviceClaim to the specific ServiceClaim contract instance
 
     //Events for organization creation    event ServiceCreated(address serviceClaimAddr);
     event SCID(bytes32 ID, address addr);
