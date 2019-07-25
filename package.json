@@ -1,0 +1,30 @@
+{
+  "name": "medicare-claim-verification",
+  "version": "1.0.0",
+  "description": "### AEEC",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdsc-blocklab/Medicare-Claim-Verification.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification/issues"
+  },
+  "homepage": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification#readme",
+  "dependencies": {
+    "ethereumjs-tx": "^2.1.0",
+    "ethers": "^4.0.33",
+    "fs": "0.0.1-security",
+    "md5-file": "^4.0.0",
+    "path": "^0.12.7",
+    "web3": "^1.2.0"
+  }
+}
