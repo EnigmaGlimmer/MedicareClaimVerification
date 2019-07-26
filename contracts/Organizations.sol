@@ -7,6 +7,9 @@ import "./ServiceClaim.sol";
 
 contract Organizations {
 
+    uint admin;
+
+
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data
 
@@ -190,4 +193,12 @@ contract Organizations {
 
 
 
+    function setAdmin(uint _num) public {
+        admin = _num;
+    }
+
+
+    function getAdmin() public view returns (uint) {
+        return admin;
+    }
 }
