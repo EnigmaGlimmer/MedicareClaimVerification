@@ -1,4 +1,6 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
 
 import "./SafeMath.sol";
 import "./ServiceClaim.sol";
@@ -20,10 +22,19 @@ contract Organizations {
     event ProviderCreated(bytes32 id, string name);
     event InsurerCreated(bytes32 id, string name);
 
+
+    //event patientList(Patient[] patients);
+    //event providerList(Provider[] providers);
+    //event insurerList(Insurer[] insurers);
+
+    event idList(bytes32[] ids);
+    event serviceList(address[] services);
+
     struct Patient {
         bytes32 id;
         string name;
-        address[] serviceClaimsList;
+        address[] unverifiedServiceClaims;
+        address[] verifiedServiceClaims;
     }
 
     struct Provider {
@@ -74,7 +85,7 @@ contract Organizations {
 
     /** @dev add an insurnace provider to the network
     @param _name the name of the insurance provider
-    @return the pID of the insurance provider
+    @return pID of the insurance provider
     */
     function addInsurer(string memory _name) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
@@ -89,7 +100,7 @@ contract Organizations {
     // ------------------------------ Functionality of the Network --------------------------- //
 
     /** @dev create an instance of a ServiceClaim contract
-C    @param _name name of the service
+    @param _name name of the service
     @param _providerID provider ID
     @param _patientID patient ID
     @return serviceContractHash is the id of the ServiceClaim contract
@@ -100,7 +111,7 @@ C    @param _name name of the service
         bytes32 serviceClaimID = keccak256(abi.encodePacked(address(serviceClaim)));
         serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
-        patient.serviceClaimsList.push(address(serviceClaim));
+        patient.unverifiedServiceClaims.push(address(serviceClaim));
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
@@ -135,5 +146,47 @@ C    @param _name name of the service
         //require(_serviceClaim.claim().verified == true, "User has not verified service");
         _serviceClaim.payProvider();
     }
-    
+
+
+
+    // ------------------------------ Getters of Network Data --------------------------- //
+
+    function insurerUnpaidClaims(bytes32 _id) public {
+
+    }
+
+    function providerUnpaidClaims(bytes32 _id) public {
+
+    }
+
+     function providerPaidClaims(bytes32 _id) public {
+        
+    }
+
+    function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
+        Provider storage cP = providerMap[_id];
+        emit idList(cP.patients);
+        return(cP.patients);
+    }
+
+    function providersOfInsurer(bytes32 _id) public returns (bytes32[] memory) {
+        Insurer storage cI = insurerMap[_id];
+        emit idList(cI.providers);
+        return(cI.providers);
+    }
+
+    function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
+        Patient storage cP = patientMap[_id];
+        emit serviceList(cP.unverifiedServiceClaims);
+        return(cP.unverifiedServiceClaims);
+    }
+
+    function patientVerifiedServices(bytes32 _id) public returns (address[] memory){
+        Patient storage cP = patientMap[_id];
+        emit serviceList(cP.verifiedServiceClaims);
+        return(cP.verifiedServiceClaims);
+    }
+
+
+
 }
