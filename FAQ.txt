@@ -1,0 +1,14 @@
+Build folder directory is client/src/contracts folder. Delete this
+and then run 'truffle migrate --reset --compile-all' if you have issues 
+with running the tests or any of the solidity files.
+
+Prerequisites:
+
+1. Ensure you have an instance of Ganache-cli running.
+2. Also, make sure you have Truffle installed in order to run the following commands.
+
+How to run:
+
+1. Run 'truffle compile' and then 'truffle migrate'
+2. Run 'truffle test' each time you edit a test and want to run it. 
+No need to recompile or run the migrations again.

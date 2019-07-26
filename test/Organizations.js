@@ -1,4 +1,5 @@
 const Organizations = artifacts.require("Organizations");
+const ServiceClaim = artifacts.require("ServiceClaim");
 
 
 function bytesToString(bytes) {
@@ -34,12 +35,12 @@ function stringToBytes(text, len = 0) {
 contract('Organizations', (accounts) => {
 	//console.log(accounts);
 	beforeEach(async function(){
-		this.organizations = await Organizations.new();
-	});
+    this.organizations = await Organizations.new();
+  });
 
 	it('Organization Contract is properly deployed', async () => {
 		const organizationsInstance = await Organizations.deployed();
-		const oAddress = organizationsInstance.address 
+		const oAddress = organizationsInstance.address; 
 		assert(oAddress, "Organization address does not exist");
 	});
 
@@ -47,18 +48,18 @@ contract('Organizations', (accounts) => {
 	it('Correctly added Insurer to Organizations', async () => {
 		const organizationsInstance = await Organizations.deployed();
 		const insurerID = await organizationsInstance.addInsurer("CMS"); 
-		console.log("INSURER ID: ", insurerID.logs[0].args.id);
+		//console.log("INSURER ID: ", insurerID.logs[0].args.id);
 		const insurerStruct = await organizationsInstance.insurerMap(insurerID.logs[0].args.id);
-		console.log("INSURER: ", insurerStruct)
+		//console.log("INSURER: ", insurerStruct)
 		assert.equal("CMS", insurerStruct.name, "Insurer name does not matche given input");
   	});
   
-  /*
-  
   it('Correctly added Provider to Organization', async () => {
     const organizationsInstance = await Organizations.deployed();
-    const insurerID =  await organizationsInstance.addInsurer("CMS");
-    const providerID = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
+    const insurer =  await organizationsInstance.addInsurer("CMS");
+    const insurerID = insurer.logs[0].args.id;
+    const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
+    const providerID = provider.logs[0].args.id;
     const providerActual = await organizationsInstance.providerMap(providerID);
     //console.log(providerName);
     assert.equal("Anthem Blue Cross",providerActual.name, "provider name does not match input name");
@@ -67,15 +68,35 @@ contract('Organizations', (accounts) => {
 
   it('Correctly added a Patient to the Organization', async() => {
     const organizationsInstance = await Organizations.deployed();
-    const insurerID =  await organizationsInstance.addInsurer("CMS");
-    const providerID = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
-    const providerActual = await organizationsInstance.providerMap(providerID);
-    const patientActual = await organizationsInstance.addPatient("Antonio",providerID);
+    const insurer =  await organizationsInstance.addInsurer("CMS");
+    const insurerID = insurer.logs[0].args.id;
+    const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
+    const providerID = provider.logs[0].args.id;
+    const patient = await organizationsInstance.addPatient("Antonio",providerID);
+    const patientID = await patient.logs[0].args.id;
+    const patientActual = await organizationsInstance.patientMap(patientID);
     assert.equal("Antonio",patientActual.name,"patient name does not match actual name");
-    assert.equal(organizationsInstance.patientMap(providerActual.patients[0]),);
   });
-  */
 
+  it('Correctly instantiate ServiceClaim', async() => {
+    //Startup to be refactored
+    const organizationsInstance = await Organizations.deployed();
+    const insurer =  await organizationsInstance.addInsurer("CMS");
+    const insurerID = insurer.logs[0].args.id;
+    const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
+    const providerID = provider.logs[0].args.id;
+    const patient = await organizationsInstance.addPatient("Antonio",providerID);
+    const patientID = await patient.logs[0].args.id;
+    const patientActual = await organizationsInstance.patientMap(patientID);
 
+    //Create new service claim contract
+    const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+    
+    const serviceClaimID = await serviceClaim.logs[0].args.addr;
+    //console.log("ServiceClaimID: ", serviceClaimID);
+    const serviceClaimActual = await organizationsInstance.serviceClaimsMap(serviceClaimID);
 
+    console.log("ServiceClaim contract: ",serviceClaimActual);
+    assert(serviceClaimActual,"Address found");
+  });
 });
