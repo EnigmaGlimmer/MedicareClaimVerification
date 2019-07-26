@@ -155,17 +155,6 @@ contract Organizations {
 
     // ------------------------------ Getters of Network Data --------------------------- //
 
-    function insurerUnpaidClaims(bytes32 _id) public {
-
-    }
-
-    function providerUnpaidClaims(bytes32 _id) public {
-
-    }
-
-     function providerPaidClaims(bytes32 _id) public {
-        
-    }
 
     function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
         Provider storage cP = providerMap[_id];
@@ -178,6 +167,9 @@ contract Organizations {
         emit idList(cI.providers);
         return(cI.providers);
     }
+
+
+
 
     function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
@@ -201,4 +193,20 @@ contract Organizations {
     function getAdmin() public view returns (uint) {
         return admin;
     }
+
+
+
+// TODO
+    // function insurerUnpaidClaims(bytes32 _id) public {
+    // }
+
+
+    // function insurerPaidClaims(bytes32 _id) public {
+    // }
+
+    // function providerUnpaidClaims(bytes32 _id) public {
+    // }
+
+    //  function providerPaidClaims(bytes32 _id) public {
+    // }
 }
