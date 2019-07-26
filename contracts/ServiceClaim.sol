@@ -17,6 +17,7 @@ contract ServiceClaim {
     bool paid;
 
 
+
     constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {
         providerID = _proID;
         patientID = _patID;

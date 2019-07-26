@@ -78,19 +78,24 @@ contract('Organizations', (accounts) => {
       assert(serviceClaimActual,"Address found");
     });
 
-    /*
+    
     it('Correctly adds our claim', async() => {
       const serviceClaim = await organizationalInstance.newServiceClaim("Glasses",providerID,patientID);
-      const serviceClaimID = await serviceClaim.logs[0].args.addr;
-      const serviceClaimActual = await organizationalInstance.serviceClaimsMap(serviceClaimID);
-  
-      const addServiceClaim = await organizationalInstance.addClaim(serviceClaimID,100);
+      console.log("Claim Created");
+      const serviceClaimID = await serviceClaim.logs[0].args.ID;
+      //serviceClaimInstance = await ServiceClaim.at(serviceClaimID);
+      console.log("Got Service Claim ID: ", serviceClaimID);
+      const addServiceClaim = await organizationalInstance.addClaim(serviceClaimID, 100);
+      //const addServiceClaim = await serviceClaimInstance.addClaim(100);
+      console.log("added claim");
       //const addedClaimID = await addServiceClaim.logs[0].args.id;
       //console.log("Added claim: ", addedClaimID);
   
       assert.equal(100,100,"Address found");
     });
-    
+  
+  
+    /*
   it('Correctly verifies our claim', async() => {
     const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
     const serviceClaimID = await serviceClaim.logs[0].args.addr; 

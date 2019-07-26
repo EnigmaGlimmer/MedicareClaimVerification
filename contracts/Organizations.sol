@@ -58,8 +58,9 @@ contract Organizations {
     */
     function addPatient(string memory _name, bytes32 _providerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
-        address[] memory claimList;
-        Patient memory newPatient = Patient(id, _name, claimList);
+        address[] memory uClaimList;
+        address[] memory vClaimList;
+        Patient memory newPatient = Patient(id, _name, uClaimList, vClaimList);
         //bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[id] = newPatient;
         providerMap[_providerID].patients.push(newPatient.id);

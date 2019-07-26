@@ -21,7 +21,7 @@ If you are experiencing erros that do no match the changes you made in the code 
 2. Incorrect number of parameters
 
 Delete and recompiled the Build folder
+
 Build folder directory is client/src/contracts folder. 
 
-Then run 'truffle migrate --reset --compile-all' if you have issues 
-with running the tests or any of the solidity files.
+Then run 'truffle migrate --reset --compile-all' 
