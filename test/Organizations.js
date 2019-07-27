@@ -2,7 +2,7 @@ const Organizations = artifacts.require("Organizations");
 const ServiceClaim = artifacts.require("ServiceClaim");
 
 
-let organizationalInstance;
+let organizationsInstance;
 let insurer; 
 let insurerID; 
 let provider;
@@ -61,59 +61,52 @@ contract('Organizations', (accounts) => {
 
   describe('Service claim related features', async() => {
     before(async() =>{
-      organizationalInstance = await Organizations.deployed();
-      insurer =  await organizationalInstance.addInsurer("CMS");
+      organizationsInstance = await Organizations.deployed();
+      insurer =  await organizationsInstance.addInsurer("CMS");
       insurerID = insurer.logs[0].args.id;
-      provider = await organizationalInstance.addProvider("Anthem Blue Cross",insurerID);
+      provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
       providerID = provider.logs[0].args.id;
-      patient = await organizationalInstance.addPatient("Antonio",providerID);
+      patient = await organizationsInstance.addPatient("Antonio",providerID);
       patientID = await patient.logs[0].args.id;
-      patientActual = await organizationalInstance.patientMap(patientID);
+      patientActual = await organizationsInstance.patientMap(patientID);
     });
 
     it('Correctly instantiate ServiceClaim', async() => {
-      const serviceClaim = await organizationalInstance.newServiceClaim("Glasses",providerID,patientID);    
+      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);    
       const serviceClaimID = await serviceClaim.logs[0].args.addr;
-      const serviceClaimActual = await organizationalInstance.serviceClaimsMap(serviceClaimID);
+      const serviceClaimActual = await organizationsInstance.serviceClaimsMap(serviceClaimID);
       assert(serviceClaimActual,"Address found");
     });
 
     
-    it('Correctly adds our claim', async() => {
-      const serviceClaim = await organizationalInstance.newServiceClaim("Glasses",providerID,patientID);
-      console.log("Claim Created");
-      const serviceClaimID = await serviceClaim.logs[0].args.ID;
-      //serviceClaimInstance = await ServiceClaim.at(serviceClaimID);
-      console.log("Got Service Claim ID: ", serviceClaimID);
-      const addServiceClaim = await organizationalInstance.addClaim(serviceClaimID, 100);
-      //const addServiceClaim = await serviceClaimInstance.addClaim(100);
-      console.log("added claim");
-      //const addedClaimID = await addServiceClaim.logs[0].args.id;
-      //console.log("Added claim: ", addedClaimID);
-  
-      assert.equal(100,100,"Address found");
+    it('Correctly adds a claim amount', async() => {
+      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+      const serviceClaimInfo = await serviceClaim.logs[0].args;
+      const addServiceClaim = await organizationsInstance.addClaim(serviceClaimInfo.ID, 100);
+      const currService = await ServiceClaim.at(serviceClaimInfo.addr);
+      const claimAmount = await currService.getAmount();
+      assert.equal(100,claimAmount,"Claim Amount is Incorrect");
     });
   
   
-    /*
-  it('Correctly verifies our claim', async() => {
+  it('Correctly verifies a claim', async() => {
     const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
-    const serviceClaimID = await serviceClaim.logs[0].args.addr; 
-    const serviceClaimActual = await organizationsInstance.serviceClaimsMap(serviceClaimID);
-
-    console.log("ServiceClaim contract: ",serviceClaimActual);
-    assert(serviceClaimActual,"Address found");
+    const serviceClaimInfo = await serviceClaim.logs[0].args;
+    const verifyServiceClaim = await organizationsInstance.verifyClaim(serviceClaimInfo.ID);
+    const currService = await ServiceClaim.at(serviceClaimInfo.addr);
+    const claimVerify = await currService.isVerified();
+    assert.equal(true,claimVerify,"Claim Verification is Incorrect");
   });
 
-  it('Correctly pays our provider', async() => {
+  it('Confirms payment completion of the claim', async() => {
     const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
-    const serviceClaimID = await serviceClaim.logs[0].args.addr;
-    const serviceClaimActual = await organizationsInstance.serviceClaimsMap(serviceClaimID);
-
-    console.log("ServiceClaim contract: ",serviceClaimActual);
-    assert(serviceClaimActual,"Address found");
+    const serviceClaimInfo = await serviceClaim.logs[0].args;
+    await organizationsInstance.payProvider(serviceClaimInfo.ID);
+    const currService = await ServiceClaim.at(serviceClaimInfo.addr);
+    const claimPaid = await currService.isPaid();
+    assert.equal(true,claimPaid,"Claim Verification is Incorrect");
   });
   
-*/
+
   });
 });

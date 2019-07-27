@@ -139,16 +139,16 @@ contract Organizations {
     */
     function verifyClaim(bytes32 _serviceClaimID) public {
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        require(myServiceClaim.verifyClaim(), "Claim was not verified");
-        payProvider(myServiceClaim);
+        myServiceClaim.verifyClaim();
     }
 
-    /** @dev invoke the payProvider function in the ServiceClaim contract, may only be called from within Organizations.sol
-    @param _serviceClaim an instance of the ServiceClaim contract
+    /** @dev invoke the payProvider function in the ServiceClaim contract
+    @param _serviceClaimID the id of the ServiceClaim contract
     */
-    function payProvider(ServiceClaim _serviceClaim) internal {
+    function payProvider(bytes32 _serviceClaimID) public {
         //require(_serviceClaim.claim().verified == true, "User has not verified service");
-        _serviceClaim.payProvider();
+        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+        myServiceClaim.payProvider();
     }
 
 
@@ -205,6 +205,7 @@ contract Organizations {
     // }
 
     // function providerUnpaidClaims(bytes32 _id) public {
+
     // }
 
     //  function providerPaidClaims(bytes32 _id) public {
