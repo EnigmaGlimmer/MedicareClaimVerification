@@ -139,33 +139,22 @@ contract Organizations {
     */
     function verifyClaim(bytes32 _serviceClaimID) public {
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        require(myServiceClaim.verifyClaim(), "Claim was not verified");
-        payProvider(myServiceClaim);
+        myServiceClaim.verifyClaim();
     }
 
-    /** @dev invoke the payProvider function in the ServiceClaim contract, may only be called from within Organizations.sol
-    @param _serviceClaim an instance of the ServiceClaim contract
+    /** @dev invoke the payProvider function in the ServiceClaim contract
+    @param _serviceClaimID the id of the ServiceClaim contract
     */
-    function payProvider(ServiceClaim _serviceClaim) internal {
+    function payProvider(bytes32 _serviceClaimID) public {
         //require(_serviceClaim.claim().verified == true, "User has not verified service");
-        _serviceClaim.payProvider();
+        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+        myServiceClaim.payProvider();
     }
 
 
 
     // ------------------------------ Getters of Network Data --------------------------- //
 
-    function insurerUnpaidClaims(bytes32 _id) public {
-
-    }
-
-    function providerUnpaidClaims(bytes32 _id) public {
-
-    }
-
-     function providerPaidClaims(bytes32 _id) public {
-        
-    }
 
     function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
         Provider storage cP = providerMap[_id];
@@ -178,6 +167,9 @@ contract Organizations {
         emit idList(cI.providers);
         return(cI.providers);
     }
+
+
+
 
     function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
@@ -201,4 +193,21 @@ contract Organizations {
     function getAdmin() public view returns (uint) {
         return admin;
     }
+
+
+
+// TODO
+    // function insurerUnpaidClaims(bytes32 _id) public {
+    // }
+
+
+    // function insurerPaidClaims(bytes32 _id) public {
+    // }
+
+    // function providerUnpaidClaims(bytes32 _id) public {
+
+    // }
+
+    //  function providerPaidClaims(bytes32 _id) public {
+    // }
 }

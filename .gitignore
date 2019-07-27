@@ -18,3 +18,5 @@ dist
 
 
 truffle
+
+client/src/contracts

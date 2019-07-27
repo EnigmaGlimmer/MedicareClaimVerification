@@ -17,6 +17,8 @@ contract ServiceClaim {
     bool paid;
 
 
+    event ClaimAdded(uint256 amount);
+
 
     constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {
         providerID = _proID;
@@ -29,6 +31,7 @@ contract ServiceClaim {
 
     function addClaim(uint256 _amount) public returns(uint256) {
         amount = _amount;
+        emit ClaimAdded(amount);
         return amount;
     }
 
@@ -46,5 +49,13 @@ contract ServiceClaim {
     // -------------------------------- Getters ----------------------------------------- //
     function getAmount() public view returns (uint256){
         return amount;
+    }
+
+    function isVerified() public view returns (bool){
+        return verified;
+    }
+
+    function isPaid() public view returns (bool){
+        return paid;
     }
 }
