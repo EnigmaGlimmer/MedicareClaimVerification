@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
+import PatientCell from './components/PatientCell'
+import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 40, web3: null, accounts: null, contract: null };
+  state = {
+    storageValue: 40,
+    web3: null,
+    accounts: null,
+    contract: null
+  };
 
   componentDidMount = async () => {
     try {
@@ -25,7 +32,7 @@ class App extends Component {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance }, this.preloadInformation);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -34,6 +41,27 @@ class App extends Component {
       console.error(error);
     }
   };
+
+
+  preloadInformation = async () => {
+    try {
+      const {accounts, contract } = this.state;
+
+      //adds an insuruser
+      const insurer = await contract.methods.addInsurer("CMS").send({ from: accounts[0] });
+      console.log("INSURER: ", insurer);
+
+
+
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to preload information into the organizations contract.`,
+      );
+      console.error(error);
+    }
+  };
+
 
   runExample = async () => {
     const { accounts, contract } = this.state;
@@ -53,18 +81,30 @@ class App extends Component {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+      <div>
+        <h1 id='centerText'>Provider Dashboard</h1>
+        <Row>
+          <Col md={6}>
+            <h2 id='centerText'>Patient List</h2>
+            <ul>
+              <PatientCell name='Ken' />
+              <PatientCell name='Jim' />
+              <PatientCell name='Danny' />
+              <PatientCell name='Antonio' />
+            </ul>
+          </Col>
+          <Col md={6}>
+            <h2 id='centerText'>Add Patient</h2>
+            <Form id='form'>
+              <FormGroup>
+                <Input placeholder="Name" />
+              </FormGroup>
+              <div className="text-right">
+                <Button color='success'>Enter</Button>
+              </div>
+            </Form>
+          </Col>
+        </Row>
       </div>
     );
   }
