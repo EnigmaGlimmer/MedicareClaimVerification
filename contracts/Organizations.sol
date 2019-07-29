@@ -52,6 +52,16 @@ contract Organizations {
         bytes32[] providers;
     }
 
+
+
+    constructor() public {
+        preLoadInfo();
+    }
+
+
+    function preLoadInfo() public {
+        
+    }
     // ------------------------------ Adds Users to Network --------------------------- //
 
     /** @dev add a patient to the network

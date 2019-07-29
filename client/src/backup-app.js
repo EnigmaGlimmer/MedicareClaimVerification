@@ -49,13 +49,7 @@ class App extends Component {
 
       //adds an insuruser
       const insurer = await contract.methods.addInsurer("CMS").send({ from: accounts[0] });
-      console.log("INSURER: ", insurer.events.InsurerCreated.returnValues.id);
-      const provider = await contract.methods.addProvider("UCSD Medical", insurer.events.InsurerCreated.returnValues.id).send({ from: accounts[0] });
-      console.log(provider);
-      await contract.methods.addPatient("Ken", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-      await contract.methods.addPatient("Danny", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-      await contract.methods.addPatient("Antonio", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-
+      console.log("INSURER: ", insurer);
 
 
 
@@ -96,15 +90,6 @@ class App extends Component {
               <PatientCell name='Ken' />
               <PatientCell name='Jim' />
               <PatientCell name='Danny' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
               <PatientCell name='Antonio' />
             </ul>
           </Col>
