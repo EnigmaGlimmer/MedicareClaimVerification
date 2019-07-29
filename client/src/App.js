@@ -91,6 +91,15 @@ class App extends Component {
               <PatientCell name='Jim' />
               <PatientCell name='Danny' />
               <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
+              <PatientCell name='Antonio' />
             </ul>
           </Col>
           <Col md={6}>
