@@ -29,9 +29,9 @@ contract('Organizations', (accounts) => {
     it('Correctly added Insurer to Organizations', async () => {
       const organizationsInstance = await Organizations.deployed();
       const insurerID = await organizationsInstance.addInsurer("CMS"); 
-      //console.log("INSURER ID: ", insurerID.logs[0].args.id);
+      
       const insurerStruct = await organizationsInstance.insurerMap(insurerID.logs[0].args.id);
-      //console.log("INSURER: ", insurerStruct)
+      
       assert.equal("CMS", insurerStruct.name, "Insurer name does not matche given input");
       });
     
@@ -131,7 +131,7 @@ contract('Organizations', (accounts) => {
       assert.equal(insurerList,1,"Insurer list should have a member here as well");
     });
 
-    //Provider Patient - DONE?
+    //Provider Patient - DONE
     it('Empty Provider Patient List', async () => {
       const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
       const providerID = provider.logs[0].args.id;
@@ -167,19 +167,20 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
 
       const unvServices = await organizationsInstance.patientUnverifiedServices(patientID);
-      const unverifiedServices = unvServices.logs[0].args.services;
+      const unverifiedServices = unvServices.logs[0].args.services.length;
 
       assert.equal(unverifiedServices,0,"There should be no unverified services here");
     });
 
+    //
     it('Single Unverified Claims List', async() => {
       const organizationsInstance = await Organizations.deployed();
 
       await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
 
-      const uvS = organizationsInstance.patientUnverifiedServices(patientID);
-      const unverifiedServices = uvS.logs[0].args.services;
-
+      const uvS = await organizationsInstance.patientUnverifiedServices(patientID);
+      const unverifiedServices = uvS.logs[0].args.services.length;
+      
       assert.equal(unverifiedServices,1,"There should be an unverified service here");
     });
 
@@ -187,11 +188,12 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
       
       const vServices = await organizationsInstance.patientVerifiedServices(patientID);
-      const verifiedServices = vServices.logs[0].args.services;
-
+      const verifiedServices = vServices.logs[0].args.services.length;
+      
       assert.equal(verifiedServices,0,"There should be no verified services here");
     });
 
+    //
     it('Single Verified Claims List', async() =>{
       const organizationsInstance = await Organizations.deployed();
 
@@ -201,7 +203,7 @@ contract('Organizations', (accounts) => {
       await organizationsInstance.verifyClaim(serviceClaimID.ID);
 
       const vServices = await organizationsInstance.patientVerifiedServices(patientID);
-      const verifiedServices = vServices.logs[0].args.services;
+      const verifiedServices = vServices.logs[0].args.services.length;
 
       assert.equal(verifiedServices,1,"There should be a verified service here");
     });
