@@ -167,7 +167,7 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
 
       const unvServices = await organizationsInstance.patientUnverifiedServices(patientID);
-      const unverifiedServices = unvServices.logs[0].args.ids.length;
+      const unverifiedServices = unvServices.logs[0].args.services;
 
       assert.equal(unverifiedServices,0,"There should be no unverified services here");
     });
@@ -177,14 +177,17 @@ contract('Organizations', (accounts) => {
 
       await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
 
+      const uvS = organizationsInstance.patientUnverifiedServices(patientID);
+      const unverifiedServices = uvS.logs[0].args.services;
 
+      assert.equal(unverifiedServices,1,"There should be an unverified service here");
     });
 
-    it('Verified Claims List Test', async() => {
+    it('Empty Verified Claims List Test', async() => {
       const organizationsInstance = await Organizations.deployed();
       
       const vServices = await organizationsInstance.patientVerifiedServices(patientID);
-      const verifiedServices = vServices.logs[0].args.ids.length;
+      const verifiedServices = vServices.logs[0].args.services;
 
       assert.equal(verifiedServices,0,"There should be no verified services here");
     });
@@ -192,8 +195,15 @@ contract('Organizations', (accounts) => {
     it('Single Verified Claims List', async() =>{
       const organizationsInstance = await Organizations.deployed();
 
-      await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);    
+      const serviceClaimID = await serviceClaim.logs[0].args;
 
+      await organizationsInstance.verifyClaim(serviceClaimID.ID);
+
+      const vServices = await organizationsInstance.patientVerifiedServices(patientID);
+      const verifiedServices = vServices.logs[0].args.services;
+
+      assert.equal(verifiedServices,1,"There should be a verified service here");
     });
   });
 });
