@@ -157,7 +157,6 @@ contract Organizations {
     }
 
 
-
     // ------------------------------ Getters of Network Data --------------------------- //
 
 
