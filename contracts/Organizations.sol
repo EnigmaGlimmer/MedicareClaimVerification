@@ -7,9 +7,6 @@ import "./ServiceClaim.sol";
 
 contract Organizations {
 
-    uint admin;
-
-
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data
 
@@ -24,11 +21,6 @@ contract Organizations {
     event PatientCreated(bytes32 id, string name);
     event ProviderCreated(bytes32 id, string name);
     event InsurerCreated(bytes32 id, string name);
-
-
-    //event patientList(Patient[] patients);
-    //event providerList(Provider[] providers);
-    //event insurerList(Insurer[] insurers);
 
     event idList(bytes32[] ids);
     event serviceList(address[] services);
@@ -168,9 +160,6 @@ contract Organizations {
         return(cI.providers);
     }
 
-
-
-
     function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         emit serviceList(cP.unverifiedServiceClaims);
@@ -182,18 +171,6 @@ contract Organizations {
         emit serviceList(cP.verifiedServiceClaims);
         return(cP.verifiedServiceClaims);
     }
-
-
-
-    function setAdmin(uint _num) public {
-        admin = _num;
-    }
-
-
-    function getAdmin() public view returns (uint) {
-        return admin;
-    }
-
 
 
 // TODO
