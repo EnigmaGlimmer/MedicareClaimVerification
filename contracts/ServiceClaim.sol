@@ -5,9 +5,9 @@ import "./SafeMath.sol";
 contract ServiceClaim {
 
     // Entity Information
-    bytes32 insurerID;
-    bytes32 providerID;
-    bytes32 patientID;
+    bytes32 public insurerID;
+    bytes32 public providerID;
+    bytes32 public patientID;
 
     // ServiceClaim Information
     bytes32 serviceClaimID;
@@ -57,5 +57,25 @@ contract ServiceClaim {
 
     function isPaid() public view returns (bool){
         return paid;
+    }
+
+
+    // -------------------------------- Update ----------------------------------------- //
+    function updateAmount(uint256 _amount) public returns (uint256) {
+        amount = _amount;
+        return amount;
+    }
+
+    function updateInsurer(bytes32 _id) public returns (bytes32) {
+        insurerID = _id;
+        return insurerID;
+    }
+    function updateProvider(bytes32 _id) public returns (bytes32) {
+        providerID = _id;
+        return providerID;
+    }
+    function updatePatient(bytes32 _id) public returns (bytes32) {
+        patientID = _id;
+        return patientID;
     }
 }

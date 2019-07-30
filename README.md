@@ -25,6 +25,7 @@ npm i web3
 ```
 
 ###### Download MetaMask
+MetaMask Chrome Extension: https://metamask.io/
 
 ### Setup
 
