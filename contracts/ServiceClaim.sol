@@ -5,9 +5,9 @@ import "./SafeMath.sol";
 contract ServiceClaim {
 
     // Entity Information
-    bytes32 insurerID;
-    bytes32 providerID;
-    bytes32 patientID;
+    bytes32 public insurerID;
+    bytes32 public providerID;
+    bytes32 public patientID;
 
     // ServiceClaim Information
     bytes32 serviceClaimID;

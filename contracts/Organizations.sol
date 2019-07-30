@@ -131,7 +131,20 @@ contract Organizations {
     */
     function verifyClaim(bytes32 _serviceClaimID) public {
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        myServiceClaim.verifyClaim();
+        require(myServiceClaim.verifyClaim(), "Claim was not Verified");
+        // Add the claim address to verified list
+        // Delete the claim address from unverified list
+        bytes32 patID = myServiceClaim.patientID();
+        Patient storage cP = patientMap[patID];
+
+        cP.verifiedServiceClaims.push(address(myServiceClaim));
+        
+        for(uint i = 0; i < cP.unverifiedServiceClaims.length; i++){
+            if(cP.unverifiedServiceClaims[i] == address(myServiceClaim)){
+                delete(cP.unverifiedServiceClaims[i]);
+                break;
+            }
+        }
     }
 
     /** @dev invoke the payProvider function in the ServiceClaim contract
