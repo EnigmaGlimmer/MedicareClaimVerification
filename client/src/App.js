@@ -3,16 +3,30 @@ import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import PatientCell from './components/PatientCell'
 import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
+import ReactDOM from "react-dom"
 
 import "./App.css";
 
 class App extends Component {
-  state = {
-    storageValue: 40,
-    web3: null,
-    accounts: null,
-    contract: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      storageValue: 40,
+      web3: null,
+      accounts: null,
+      contract: null,
+      patients: []
+    };
+    this.solidityData = null;
+    this.patientname = null;
+    this.updatePatientName = this.updatePatientName.bind(this);
+    this.createServiceClaim = this.createServiceClaim.bind(this);
+    this.addClaim = this.addClaim.bind(this);
+  }
+
+  updatePatientName({ target }) {
+    this.patientname = target.value
+  }
 
   componentDidMount = async () => {
     try {
@@ -32,7 +46,7 @@ class App extends Component {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.preloadInformation);
+      this.setState({ web3, accounts, contract: instance }, this.fetchData);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -42,47 +56,46 @@ class App extends Component {
     }
   };
 
-
-  preloadInformation = async () => {
-    try {
-      const {accounts, contract } = this.state;
-
-      //adds an insuruser
-      const insurer = await contract.methods.addInsurer("CMS").send({ from: accounts[0] });
-      console.log("INSURER: ", insurer.events.InsurerCreated.returnValues.id);
-      const provider = await contract.methods.addProvider("UCSD Medical", insurer.events.InsurerCreated.returnValues.id).send({ from: accounts[0] });
-      console.log(provider);
-      await contract.methods.addPatient("Ken", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-      await contract.methods.addPatient("Danny", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-      await contract.methods.addPatient("Antonio", provider.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-
-
-
-
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to preload information into the organizations contract.`,
-      );
-      console.error(error);
-    }
-  };
-
-
-  runExample = async () => {
+  createServiceClaim = async(serviceName, providerID, patientID) => {
     const { accounts, contract } = this.state;
+    const info = await contract.methods.newServiceClaim(serviceName, providerID, patientID).send({ from: accounts[0] });
+    console.log(info)
+  }
 
-    // Stores a given value, 5 by default.
-    await contract.methods.setAdmin(5).send({ from: accounts[0] });
+  addClaim = async(serviceClaimID, amount) => {
+    const { accounts, contract } = this.state;
+    const info = await contract.methods.addClaim(serviceClaimID, amount).send({ from: accounts[0] });
+    console.log(info)
+  }
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.getAdmin().call();
+  onFormSubmit = async(e) => {
+    e.preventDefault()
+    const { accounts, contract } = this.state;
+    const info = await contract.methods.addPatient(this.patientname, this.solidityData.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
+    console.log("Added patient",info)
+    let patientList = this.state.patients;
+    patientList.push(this.patientname);
+    this.setState({patients: patientList})
+    ReactDOM.findDOMNode(this.refs.sold).innerHTML = "<p>Added new patient! Check your list!</p>";
+    ReactDOM.findDOMNode(this.refs.sold).style.color = "#acd854";
+  }
 
-    // Update state with the result.
-    this.setState({ storageValue: response });
+  fetchData = async () => {
+    const { accounts, contract } = this.state;
+    let patientList = [];
+    const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
+    this.solidityData = info;
+    console.log("Fetched data",info)
+    const patients = this.solidityData.events.PatientCreated;
+    for (let i = 0; i < patients.length; i++) {
+      patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
+    }
+    console.log(patientList)
+    this.setState({ patients: patientList })
   };
 
   render() {
+    let sd = this.solidityData
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -93,30 +106,29 @@ class App extends Component {
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
             <ul>
-              <PatientCell name='Ken' />
-              <PatientCell name='Jim' />
-              <PatientCell name='Danny' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
-              <PatientCell name='Antonio' />
+              {this.state.patients.map((o, i) => {
+                return <PatientCell name={o[0]} 
+                                    key={i}
+                                    patientID={o[1]}
+                                    sd={sd}
+                                    createServiceClaim={this.createServiceClaim}
+                                    addClaim={this.addClaim}
+                                    accounts={this.state.accounts}
+                                    contract={this.state.contract}
+                                    />
+              })}
             </ul>
           </Col>
           <Col md={6}>
             <h2 id='centerText'>Add Patient</h2>
-            <Form id='form'>
+            <Form id="form" onSubmit={this.onFormSubmit}>
               <FormGroup>
-                <Input placeholder="Name" />
+                <Input onChange={this.updatePatientName} placeholder="Name" />
               </FormGroup>
               <div className="text-right">
-                <Button color='success'>Enter</Button>
+                <Button type="submit" color='success'>Enter</Button>
               </div>
+              <div ref="sold" className="expandable" id="nav"/>
             </Form>
           </Col>
         </Row>

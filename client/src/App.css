@@ -33,7 +33,8 @@
 ul{
   overflow:hidden; 
   overflow-y:scroll; 
-  height:600px; 
+  height:600px;
+  padding-left: 0px;
 }
 
 @keyframes App-logo-spin {
