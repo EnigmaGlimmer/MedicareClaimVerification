@@ -59,8 +59,12 @@ contract Organizations {
     }
 
 
-    function preLoadInfo() public {
-        
+    function preLoadInfo() public{
+        bytes32 insurerID = addInsurer("CMS");
+        bytes32 providerID = addProvider("UCSD Medical", insurerID);
+        addPatient("Ken", providerID);
+        addPatient("Danny", providerID);
+        addPatient("Antonio", providerID);
     }
     // ------------------------------ Adds Users to Network --------------------------- //
 
