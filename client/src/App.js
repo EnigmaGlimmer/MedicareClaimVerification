@@ -133,17 +133,17 @@ class App extends Component {
   createServiceClaim = async(serviceName, providerID, patientID) => {
     const { accounts, contract } = this.state;
     const info = await contract.methods.newServiceClaim(serviceName, providerID, patientID).send({ from: accounts[0] });
-    console.log(info)
     this.serviceClaimID = info.events.SCID.returnValues.ID;
-    this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
+    // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
+    return info;
   }
 
-  addClaim = async(serviceClaimID, amount, serviceName) => {
+  addClaim = async(serviceClaimID, amount) => {
     const { accounts, contract } = this.state;
     serviceClaimID = serviceClaimID || this.serviceClaimID;
     const info = await contract.methods.addClaim(serviceClaimID, amount).send({ from: accounts[0] });
-    console.log(info)
-    this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
+    // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
+    return info;
   }
 
   onFormSubmit = async(e) => {
