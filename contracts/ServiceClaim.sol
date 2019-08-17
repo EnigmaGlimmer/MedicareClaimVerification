@@ -29,7 +29,7 @@ contract ServiceClaim {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function addClaim(uint256 _amount) public returns(uint256) {
+    function fileClaim(uint256 _amount) public returns(uint256) {
         amount = _amount;
         emit ClaimAdded(amount);
         return amount;

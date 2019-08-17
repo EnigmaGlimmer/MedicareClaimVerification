@@ -4,18 +4,22 @@
     {
       "inputs": [
         {
+          "internalType": "bytes32",
           "name": "_proID",
           "type": "bytes32"
         },
         {
+          "internalType": "bytes32",
           "name": "_patID",
           "type": "bytes32"
         },
         {
+          "internalType": "bytes32",
           "name": "_id",
           "type": "bytes32"
         },
         {
+          "internalType": "string",
           "name": "_name",
           "type": "string"
         }
@@ -29,6 +33,7 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
         }
@@ -40,13 +45,15 @@
       "constant": false,
       "inputs": [
         {
+          "internalType": "uint256",
           "name": "_amount",
           "type": "uint256"
         }
       ],
-      "name": "addClaim",
+      "name": "fileClaim",
       "outputs": [
         {
+          "internalType": "uint256",
           "name": "",
           "type": "uint256"
         }
@@ -61,6 +68,7 @@
       "name": "verifyClaim",
       "outputs": [
         {
+          "internalType": "bool",
           "name": "verifySuccess",
           "type": "bool"
         }
@@ -75,6 +83,7 @@
       "name": "payProvider",
       "outputs": [
         {
+          "internalType": "bool",
           "name": "paySuccess",
           "type": "bool"
         }
@@ -89,6 +98,7 @@
       "name": "getAmount",
       "outputs": [
         {
+          "internalType": "uint256",
           "name": "",
           "type": "uint256"
         }
@@ -103,6 +113,7 @@
       "name": "isVerified",
       "outputs": [
         {
+          "internalType": "bool",
           "name": "",
           "type": "bool"
         }
@@ -117,6 +128,7 @@
       "name": "isPaid",
       "outputs": [
         {
+          "internalType": "bool",
           "name": "",
           "type": "bool"
         }
@@ -126,12 +138,12 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.10+commit.5a6ea5b1\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"isPaid\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"addClaim\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isVerified\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"verifyClaim\",\"outputs\":[{\"name\":\"verifySuccess\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"payProvider\",\"outputs\":[{\"name\":\"paySuccess\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getAmount\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"_proID\",\"type\":\"bytes32\"},{\"name\":\"_patID\",\"type\":\"bytes32\"},{\"name\":\"_id\",\"type\":\"bytes32\"},{\"name\":\"_name\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ClaimAdded\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol\":\"ServiceClaim\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/SafeMath.sol\":{\"keccak256\":\"0x6123636081d79424b5703cfa767a876879ff16997cc068689b2f10f09c814cf8\",\"urls\":[\"bzzr://e8a1ca72ff5cc6f7929bc9cb61105c5374c7373929215efbcb26be0bd7acd131\",\"dweb:/ipfs/QmP9SPisbdShxSzaT4UanNoFPrqM36oWmWGVYaDrNweunk\"]},\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol\":{\"keccak256\":\"0xc8c4f31f0d47b338e588e3458226e630a6610fb417216c27b5c0f141b7a38d28\",\"urls\":[\"bzzr://cd10c0b5a7c6cff2c02c25d9ae05c676db59121e069e66fef1349d68d5652eb1\",\"dweb:/ipfs/QmXjq9PCNy3dYuU9hY5vDrb876oGVBZ2GxpAn5v4Z4Lcdv\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506040516102fb3803806102fb8339818101604052608081101561003357600080fd5b815160208301516040840151606085018051939592949193918301929164010000000081111561006257600080fd5b8201602081018481111561007557600080fd5b815164010000000081118282018710171561008f57600080fd5b505060018790556002869055600385905580519093506100b892506004915060208401906100c2565b505050505061015d565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061010357805160ff1916838001178555610130565b82800160010185558215610130579182015b82811115610130578251825591602001919060010190610115565b5061013c929150610140565b5090565b61015a91905b8082111561013c5760008155600101610146565b90565b61018f8061016c6000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c8063209ebc0814610067578063745c25f61461008357806380007e83146100b2578063844cdf09146100ba57806398d6a373146100c2578063d321fe29146100ca575b600080fd5b61006f6100d2565b604080519115158252519081900360200190f35b6100a06004803603602081101561009957600080fd5b50356100e0565b60408051918252519081900360200190f35b61006f610124565b61006f61012d565b61006f610140565b6100a0610154565b600654610100900460ff1690565b60058190556040805182815290516000917f7da274c7907a6e3fe48918a914c8a93c400713daffcd99eaa4a9ae6e99322204919081900360200190a1505060055490565b60065460ff1690565b6006805460ff1916600190811790915590565b6006805461ff001916610100179055600190565b6005549056fea265627a7a72305820ed3d29d1194289a83b792d6545c04a57fc45182e6a41eab0ea51e5344c35b82964736f6c634300050a0032",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100625760003560e01c8063209ebc0814610067578063745c25f61461008357806380007e83146100b2578063844cdf09146100ba57806398d6a373146100c2578063d321fe29146100ca575b600080fd5b61006f6100d2565b604080519115158252519081900360200190f35b6100a06004803603602081101561009957600080fd5b50356100e0565b60408051918252519081900360200190f35b61006f610124565b61006f61012d565b61006f610140565b6100a0610154565b600654610100900460ff1690565b60058190556040805182815290516000917f7da274c7907a6e3fe48918a914c8a93c400713daffcd99eaa4a9ae6e99322204919081900360200190a1505060055490565b60065460ff1690565b6006805460ff1916600190811790915590565b6006805461ff001916610100179055600190565b6005549056fea265627a7a72305820ed3d29d1194289a83b792d6545c04a57fc45182e6a41eab0ea51e5344c35b82964736f6c634300050a0032",
-  "sourceMap": "51:1326:3:-;;;350:201;8:9:-1;5:2;;;30:1;27;20:12;5:2;350:201:3;;;;;;;;;;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;350:201:3;;;;;;;;;;;;;;;;;;;;;;;;;;19:11:-1;11:20;;8:2;;;44:1;41;34:12;8:2;62:21;;123:4;114:14;;138:31;;;135:2;;;182:1;179;172:12;135:2;213:10;;261:11;244:29;;285:43;;;282:58;-1:-1;233:115;230:2;;;361:1;358;351:12;230:2;-1:-1;;445:10:3;:19;;;474:9;:18;;;502:14;:20;;;532:12;;350:201;;-1:-1:-1;532:12:3;;-1:-1:-1;532:4:3;;-1:-1:-1;532:12:3;;;;;:::i;:::-;;350:201;;;;51:1326;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;51:1326:3;;;-1:-1:-1;51:1326:3;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
-  "deployedSourceMap": "51:1326:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;51:1326:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1303:72;;;:::i;:::-;;;;;;;;;;;;;;;;;;656:148;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;656:148:3;;:::i;:::-;;;;;;;;;;;;;;;;1217:80;;;:::i;810:111::-;;;:::i;927:104::-;;;:::i;1131:80::-;;;:::i;1303:72::-;1364:4;;;;;;;;1303:72::o;656:148::-;725:6;:16;;;756:18;;;;;;;;706:7;;756:18;;;;;;;;;;-1:-1:-1;;791:6:3;;;656:148::o;1217:80::-;1282:8;;;;1217:80;:::o;810:111::-;878:8;:15;;-1:-1:-1;;878:15:3;889:4;878:15;;;;;;810:111;:::o;927:104::-;992:4;:11;;-1:-1:-1;;992:11:3;;;;;999:4;927:104;:::o;1131:80::-;1198:6;;1131:80;:::o",
-  "source": "pragma solidity ^0.5.0;\n\nimport \"./SafeMath.sol\";\n\ncontract ServiceClaim {\n\n    // Entity Information\n    bytes32 insurerID;\n    bytes32 providerID;\n    bytes32 patientID;\n\n    // ServiceClaim Information\n    bytes32 serviceClaimID;\n    string name;\n    uint256 amount;\n    bool verified;\n    bool paid;\n\n\n    event ClaimAdded(uint256 amount);\n\n\n    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {\n        providerID = _proID;\n        patientID = _patID;\n        serviceClaimID = _id;\n        name = _name;\n    }\n\n    // ------------------------------ Functionality of the Network --------------------------- //\n\n    function addClaim(uint256 _amount) public returns(uint256) {\n        amount = _amount;\n        emit ClaimAdded(amount);\n        return amount;\n    }\n\n    function verifyClaim() public returns(bool verifySuccess) {\n        verified = true;\n        return true;\n    }\n\n    function payProvider() public returns(bool paySuccess) {\n        paid = true;\n        return true;\n    }\n\n\n    // -------------------------------- Getters ----------------------------------------- //\n    function getAmount() public view returns (uint256){\n        return amount;\n    }\n\n    function isVerified() public view returns (bool){\n        return verified;\n    }\n\n    function isPaid() public view returns (bool){\n        return paid;\n    }\n}\n",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.11+commit.c082d0b4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[],\"name\":\"isPaid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"isVerified\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"verifyClaim\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"verifySuccess\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"payProvider\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"paySuccess\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"fileClaim\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_proID\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_patID\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"_id\",\"type\":\"bytes32\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ClaimAdded\",\"type\":\"event\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol\":\"ServiceClaim\"},\"evmVersion\":\"petersburg\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/SafeMath.sol\":{\"keccak256\":\"0x6123636081d79424b5703cfa767a876879ff16997cc068689b2f10f09c814cf8\",\"urls\":[\"bzz-raw://3e7b9e75e30442ef8996ab66cbdaf3c5dd97d05c9e889bc8bb44f0287cfc083c\",\"dweb:/ipfs/QmP9SPisbdShxSzaT4UanNoFPrqM36oWmWGVYaDrNweunk\"]},\"/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol\":{\"keccak256\":\"0xddf3ce17aefe4b2a64c3ad409d097b2b03c31635c08ab75cf6e3074e83bb2ca1\",\"urls\":[\"bzz-raw://50bc7a3ee1aceab228c14c57c68b204c110fcac69f9c04a94c3f6472914ae67b\",\"dweb:/ipfs/QmNYXJuHWCmpU39SzHDxzp38KJfVs1JmTojYnexsokH8x5\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161035b38038061035b8339818101604052608081101561003357600080fd5b81516020830151604080850151606086018051925194969395919493918201928464010000000082111561006657600080fd5b90830190602082018581111561007b57600080fd5b825164010000000081118282018810171561009557600080fd5b82525081516020918201929091019080838360005b838110156100c25781810151838201526020016100aa565b50505050905090810190601f1680156100ef5780820380516001836020036101000a031916815260200191505b506040525050506001849055600283905560038290558051610118906004906020840190610122565b50505050506101bd565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061016357805160ff1916838001178555610190565b82800160010185558215610190579182015b82811115610190578251825591602001919060010190610175565b5061019c9291506101a0565b5090565b6101ba91905b8082111561019c57600081556001016101a6565b90565b61018f806101cc6000396000f3fe608060405234801561001057600080fd5b50600436106100625760003560e01c8063209ebc081461006757806380007e8314610083578063844cdf091461008b57806398d6a37314610093578063d321fe291461009b578063d61909f9146100b5575b600080fd5b61006f6100d2565b604080519115158252519081900360200190f35b61006f6100e0565b61006f6100e9565b61006f6100fc565b6100a3610110565b60408051918252519081900360200190f35b6100a3600480360360208110156100cb57600080fd5b5035610116565b600654610100900460ff1690565b60065460ff1690565b6006805460ff1916600190811790915590565b6006805461ff001916610100179055600190565b60055490565b60058190556040805182815290516000917f7da274c7907a6e3fe48918a914c8a93c400713daffcd99eaa4a9ae6e99322204919081900360200190a150506005549056fea265627a7a72315820cdcc1e8fad5e540780b4604abf05ab2cbb71e1639726c7f38b08228e8535745264736f6c634300050b0032",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100625760003560e01c8063209ebc081461006757806380007e8314610083578063844cdf091461008b57806398d6a37314610093578063d321fe291461009b578063d61909f9146100b5575b600080fd5b61006f6100d2565b604080519115158252519081900360200190f35b61006f6100e0565b61006f6100e9565b61006f6100fc565b6100a3610110565b60408051918252519081900360200190f35b6100a3600480360360208110156100cb57600080fd5b5035610116565b600654610100900460ff1690565b60065460ff1690565b6006805460ff1916600190811790915590565b6006805461ff001916610100179055600190565b60055490565b60058190556040805182815290516000917f7da274c7907a6e3fe48918a914c8a93c400713daffcd99eaa4a9ae6e99322204919081900360200190a150506005549056fea265627a7a72315820cdcc1e8fad5e540780b4604abf05ab2cbb71e1639726c7f38b08228e8535745264736f6c634300050b0032",
+  "sourceMap": "51:1327:3:-;;;350:201;8:9:-1;5:2;;;30:1;27;20:12;5:2;350:201:3;;;;;;;;;;;;;;;13:3:-1;8;5:12;2:2;;;30:1;27;20:12;2:2;350:201:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;19:11:-1;11:20;;8:2;;;44:1;41;34:12;8:2;62:21;;;;123:4;114:14;;138:31;;;135:2;;;182:1;179;172:12;135:2;213:10;;261:11;244:29;;285:43;;;282:58;-1:-1;233:115;230:2;;;361:1;358;351:12;230:2;372:25;;-1:-1;350:201:3;;420:4:-1;411:14;;;;350:201:3;;;;;411:14:-1;350:201:3;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;90:11;;;84:18;71:11;;;64:39;52:2;45:10;8:100;;;12:14;350:201:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;350:201:3;;-1:-1:-1;;;445:10:3;:19;;;474:9;:18;;;502:14;:20;;;532:12;;;;:4;;:12;;;;;:::i;:::-;;350:201;;;;51:1327;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;51:1327:3;;;-1:-1:-1;51:1327:3;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "51:1327:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;51:1327:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1304:72;;;:::i;:::-;;;;;;;;;;;;;;;;;;1218:80;;;:::i;811:111::-;;;:::i;928:104::-;;;:::i;1132:80::-;;;:::i;:::-;;;;;;;;;;;;;;;;656:149;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;-1:-1;656:149:3;;:::i;1304:72::-;1365:4;;;;;;;;1304:72::o;1218:80::-;1283:8;;;;1218:80;:::o;811:111::-;879:8;:15;;-1:-1:-1;;879:15:3;890:4;879:15;;;;;;811:111;:::o;928:104::-;993:4;:11;;-1:-1:-1;;993:11:3;;;;;1000:4;928:104;:::o;1132:80::-;1199:6;;1132:80;:::o;656:149::-;726:6;:16;;;757:18;;;;;;;;707:7;;757:18;;;;;;;;;;-1:-1:-1;;792:6:3;;;656:149::o",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"./SafeMath.sol\";\n\ncontract ServiceClaim {\n\n    // Entity Information\n    bytes32 insurerID;\n    bytes32 providerID;\n    bytes32 patientID;\n\n    // ServiceClaim Information\n    bytes32 serviceClaimID;\n    string name;\n    uint256 amount;\n    bool verified;\n    bool paid;\n\n\n    event ClaimAdded(uint256 amount);\n\n\n    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {\n        providerID = _proID;\n        patientID = _patID;\n        serviceClaimID = _id;\n        name = _name;\n    }\n\n    // ------------------------------ Functionality of the Network --------------------------- //\n\n    function fileClaim(uint256 _amount) public returns(uint256) {\n        amount = _amount;\n        emit ClaimAdded(amount);\n        return amount;\n    }\n\n    function verifyClaim() public returns(bool verifySuccess) {\n        verified = true;\n        return true;\n    }\n\n    function payProvider() public returns(bool paySuccess) {\n        paid = true;\n        return true;\n    }\n\n\n    // -------------------------------- Getters ----------------------------------------- //\n    function getAmount() public view returns (uint256){\n        return amount;\n    }\n\n    function isVerified() public view returns (bool){\n        return verified;\n    }\n\n    function isPaid() public view returns (bool){\n        return paid;\n    }\n}\n",
   "sourcePath": "/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol",
   "ast": {
     "absolutePath": "/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol",
@@ -754,7 +766,7 @@
             "body": {
               "id": 809,
               "nodeType": "Block",
-              "src": "715:89:3",
+              "src": "716:89:3",
               "statements": [
                 {
                   "expression": {
@@ -771,7 +783,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 756,
-                      "src": "725:6:3",
+                      "src": "726:6:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -786,13 +798,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 794,
-                      "src": "734:7:3",
+                      "src": "735:7:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "725:16:3",
+                    "src": "726:16:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -800,7 +812,7 @@
                   },
                   "id": 802,
                   "nodeType": "ExpressionStatement",
-                  "src": "725:16:3"
+                  "src": "726:16:3"
                 },
                 {
                   "eventCall": {
@@ -813,7 +825,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 756,
-                        "src": "767:6:3",
+                        "src": "768:6:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -832,7 +844,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 764,
-                      "src": "756:10:3",
+                      "src": "757:10:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256)"
@@ -846,7 +858,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "756:18:3",
+                    "src": "757:18:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -854,7 +866,7 @@
                   },
                   "id": 806,
                   "nodeType": "EmitStatement",
-                  "src": "751:23:3"
+                  "src": "752:23:3"
                 },
                 {
                   "expression": {
@@ -864,7 +876,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 756,
-                    "src": "791:6:3",
+                    "src": "792:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -873,7 +885,7 @@
                   "functionReturnParameters": 798,
                   "id": 808,
                   "nodeType": "Return",
-                  "src": "784:13:3"
+                  "src": "785:13:3"
                 }
               ]
             },
@@ -882,7 +894,7 @@
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "addClaim",
+            "name": "fileClaim",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 795,
@@ -894,7 +906,7 @@
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
                   "scope": 810,
-                  "src": "674:15:3",
+                  "src": "675:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -905,7 +917,7 @@
                     "id": 793,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "674:7:3",
+                    "src": "675:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -915,7 +927,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "673:17:3"
+              "src": "674:17:3"
             },
             "returnParameters": {
               "id": 798,
@@ -927,7 +939,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 810,
-                  "src": "706:7:3",
+                  "src": "707:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -938,7 +950,7 @@
                     "id": 796,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "706:7:3",
+                    "src": "707:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -948,10 +960,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "705:9:3"
+              "src": "706:9:3"
             },
             "scope": 859,
-            "src": "656:148:3",
+            "src": "656:149:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -960,7 +972,7 @@
             "body": {
               "id": 821,
               "nodeType": "Block",
-              "src": "868:53:3",
+              "src": "869:53:3",
               "statements": [
                 {
                   "expression": {
@@ -977,7 +989,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 758,
-                      "src": "878:8:3",
+                      "src": "879:8:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -995,7 +1007,7 @@
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "889:4:3",
+                      "src": "890:4:3",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1003,7 +1015,7 @@
                       },
                       "value": "true"
                     },
-                    "src": "878:15:3",
+                    "src": "879:15:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1011,7 +1023,7 @@
                   },
                   "id": 818,
                   "nodeType": "ExpressionStatement",
-                  "src": "878:15:3"
+                  "src": "879:15:3"
                 },
                 {
                   "expression": {
@@ -1024,7 +1036,7 @@
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "910:4:3",
+                    "src": "911:4:3",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -1035,7 +1047,7 @@
                   "functionReturnParameters": 814,
                   "id": 820,
                   "nodeType": "Return",
-                  "src": "903:11:3"
+                  "src": "904:11:3"
                 }
               ]
             },
@@ -1050,7 +1062,7 @@
               "id": 811,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "830:2:3"
+              "src": "831:2:3"
             },
             "returnParameters": {
               "id": 814,
@@ -1062,7 +1074,7 @@
                   "name": "verifySuccess",
                   "nodeType": "VariableDeclaration",
                   "scope": 822,
-                  "src": "848:18:3",
+                  "src": "849:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1073,7 +1085,7 @@
                     "id": 812,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "848:4:3",
+                    "src": "849:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1083,10 +1095,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "847:20:3"
+              "src": "848:20:3"
             },
             "scope": 859,
-            "src": "810:111:3",
+            "src": "811:111:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -1095,7 +1107,7 @@
             "body": {
               "id": 833,
               "nodeType": "Block",
-              "src": "982:49:3",
+              "src": "983:49:3",
               "statements": [
                 {
                   "expression": {
@@ -1112,7 +1124,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 760,
-                      "src": "992:4:3",
+                      "src": "993:4:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -1130,7 +1142,7 @@
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "999:4:3",
+                      "src": "1000:4:3",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -1138,7 +1150,7 @@
                       },
                       "value": "true"
                     },
-                    "src": "992:11:3",
+                    "src": "993:11:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1146,7 +1158,7 @@
                   },
                   "id": 830,
                   "nodeType": "ExpressionStatement",
-                  "src": "992:11:3"
+                  "src": "993:11:3"
                 },
                 {
                   "expression": {
@@ -1159,7 +1171,7 @@
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "1020:4:3",
+                    "src": "1021:4:3",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -1170,7 +1182,7 @@
                   "functionReturnParameters": 826,
                   "id": 832,
                   "nodeType": "Return",
-                  "src": "1013:11:3"
+                  "src": "1014:11:3"
                 }
               ]
             },
@@ -1185,7 +1197,7 @@
               "id": 823,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "947:2:3"
+              "src": "948:2:3"
             },
             "returnParameters": {
               "id": 826,
@@ -1197,7 +1209,7 @@
                   "name": "paySuccess",
                   "nodeType": "VariableDeclaration",
                   "scope": 834,
-                  "src": "965:15:3",
+                  "src": "966:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1208,7 +1220,7 @@
                     "id": 824,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "965:4:3",
+                    "src": "966:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1218,10 +1230,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "964:17:3"
+              "src": "965:17:3"
             },
             "scope": 859,
-            "src": "927:104:3",
+            "src": "928:104:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -1230,7 +1242,7 @@
             "body": {
               "id": 841,
               "nodeType": "Block",
-              "src": "1181:30:3",
+              "src": "1182:30:3",
               "statements": [
                 {
                   "expression": {
@@ -1240,7 +1252,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 756,
-                    "src": "1198:6:3",
+                    "src": "1199:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1249,7 +1261,7 @@
                   "functionReturnParameters": 838,
                   "id": 840,
                   "nodeType": "Return",
-                  "src": "1191:13:3"
+                  "src": "1192:13:3"
                 }
               ]
             },
@@ -1264,7 +1276,7 @@
               "id": 835,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1149:2:3"
+              "src": "1150:2:3"
             },
             "returnParameters": {
               "id": 838,
@@ -1276,7 +1288,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 842,
-                  "src": "1173:7:3",
+                  "src": "1174:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1287,7 +1299,7 @@
                     "id": 836,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1173:7:3",
+                    "src": "1174:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1297,10 +1309,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1172:9:3"
+              "src": "1173:9:3"
             },
             "scope": 859,
-            "src": "1131:80:3",
+            "src": "1132:80:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1309,7 +1321,7 @@
             "body": {
               "id": 849,
               "nodeType": "Block",
-              "src": "1265:32:3",
+              "src": "1266:32:3",
               "statements": [
                 {
                   "expression": {
@@ -1319,7 +1331,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 758,
-                    "src": "1282:8:3",
+                    "src": "1283:8:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1328,7 +1340,7 @@
                   "functionReturnParameters": 846,
                   "id": 848,
                   "nodeType": "Return",
-                  "src": "1275:15:3"
+                  "src": "1276:15:3"
                 }
               ]
             },
@@ -1343,7 +1355,7 @@
               "id": 843,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1236:2:3"
+              "src": "1237:2:3"
             },
             "returnParameters": {
               "id": 846,
@@ -1355,7 +1367,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 850,
-                  "src": "1260:4:3",
+                  "src": "1261:4:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1366,7 +1378,7 @@
                     "id": 844,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1260:4:3",
+                    "src": "1261:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1376,10 +1388,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1259:6:3"
+              "src": "1260:6:3"
             },
             "scope": 859,
-            "src": "1217:80:3",
+            "src": "1218:80:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1388,7 +1400,7 @@
             "body": {
               "id": 857,
               "nodeType": "Block",
-              "src": "1347:28:3",
+              "src": "1348:28:3",
               "statements": [
                 {
                   "expression": {
@@ -1398,7 +1410,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 760,
-                    "src": "1364:4:3",
+                    "src": "1365:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1407,7 +1419,7 @@
                   "functionReturnParameters": 854,
                   "id": 856,
                   "nodeType": "Return",
-                  "src": "1357:11:3"
+                  "src": "1358:11:3"
                 }
               ]
             },
@@ -1422,7 +1434,7 @@
               "id": 851,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1318:2:3"
+              "src": "1319:2:3"
             },
             "returnParameters": {
               "id": 854,
@@ -1434,7 +1446,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 858,
-                  "src": "1342:4:3",
+                  "src": "1343:4:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1445,7 +1457,7 @@
                     "id": 852,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1342:4:3",
+                    "src": "1343:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1455,20 +1467,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1341:6:3"
+              "src": "1342:6:3"
             },
             "scope": 859,
-            "src": "1303:72:3",
+            "src": "1304:72:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 860,
-        "src": "51:1326:3"
+        "src": "51:1327:3"
       }
     ],
-    "src": "0:1378:3"
+    "src": "0:1379:3"
   },
   "legacyAST": {
     "absolutePath": "/Users/danny/sdsc-blocklab/Medicare-Claim-Verification/contracts/ServiceClaim.sol",
@@ -2091,7 +2103,7 @@
             "body": {
               "id": 809,
               "nodeType": "Block",
-              "src": "715:89:3",
+              "src": "716:89:3",
               "statements": [
                 {
                   "expression": {
@@ -2108,7 +2120,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 756,
-                      "src": "725:6:3",
+                      "src": "726:6:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2123,13 +2135,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 794,
-                      "src": "734:7:3",
+                      "src": "735:7:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "725:16:3",
+                    "src": "726:16:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2137,7 +2149,7 @@
                   },
                   "id": 802,
                   "nodeType": "ExpressionStatement",
-                  "src": "725:16:3"
+                  "src": "726:16:3"
                 },
                 {
                   "eventCall": {
@@ -2150,7 +2162,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 756,
-                        "src": "767:6:3",
+                        "src": "768:6:3",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2169,7 +2181,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 764,
-                      "src": "756:10:3",
+                      "src": "757:10:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_uint256_$returns$__$",
                         "typeString": "function (uint256)"
@@ -2183,7 +2195,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "756:18:3",
+                    "src": "757:18:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -2191,7 +2203,7 @@
                   },
                   "id": 806,
                   "nodeType": "EmitStatement",
-                  "src": "751:23:3"
+                  "src": "752:23:3"
                 },
                 {
                   "expression": {
@@ -2201,7 +2213,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 756,
-                    "src": "791:6:3",
+                    "src": "792:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2210,7 +2222,7 @@
                   "functionReturnParameters": 798,
                   "id": 808,
                   "nodeType": "Return",
-                  "src": "784:13:3"
+                  "src": "785:13:3"
                 }
               ]
             },
@@ -2219,7 +2231,7 @@
             "implemented": true,
             "kind": "function",
             "modifiers": [],
-            "name": "addClaim",
+            "name": "fileClaim",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 795,
@@ -2231,7 +2243,7 @@
                   "name": "_amount",
                   "nodeType": "VariableDeclaration",
                   "scope": 810,
-                  "src": "674:15:3",
+                  "src": "675:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2242,7 +2254,7 @@
                     "id": 793,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "674:7:3",
+                    "src": "675:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2252,7 +2264,7 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "673:17:3"
+              "src": "674:17:3"
             },
             "returnParameters": {
               "id": 798,
@@ -2264,7 +2276,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 810,
-                  "src": "706:7:3",
+                  "src": "707:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2275,7 +2287,7 @@
                     "id": 796,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "706:7:3",
+                    "src": "707:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2285,10 +2297,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "705:9:3"
+              "src": "706:9:3"
             },
             "scope": 859,
-            "src": "656:148:3",
+            "src": "656:149:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -2297,7 +2309,7 @@
             "body": {
               "id": 821,
               "nodeType": "Block",
-              "src": "868:53:3",
+              "src": "869:53:3",
               "statements": [
                 {
                   "expression": {
@@ -2314,7 +2326,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 758,
-                      "src": "878:8:3",
+                      "src": "879:8:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -2332,7 +2344,7 @@
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "889:4:3",
+                      "src": "890:4:3",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -2340,7 +2352,7 @@
                       },
                       "value": "true"
                     },
-                    "src": "878:15:3",
+                    "src": "879:15:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2348,7 +2360,7 @@
                   },
                   "id": 818,
                   "nodeType": "ExpressionStatement",
-                  "src": "878:15:3"
+                  "src": "879:15:3"
                 },
                 {
                   "expression": {
@@ -2361,7 +2373,7 @@
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "910:4:3",
+                    "src": "911:4:3",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -2372,7 +2384,7 @@
                   "functionReturnParameters": 814,
                   "id": 820,
                   "nodeType": "Return",
-                  "src": "903:11:3"
+                  "src": "904:11:3"
                 }
               ]
             },
@@ -2387,7 +2399,7 @@
               "id": 811,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "830:2:3"
+              "src": "831:2:3"
             },
             "returnParameters": {
               "id": 814,
@@ -2399,7 +2411,7 @@
                   "name": "verifySuccess",
                   "nodeType": "VariableDeclaration",
                   "scope": 822,
-                  "src": "848:18:3",
+                  "src": "849:18:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2410,7 +2422,7 @@
                     "id": 812,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "848:4:3",
+                    "src": "849:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2420,10 +2432,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "847:20:3"
+              "src": "848:20:3"
             },
             "scope": 859,
-            "src": "810:111:3",
+            "src": "811:111:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -2432,7 +2444,7 @@
             "body": {
               "id": 833,
               "nodeType": "Block",
-              "src": "982:49:3",
+              "src": "983:49:3",
               "statements": [
                 {
                   "expression": {
@@ -2449,7 +2461,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 760,
-                      "src": "992:4:3",
+                      "src": "993:4:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
                         "typeString": "bool"
@@ -2467,7 +2479,7 @@
                       "kind": "bool",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "999:4:3",
+                      "src": "1000:4:3",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_bool",
@@ -2475,7 +2487,7 @@
                       },
                       "value": "true"
                     },
-                    "src": "992:11:3",
+                    "src": "993:11:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2483,7 +2495,7 @@
                   },
                   "id": 830,
                   "nodeType": "ExpressionStatement",
-                  "src": "992:11:3"
+                  "src": "993:11:3"
                 },
                 {
                   "expression": {
@@ -2496,7 +2508,7 @@
                     "kind": "bool",
                     "lValueRequested": false,
                     "nodeType": "Literal",
-                    "src": "1020:4:3",
+                    "src": "1021:4:3",
                     "subdenomination": null,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
@@ -2507,7 +2519,7 @@
                   "functionReturnParameters": 826,
                   "id": 832,
                   "nodeType": "Return",
-                  "src": "1013:11:3"
+                  "src": "1014:11:3"
                 }
               ]
             },
@@ -2522,7 +2534,7 @@
               "id": 823,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "947:2:3"
+              "src": "948:2:3"
             },
             "returnParameters": {
               "id": 826,
@@ -2534,7 +2546,7 @@
                   "name": "paySuccess",
                   "nodeType": "VariableDeclaration",
                   "scope": 834,
-                  "src": "965:15:3",
+                  "src": "966:15:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2545,7 +2557,7 @@
                     "id": 824,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "965:4:3",
+                    "src": "966:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2555,10 +2567,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "964:17:3"
+              "src": "965:17:3"
             },
             "scope": 859,
-            "src": "927:104:3",
+            "src": "928:104:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -2567,7 +2579,7 @@
             "body": {
               "id": 841,
               "nodeType": "Block",
-              "src": "1181:30:3",
+              "src": "1182:30:3",
               "statements": [
                 {
                   "expression": {
@@ -2577,7 +2589,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 756,
-                    "src": "1198:6:3",
+                    "src": "1199:6:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2586,7 +2598,7 @@
                   "functionReturnParameters": 838,
                   "id": 840,
                   "nodeType": "Return",
-                  "src": "1191:13:3"
+                  "src": "1192:13:3"
                 }
               ]
             },
@@ -2601,7 +2613,7 @@
               "id": 835,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1149:2:3"
+              "src": "1150:2:3"
             },
             "returnParameters": {
               "id": 838,
@@ -2613,7 +2625,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 842,
-                  "src": "1173:7:3",
+                  "src": "1174:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2624,7 +2636,7 @@
                     "id": 836,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1173:7:3",
+                    "src": "1174:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2634,10 +2646,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1172:9:3"
+              "src": "1173:9:3"
             },
             "scope": 859,
-            "src": "1131:80:3",
+            "src": "1132:80:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -2646,7 +2658,7 @@
             "body": {
               "id": 849,
               "nodeType": "Block",
-              "src": "1265:32:3",
+              "src": "1266:32:3",
               "statements": [
                 {
                   "expression": {
@@ -2656,7 +2668,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 758,
-                    "src": "1282:8:3",
+                    "src": "1283:8:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2665,7 +2677,7 @@
                   "functionReturnParameters": 846,
                   "id": 848,
                   "nodeType": "Return",
-                  "src": "1275:15:3"
+                  "src": "1276:15:3"
                 }
               ]
             },
@@ -2680,7 +2692,7 @@
               "id": 843,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1236:2:3"
+              "src": "1237:2:3"
             },
             "returnParameters": {
               "id": 846,
@@ -2692,7 +2704,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 850,
-                  "src": "1260:4:3",
+                  "src": "1261:4:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2703,7 +2715,7 @@
                     "id": 844,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1260:4:3",
+                    "src": "1261:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2713,10 +2725,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1259:6:3"
+              "src": "1260:6:3"
             },
             "scope": 859,
-            "src": "1217:80:3",
+            "src": "1218:80:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -2725,7 +2737,7 @@
             "body": {
               "id": 857,
               "nodeType": "Block",
-              "src": "1347:28:3",
+              "src": "1348:28:3",
               "statements": [
                 {
                   "expression": {
@@ -2735,7 +2747,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 760,
-                    "src": "1364:4:3",
+                    "src": "1365:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2744,7 +2756,7 @@
                   "functionReturnParameters": 854,
                   "id": 856,
                   "nodeType": "Return",
-                  "src": "1357:11:3"
+                  "src": "1358:11:3"
                 }
               ]
             },
@@ -2759,7 +2771,7 @@
               "id": 851,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1318:2:3"
+              "src": "1319:2:3"
             },
             "returnParameters": {
               "id": 854,
@@ -2771,7 +2783,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 858,
-                  "src": "1342:4:3",
+                  "src": "1343:4:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2782,7 +2794,7 @@
                     "id": 852,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1342:4:3",
+                    "src": "1343:4:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2792,28 +2804,28 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1341:6:3"
+              "src": "1342:6:3"
             },
             "scope": 859,
-            "src": "1303:72:3",
+            "src": "1304:72:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 860,
-        "src": "51:1326:3"
+        "src": "51:1327:3"
       }
     ],
-    "src": "0:1378:3"
+    "src": "0:1379:3"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.5.10+commit.5a6ea5b1.Emscripten.clang"
+    "version": "0.5.11+commit.c082d0b4.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-08-13T22:43:30.421Z",
+  "updatedAt": "2019-08-16T22:20:08.159Z",
   "devdoc": {
     "methods": {}
   },

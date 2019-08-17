@@ -6,9 +6,9 @@ import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 
-import "./App.css";
+import "./ProviderApp.css";
 
-class App extends Component {
+class ProviderApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,8 +23,8 @@ class App extends Component {
     this.patientname = null;
     this.serviceClaimID = null;
     this.updatePatientName = this.updatePatientName.bind(this);
-    this.createServiceClaim = this.createServiceClaim.bind(this);
-    this.addClaim = this.addClaim.bind(this);
+    this.provideService = this.provideService.bind(this);
+    this.fileClaim = this.fileClaim.bind(this);
   }
 
   notification_patientCellCreated(patientname){
@@ -130,18 +130,18 @@ class App extends Component {
     }
   };
 
-  createServiceClaim = async(serviceName, providerID, patientID) => {
+  provideService = async(serviceName, providerID, patientID) => {
     const { accounts, contract } = this.state;
-    const info = await contract.methods.newServiceClaim(serviceName, providerID, patientID).send({ from: accounts[0] });
+    const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
     this.serviceClaimID = info.events.SCID.returnValues.ID;
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
     return info;
   }
 
-  addClaim = async(serviceClaimID, amount) => {
+  fileClaim = async(serviceClaimID, amount) => {
     const { accounts, contract } = this.state;
     serviceClaimID = serviceClaimID || this.serviceClaimID;
-    const info = await contract.methods.addClaim(serviceClaimID, amount).send({ from: accounts[0] });
+    const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
     return info;
   }
@@ -194,8 +194,8 @@ class App extends Component {
                                     patientID={o[1]}
                                     providerID={this.providerID}
                                     sd={sd}
-                                    createServiceClaim={this.createServiceClaim}
-                                    addClaim={this.addClaim}
+                                    provideService={this.provideService}
+                                    fileClaim={this.fileClaim}
                                     accounts={this.state.accounts}
                                     contract={this.state.contract}
                                     notification_claimAdded={this.notification_claimAdded}
@@ -221,4 +221,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default ProviderApp;

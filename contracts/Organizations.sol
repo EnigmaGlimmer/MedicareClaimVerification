@@ -36,8 +36,8 @@ contract Organizations {
     struct Patient {
         bytes32 id;
         string name;
-        address[] unverifiedServiceClaims;
-        address[] verifiedServiceClaims;
+        address[] unverifiedClaims;
+        address[] verifiedClaims;
     }
 
     struct Provider {
@@ -123,13 +123,13 @@ contract Organizations {
     @param _patientID patient ID
     @return serviceContractHash is the id of the ServiceClaim contract
     */
-    function newServiceClaim(string memory _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
+    function provideService(string memory _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
         bytes32 id = keccak256(abi.encodePacked(_name, _providerID, _patientID));
         ServiceClaim serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name);
         bytes32 serviceClaimID = keccak256(abi.encodePacked(address(serviceClaim)));
         serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
-        patient.unverifiedServiceClaims.push(address(serviceClaim));
+        patient.unverifiedClaims.push(address(serviceClaim));
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
@@ -139,10 +139,10 @@ contract Organizations {
     @param _amount the amount to be claimed by the provider
     @return ClaimID the ID of the claim
     */
-    function addClaim(bytes32 _serviceClaimID, uint256 _amount) public returns(uint256 ClaimID) {
+    function fileClaim(bytes32 _serviceClaimID, uint256 _amount) public returns(uint256 ClaimID) {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        uint256 newClaimID = myServiceClaim.addClaim(_amount);
+        uint256 newClaimID = myServiceClaim.fileClaim(_amount);
         emit ClaimCreated(newClaimID, _amount);
         return newClaimID;
     }
@@ -187,14 +187,14 @@ contract Organizations {
 
     function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
-        emit serviceList(cP.unverifiedServiceClaims);
-        return(cP.unverifiedServiceClaims);
+        emit serviceList(cP.unverifiedClaims);
+        return(cP.unverifiedClaims);
     }
 
     function patientVerifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
-        emit serviceList(cP.verifiedServiceClaims);
-        return(cP.verifiedServiceClaims);
+        emit serviceList(cP.verifiedClaims);
+        return(cP.verifiedClaims);
     }
 
 

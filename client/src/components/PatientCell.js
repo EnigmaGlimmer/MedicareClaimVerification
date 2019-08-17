@@ -33,14 +33,14 @@ class PatientCell extends Component {
 
     updateServiceClaimName({ target }) {
         this.serviceName = target.value
-      }
+    }
 
     toggle() {
         console.log("toggling modal")
         this.setState(prevState => ({
-          modal: !prevState.modal
+            modal: !prevState.modal
         }));
-      }
+    }
 
     toggleDropDown() {
         console.log("toggling dropdown")
@@ -54,9 +54,9 @@ class PatientCell extends Component {
         await this.props.contract.methods.insurerMap(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
 
-    csc(){
+    csc() {
         this.toggle();
-        this.props.createServiceClaim(this.serviceName, this.providerID, this.patientID).then((info) => {
+        this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
             console.log('Creating Service Claim')
             let list = this.state.serviceList;
             list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, claims: [] });
@@ -67,7 +67,7 @@ class PatientCell extends Component {
 
     ac(serviceClaimID) {
         console.log("creating claim")
-        this.props.addClaim(serviceClaimID, this.amount).then((info) => {
+        this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
             console.log('Adding Claim')
             let list = this.state.serviceList;
             this.setState({ serviceList: list })
@@ -90,20 +90,26 @@ class PatientCell extends Component {
                                 {/* <button className="button" id='create_btn' style={{backgroundColor: '#12b823'}}><span>Create Service Claim</span></button> */}
                                 {/* <Button color='success' onClick={this.csc}>Create Service Claim</Button> */}
                                 <Button color="success" onClick={this.toggle}>Create Service Claim</Button>
-                                <ServiceModal modal={this.state.modal} toggle={this.toggle} className={this.props.className} 
-                                            updateServiceClaimName={this.updateServiceClaimName}
-                                            csc={this.csc} />                               
+                                <ServiceModal modal={this.state.modal} toggle={this.toggle} className={this.props.className}
+                                    updateServiceClaimName={this.updateServiceClaimName}
+                                    csc={this.csc} />
                                 <br></br>
                                 <br></br>
                                 {/* <button className="button" id='add_btn' style={{backgroundColor: '#f0c107'}}><span>Add Claim</span></button> */}
                                 {/* <Button color='warning' onClick={this.ac}>Add Claim</Button> */}
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
                                     <DropdownToggle caret color="warning">
-                                        Add Claim
+                                        File Claim
                                     </DropdownToggle>
                                     <DropdownMenu>
-                                        <DropdownItem header>Select service to add claim to</DropdownItem>
-                                        <DropdownItem divider />
+                                        {this.state.serviceList.length === 0 ? (
+                                            <DropdownItem header>No Services for this patient</DropdownItem>) : (
+                                                <div>
+                                                    <DropdownItem header>Select Service</DropdownItem>
+                                                    <DropdownItem divider />
+                                                </div>
+                                            )}
+
                                         {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.ac(item.serviceClaimID)}> {item.serviceName} </DropdownItem> })}
                                     </DropdownMenu>
                                 </ButtonDropdown>
