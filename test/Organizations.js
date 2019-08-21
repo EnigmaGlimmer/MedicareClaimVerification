@@ -152,7 +152,7 @@ contract('Organizations', (accounts) => {
     });
   });
 
-  describe('Service claim verified and unverified list tests',async() =>{
+  describe('',async() =>{
     before(async() =>{
       insurer =  await organizationsInstance.addInsurer("CMS");
       insurerID = insurer.logs[0].args.id;
