@@ -74,7 +74,7 @@ contract('Organizations', (accounts) => {
     });
 
     it('Correctly instantiate ServiceClaim', async() => {
-      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);    
+      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
       const serviceClaimID = await serviceClaim.logs[0].args.addr;
       const serviceClaimActual = await organizationsInstance.serviceClaimsMap(serviceClaimID);
       assert(serviceClaimActual,"Address found");
@@ -82,9 +82,9 @@ contract('Organizations', (accounts) => {
 
     
     it('Correctly adds a claim amount', async() => {
-      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
       const serviceClaimInfo = await serviceClaim.logs[0].args;
-      const addServiceClaim = await organizationsInstance.addClaim(serviceClaimInfo.ID, 100);
+      const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
       const currService = await ServiceClaim.at(serviceClaimInfo.addr);
       const claimAmount = await currService.getAmount();
       assert.equal(100,claimAmount,"Claim Amount is Incorrect");
@@ -92,7 +92,7 @@ contract('Organizations', (accounts) => {
   
   
   it('Correctly verifies a claim', async() => {
-    const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+    const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
     const serviceClaimInfo = await serviceClaim.logs[0].args;
     const verifyServiceClaim = await organizationsInstance.verifyClaim(serviceClaimInfo.ID);
     const currService = await ServiceClaim.at(serviceClaimInfo.addr);
@@ -101,7 +101,7 @@ contract('Organizations', (accounts) => {
   });
 
   it('Confirms payment completion of the claim', async() => {
-    const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+    const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
     const serviceClaimInfo = await serviceClaim.logs[0].args;
     await organizationsInstance.payProvider(serviceClaimInfo.ID);
     const currService = await ServiceClaim.at(serviceClaimInfo.addr);
@@ -176,7 +176,7 @@ contract('Organizations', (accounts) => {
     it('Single Unverified Claims List', async() => {
       const organizationsInstance = await Organizations.deployed();
 
-      await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);
+      await organizationsInstance.provideService("Glasses",providerID,patientID);
 
       const uvS = await organizationsInstance.patientUnverifiedServices(patientID);
       const unverifiedServices = uvS.logs[0].args.services.length;
@@ -197,7 +197,7 @@ contract('Organizations', (accounts) => {
     it('Single Verified Claims List', async() =>{
       const organizationsInstance = await Organizations.deployed();
 
-      const serviceClaim = await organizationsInstance.newServiceClaim("Glasses",providerID,patientID);    
+      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
       const serviceClaimID = await serviceClaim.logs[0].args;
 
       await organizationsInstance.verifyClaim(serviceClaimID.ID);

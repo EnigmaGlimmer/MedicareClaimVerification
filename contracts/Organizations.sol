@@ -162,10 +162,10 @@ contract Organizations {
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
 
-        cP.verifiedServiceClaims.push(address(myServiceClaim));
-        for(uint i = 0; i < cP.unverifiedServiceClaims.length; i++){
-            if(cP.unverifiedServiceClaims[i] == address(myServiceClaim)){
-                delete(cP.unverifiedServiceClaims[i]);
+        cP.verifiedClaims.push(address(myServiceClaim));
+        for(uint i = 0; i < cP.unverifiedClaims.length; i++){
+            if(cP.unverifiedClaims[i] == address(myServiceClaim)){
+                delete(cP.unverifiedClaims[i]);
                 break;
             }
         }
