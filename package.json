@@ -20,11 +20,16 @@
   },
   "homepage": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.0.0",
     "ethereumjs-tx": "^2.1.0",
     "ethers": "^4.0.33",
+    "express": "^4.17.1",
     "fs": "0.0.1-security",
     "md5-file": "^4.0.0",
+    "nodemailer": "^6.3.0",
     "path": "^0.12.7",
+    "remixd": "^0.1.8-alpha.6",
     "web3": "^1.2.0"
   }
 }
