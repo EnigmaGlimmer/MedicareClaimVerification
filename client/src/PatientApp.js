@@ -8,14 +8,15 @@ import $ from 'jquery'
 
 import "./ProviderApp.css";
 
-class PatientApp extends Component {
+export class PatientApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
             storageValue: 40,
             web3: null,
             accounts: null,
-            contract: null
+            contract: null,
+            loading: true
         };
         this.providerID = null
         this.solidityData = null;
@@ -102,10 +103,11 @@ class PatientApp extends Component {
     }
 
     componentDidMount = async () => {
+        console.log('init')
         try {
             // Get network provider and web3 instance.
             const web3 = await getWeb3();
-
+            console.log('hey')
             // Use web3 to get the user's accounts.
             const accounts = await web3.eth.getAccounts();
 

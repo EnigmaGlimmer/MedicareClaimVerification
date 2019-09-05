@@ -29,7 +29,7 @@ class ServiceCell extends Component {
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>
                             <CardText>Verify claim</CardText>
                                 <div style={{ display: "inline-flex" }}>
-                                <label class="switch"><input type="checkbox" id="togBtn" onClick={this.updateChecked}/><div class="slider round"><span class="on">Yes</span><span class="off">No</span></div></label>
+                                <label className="switch"><input type="checkbox" id="togBtn" onClick={this.updateChecked}/><div className="slider round"><span className="on">Yes</span><span className="off">No</span></div></label>
                                 </div>
 
                             </Col>

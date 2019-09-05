@@ -8,7 +8,7 @@ import $ from 'jquery'
 
 import "./ProviderApp.css";
 
-class ProviderApp extends Component {
+export class ProviderApp extends Component {
   constructor(props) {
     super(props);
     this.state = {

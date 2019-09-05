@@ -24,7 +24,8 @@ contract Organizations {
     event PatientCreated(bytes32 id, string name);
     event ProviderCreated(bytes32 id, string name);
     event InsurerCreated(bytes32 id, string name);
-
+    event PatientRetrieval(Patient patient);
+    event ProviderRetrieval(Provider provider);
 
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
@@ -197,8 +198,17 @@ contract Organizations {
         return(cI.providers);
     }
 
+    function getPatient(bytes32 _id) public returns (Patient memory){
+        Patient memory patient = patientMap[_id];
+        emit PatientRetrieval(patient);
+        return patient;
+    }
 
-
+    function getProvider(bytes32 _id) public returns (Provider memory){
+        Provider memory provider = providerMap[_id];
+        emit ProviderRetrieval(provider);
+        return providerMap[_id];
+    }
 
     function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
