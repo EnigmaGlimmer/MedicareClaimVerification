@@ -6,17 +6,17 @@ import "./ToggleSwitch.css"
 class ServiceCell extends Component {
     constructor(props, context) {
         super(props, context);
-        this.check = null;
+        this.check = false;
         this.updateChecked = this.updateChecked.bind(this)
     }
 
     updateChecked() {
-        this.checked = !document.getElementById("togBtn").checked;
+        this.checked = document.getElementById("togBtn").checked;
         console.log(this.checked)
     }
 
     render() {
-        console.log("rendering")
+        console.log("rendering", this.check)
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">
