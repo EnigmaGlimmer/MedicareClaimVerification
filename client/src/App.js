@@ -111,13 +111,15 @@ class App extends Component {
                     this.state.patientLoginSuccess ? <PatientApp sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
-                        web3={this.state.web3} /> : null
+                        web3={this.state.web3}
+                        id={this.id} /> : null
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
-                        web3={this.state.web3} /> : null
+                        web3={this.state.web3}
+                        id={this.id} /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess ?

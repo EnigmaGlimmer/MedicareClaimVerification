@@ -141,6 +141,12 @@ export class ProviderApp extends Component {
     const { accounts, contract } = this.state;
     const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
     this.serviceClaimID = info.events.SCID.returnValues.ID;
+    // const unverifiedClaims = await contract.methods.patientUnverifiedServices(patientID).send({ from: accounts[0] });
+    // this.unverifiedClaims = unverifiedClaims;
+    // console.log('unv', this.unverifiedClaims)
+    // const verifiedClaims = await contract.methods.patientVerifiedServices(patientID).send({ from: accounts[0] });
+    // this.verifiedClaims = verifiedClaims;
+    // console.log('ver', this.verifiedClaims)
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
     return info;
   }
