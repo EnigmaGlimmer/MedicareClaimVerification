@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
-import { Input, Form, Button, FormGroup } from 'reactstrap';
+import { Input, Form, Button, FormGroup, Col } from 'reactstrap';
 import ClaimVerification from "../contracts/Organizations.json"
 import getWeb3 from "../utils/getWeb3";
 import {log} from '../App';
 import $ from 'jquery'
+import PatientApp from '../PatientApp'
+import ProviderApp from '../ProviderApp'
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
             patientLoginSuccess: false,
-            providerLoginSuccess: false
+            providerLoginSuccess: false,
+            contract: null,
+            accounts: null,
+            web3: null
         };
         this.id = null;
+        this.solidityData = null;
         this.updateID = this.updateID.bind(this)
-        this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
+        // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
     }
 
     updateID({ target }) {
@@ -35,20 +41,20 @@ class Login extends Component {
         console.log("Fetched data", info)
     };
 
-    redirectAfterLogin() {
-        if (this.state.patientLoginSuccess) {
-            console.log('heading to patient')
-            return (
-                <Redirect to='/Patient'/>
-            );
-        }
-        else if (this.state.providerLoginSuccess) {
-            console.log('heading to provider')
-            return (
-                <Redirect to='/Provider'/>
-            );
-        }
-    }
+    // redirectAfterLogin() {
+    //     if (this.state.patientLoginSuccess) {
+    //         console.log('heading to patient')
+    //         return (
+    //             <Redirect to='/Patient'/>
+    //         );
+    //     }
+    //     else if (this.state.providerLoginSuccess) {
+    //         console.log('heading to provider')
+    //         return (
+    //             <Redirect to='/Provider'/>
+    //         );
+    //     }
+    // }
 
     componentDidMount = async () => {
         try {
@@ -100,13 +106,29 @@ class Login extends Component {
         }
         return (
             <div>
-                {this.redirectAfterLogin()}
-                <Form id="form" onSubmit={this.onFormSubmit}>
+                {
+                    this.state.patientLoginSuccess ? <PatientApp sd={this.solidityData}
+                                                                 contract={this.state.contract}
+                                                                 accounts={this.state.accounts}
+                                                                 web3={this.state.web3} /> : null
+                }
+                {
+                    this.state.providerLoginSuccess ? <ProviderApp sd={this.solidityData}
+                                                                   contract={this.state.contract}
+                                                                   accounts={this.state.accounts}
+                                                                   web3={this.state.web3} /> : null
+                }
+                {/* {this.redirectAfterLogin()} */}
+                { !this.state.patientLoginSuccess && !this.state.providerLoginSuccess ?
+                <Col md={6}>
+                <Form id="form" onSubmit={this.onFormSubmit} style={{ textAlign: 'center' }}>
                     <FormGroup>
                         <Input onChange={this.updateID} />
                     </FormGroup>
                     <Button type="submit" color='success'>Enter</Button>
                 </Form>
+                </Col> : null
+                }
             </div>
         );
     }

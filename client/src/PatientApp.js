@@ -12,14 +12,12 @@ export class PatientApp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            storageValue: 40,
-            web3: null,
-            accounts: null,
-            contract: null,
-            loading: true
+            web3: this.props.web3,
+            accounts: this.props.acounts,
+            contract: this.props.contract
         };
         this.providerID = null
-        this.solidityData = null;
+        this.solidityData = this.props.sd;
         this.patientname = null;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
@@ -102,34 +100,34 @@ export class PatientApp extends Component {
         this.patientname = target.value
     }
 
-    componentDidMount = async () => {
-        console.log('init')
-        try {
-            // Get network provider and web3 instance.
-            const web3 = await getWeb3();
-            console.log('hey')
-            // Use web3 to get the user's accounts.
-            const accounts = await web3.eth.getAccounts();
+    // componentDidMount = async () => {
+    //     console.log('init')
+    //     try {
+    //         // Get network provider and web3 instance.
+    //         const web3 = await getWeb3();
+    //         console.log('hey')
+    //         // Use web3 to get the user's accounts.
+    //         const accounts = await web3.eth.getAccounts();
 
-            // Get the contract instance.
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = ClaimVerification.networks[networkId];
-            const instance = new web3.eth.Contract(
-                ClaimVerification.abi,
-                deployedNetwork && deployedNetwork.address,
-            );
+    //         // Get the contract instance.
+    //         const networkId = await web3.eth.net.getId();
+    //         const deployedNetwork = ClaimVerification.networks[networkId];
+    //         const instance = new web3.eth.Contract(
+    //             ClaimVerification.abi,
+    //             deployedNetwork && deployedNetwork.address,
+    //         );
 
-            // Set web3, accounts, and contract to the state, and then proceed with an
-            // example of interacting with the contract's methods.
-            this.setState({ web3, accounts, contract: instance }, this.fetchData);
-        } catch (error) {
-            // Catch any errors for any of the above operations.
-            alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`,
-            );
-            console.error(error);
-        }
-    };
+    //         // Set web3, accounts, and contract to the state, and then proceed with an
+    //         // example of interacting with the contract's methods.
+    //         this.setState({ web3, accounts, contract: instance }, this.fetchData);
+    //     } catch (error) {
+    //         // Catch any errors for any of the above operations.
+    //         alert(
+    //             `Failed to load web3, accounts, or contract. Check console for details.`,
+    //         );
+    //         console.error(error);
+    //     }
+    // };
 
     provideService = async (serviceName, providerID, patientID) => {
         const { accounts, contract } = this.state;
@@ -147,20 +145,20 @@ export class PatientApp extends Component {
         return info;
     }
 
-    fetchData = async () => {
-        const { accounts, contract } = this.state;
-        let patientList = [];
-        const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
-        this.solidityData = info;
-        console.log("Fetched data", info)
-        const patients = this.solidityData.events.PatientCreated;
-        this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
-        for (let i = 0; i < patients.length; i++) {
-            patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
-        }
-        console.log(patientList)
-        this.setState({ patients: patientList })
-    };
+    // fetchData = async () => {
+    //     const { accounts, contract } = this.state;
+    //     let patientList = [];
+    //     const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
+    //     this.solidityData = info;
+    //     console.log("Fetched data", info)
+    //     const patients = this.solidityData.events.PatientCreated;
+    //     this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
+    //     for (let i = 0; i < patients.length; i++) {
+    //         patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
+    //     }
+    //     console.log(patientList)
+    //     this.setState({ patients: patientList })
+    // };
 
     render() {
         let sd = this.solidityData

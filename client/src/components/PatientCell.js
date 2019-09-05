@@ -50,8 +50,8 @@ class PatientCell extends Component {
     }
 
     componentDidMount = async () => {
-        await this.props.contract.methods.providerMap(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
-        await this.props.contract.methods.insurerMap(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
+        await this.props.contract.methods.getProvider(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
+        await this.props.contract.methods.getPatient(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
 
     csc() {

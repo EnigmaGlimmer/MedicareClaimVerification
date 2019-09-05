@@ -17598,12 +17598,12 @@
         }
       },
       "links": {},
-      "address": "0x02a5bE694F4AD57B4a8cBB5ca2b4c5Ef54D86e65",
-      "transactionHash": "0xc582635c6c31584faf7b55f56f15fd21cfe8291d930ef0ff167ef724739e6560"
+      "address": "0xd46Ad0e24A9e8D35614C21804DBab6e3D5861691",
+      "transactionHash": "0x214e5e41e09f7e6e262c5c2b3272f35096651f2046a41bf3102ce2d4bc79e400"
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-09-05T05:42:15.566Z",
+  "updatedAt": "2019-09-05T18:47:07.099Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {
