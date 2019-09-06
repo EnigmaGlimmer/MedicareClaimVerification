@@ -102,31 +102,6 @@ export class ProviderApp extends Component {
   }
 
   componentDidMount = async () => {
-    // try {
-    //   // Get network provider and web3 instance.
-    //   const web3 = await getWeb3();
-
-    //   // Use web3 to get the user's accounts.
-    //   const accounts = await web3.eth.getAccounts();
-
-    //   // Get the contract instance.
-    //   const networkId = await web3.eth.net.getId();
-    //   const deployedNetwork = ClaimVerification.networks[networkId];
-    //   const instance = new web3.eth.Contract(
-    //     ClaimVerification.abi,
-    //     deployedNetwork && deployedNetwork.address,
-    //   );
-
-    //   // Set web3, accounts, and contract to the state, and then proceed with an
-    //   // example of interacting with the contract's methods.
-    //   this.setState({ web3, accounts, contract: instance }, this.fetchData);
-    // } catch (error) {
-    //   // Catch any errors for any of the above operations.
-    //   alert(
-    //     `Failed to load web3, accounts, or contract. Check console for details.`,
-    //   );
-    //   console.error(error);
-    // }
     let patientList = [];
     const patients = this.solidityData.events.PatientCreated;
     this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
@@ -147,7 +122,6 @@ export class ProviderApp extends Component {
 
   fileClaim = async(serviceClaimID, amount) => {
     const { accounts, contract } = this.state;
-    // serviceClaimID = serviceClaimID || this.serviceClaimID;
     const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
     return info;

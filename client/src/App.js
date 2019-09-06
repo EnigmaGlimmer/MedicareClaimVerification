@@ -90,7 +90,6 @@ class App extends Component {
         const { accounts, contract } = this.state;
         const i1 = await contract.methods.getPatient(this.id).send({ from: accounts[0] })
         const i2 = await contract.methods.getProvider(this.id).send({ from: accounts[0] })
-        console.log(i1, i2)
         if (i1.events.PatientRetrieval.returnValues[0][0] === this.id) {
             log.loggedIn = true;
             this.setState({ patientLoginSuccess: true })
