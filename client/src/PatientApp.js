@@ -19,13 +19,13 @@ export class PatientApp extends Component {
         this.providerID = null
         this.unverifiedClaims = []
         this.verifiedClaims = []
-        this.id = this.props.id
+        this.patientId = this.props.id
         this.solidityData = this.props.sd;
         this.patientname = null;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
-        this.provideService = this.provideService.bind(this);
-        this.fileClaim = this.fileClaim.bind(this);
+        // this.provideService = this.provideService.bind(this);
+        // this.fileClaim = this.fileClaim.bind(this);
     }
 
     notification_patientCellCreated(patientname) {
@@ -104,67 +104,48 @@ export class PatientApp extends Component {
     }
 
     componentDidMount = async () => {
-        console.log(this.id)
-        this.getClaims(this.id);
-    //     console.log('init')
-    //     try {
-    //         // Get network provider and web3 instance.
-    //         const web3 = await getWeb3();
-    //         console.log('hey')
-    //         // Use web3 to get the user's accounts.
-    //         const accounts = await web3.eth.getAccounts();
-
-    //         // Get the contract instance.
-    //         const networkId = await web3.eth.net.getId();
-    //         const deployedNetwork = ClaimVerification.networks[networkId];
-    //         const instance = new web3.eth.Contract(
-    //             ClaimVerification.abi,
-    //             deployedNetwork && deployedNetwork.address,
-    //         );
-
-    //         // Set web3, accounts, and contract to the state, and then proceed with an
-    //         // example of interacting with the contract's methods.
-    //         this.setState({ web3, accounts, contract: instance }, this.fetchData);
-    //     } catch (error) {
-    //         // Catch any errors for any of the above operations.
-    //         alert(
-    //             `Failed to load web3, accounts, or contract. Check console for details.`,
-    //         );
-    //         console.error(error);
-    //     }
+        console.log(this.patientId)
+        this.getClaims(this.patientId);
+        setInterval(function(){ this.getClaims(this.patientId); }, 10000);
     };
 
-    provideService = async (serviceName, providerID, patientID) => {
-        const { accounts, contract } = this.state;
-        const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
-        this.serviceClaimID = info.events.SCID.returnValues.ID;
-        // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
-        return info;
-    }
+    // provideService = async (serviceName, providerID, patientID) => {
+    //     const { accounts, contract } = this.state;
+    //     const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
+    //     this.serviceClaimID = info.events.SCID.returnValues.ID;
+    //     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
+    //     return info;
+    // }
 
-    fileClaim = async (serviceClaimID, amount) => {
-        const { accounts, contract } = this.state;
-        serviceClaimID = serviceClaimID || this.serviceClaimID;
-        const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
-        // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
-        return info;
-    }
+    // fileClaim = async (serviceClaimID, amount) => {
+    //     const { accounts, contract } = this.state;
+    //     serviceClaimID = serviceClaimID || this.serviceClaimID;
+    //     const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
+    //     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
+    //     return info;
+    // }
 
     getClaims = async (id) => {
         const { accounts, contract } = this.state;
-        const unverifiedClaims = await contract.methods.patientUnverifiedServices(id).send({ from: accounts[0] });
+        const unverifiedClaims = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
         this.unverifiedClaims = unverifiedClaims;
         console.log('unv', this.unverifiedClaims)
-        const verifiedClaims = await contract.methods.patientVerifiedServices(id).send({ from: accounts[0] });
+        const verifiedClaims = await contract.methods.patientVerifiedClaims(id).send({ from: accounts[0] });
         this.verifiedClaims = verifiedClaims;
         console.log('ver', this.verifiedClaims)
+    }
+
+    getUnverifiedClaims = async (id) => {
+        const { accounts, contract } = this.state;
+        const unverifiedClaims = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
+        this.unverifiedClaims = unverifiedClaims;       
     }
 
     verifyClaim = async(serviceClaimID) => {
         const { accounts, contract } = this.state;
         const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
         console.log(info);
-        this.getClaims(this.id);
+        this.getClaims(this.patientId);
     }
 
     // fetchData = async () => {
@@ -199,7 +180,8 @@ export class PatientApp extends Component {
                                             sd={sd}
                                             contract={this.state.contract}
                                             accounts={this.state.accounts}
-                                            content={output}
+                                            service={output}
+                                            verifyClaim={this.verifyClaim}
                             />
                         }) : null
                     }

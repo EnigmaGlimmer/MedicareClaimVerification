@@ -8,11 +8,16 @@ class ServiceCell extends Component {
         super(props, context);
         this.check = false;
         this.updateChecked = this.updateChecked.bind(this)
+        this.verifyClaim = this.verifyClaim.bind(this)
     }
 
     updateChecked() {
         this.checked = document.getElementById("togBtn").checked;
         console.log(this.checked)
+    }
+
+    verifyClaim() {
+        this.props.verifyClaim(this.props.service)
     }
 
     render() {
@@ -37,7 +42,7 @@ class ServiceCell extends Component {
                         <br></br>
                             <Input type="textarea" placeholder="(Optional) Please give us feedback, concerns, or just anything you wish to say..." />
                             <br></br>
-                            <Button style={{ float: 'right'}} color="success">Submit</Button>
+                            <Button style={{ float: 'right'}} color="success">Confirm</Button>
                     </CardBody>
                 </Card>
             </CardGroup>
