@@ -84,9 +84,13 @@ contract('Organizations', (accounts) => {
     it('Correctly adds a claim amount', async() => {
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
       const serviceClaimInfo = await serviceClaim.logs[0].args;
+      console.log("SC: ", serviceClaimInfo);
       const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
+      console.log("Filed the claim");
       const currService = await ServiceClaim.at(serviceClaimInfo.addr);
+      console.log("GOT SC Instance")
       const claimAmount = await currService.getAmount();
+      console.log("Claim Amount: ", claimAmount);
       assert.equal(100,claimAmount,"Claim Amount is Incorrect");
     });
   
@@ -166,19 +170,31 @@ contract('Organizations', (accounts) => {
     it('Empty Unverified Claims List', async() => {
       const organizationsInstance = await Organizations.deployed();
 
-      const unvServices = await organizationsInstance.patientUnverifiedServices(patientID);
+      const unvServices = await organizationsInstance.patientUnverifiedClaims(patientID);
       const unverifiedServices = unvServices.logs[0].args.services.length;
 
       assert.equal(unverifiedServices,0,"There should be no unverified services here");
     });
 
     //
-    it('Single Unverified Claims List', async() => {
+    it('Single Unclaimed Service List', async() => {
       const organizationsInstance = await Organizations.deployed();
 
       await organizationsInstance.provideService("Glasses",providerID,patientID);
 
-      const uvS = await organizationsInstance.patientUnverifiedServices(patientID);
+      const uvS = await organizationsInstance.patientUnclaimedServices(patientID);
+      const unclaimedServices = uvS.logs[0].args.services.length;
+      
+      assert.equal(unclaimedServices,1,"There should be an unverified service here");
+    });
+
+    it('Single Unverified Claims List', async() => {
+      const organizationsInstance = await Organizations.deployed();
+      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
+      const serviceClaimInfo = await serviceClaim.logs[0].args;
+      console.log("BEFORE FILE CLAIM");
+      const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
+      const uvS = await organizationsInstance.patientUnverifiedClaims(patientID);
       const unverifiedServices = uvS.logs[0].args.services.length;
       
       assert.equal(unverifiedServices,1,"There should be an unverified service here");
@@ -187,7 +203,7 @@ contract('Organizations', (accounts) => {
     it('Empty Verified Claims List Test', async() => {
       const organizationsInstance = await Organizations.deployed();
       
-      const vServices = await organizationsInstance.patientVerifiedServices(patientID);
+      const vServices = await organizationsInstance.patientVerifiedClaims(patientID);
       const verifiedServices = vServices.logs[0].args.services.length;
       
       assert.equal(verifiedServices,0,"There should be no verified services here");
@@ -202,7 +218,7 @@ contract('Organizations', (accounts) => {
 
       await organizationsInstance.verifyClaim(serviceClaimID.ID);
 
-      const vServices = await organizationsInstance.patientVerifiedServices(patientID);
+      const vServices = await organizationsInstance.patientVerifiedClaims(patientID);
       const verifiedServices = vServices.logs[0].args.services.length;
 
       assert.equal(verifiedServices,1,"There should be a verified service here");
