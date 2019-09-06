@@ -10,12 +10,13 @@ class PatientCell extends Component {
         this.providerID = this.props.providerID;
         this.serviceName = "";
         this.amount = 10;
-        this.csc = this.csc.bind(this);
-        this.ac = this.ac.bind(this);
+        this.provideService = this.provideService.bind(this);
+        this.fileClaim = this.fileClaim.bind(this);
         this.toggle = this.toggle.bind(this);
         this.toggleDropDown = this.toggleDropDown.bind(this);
         this.updateServiceClaimName = this.updateServiceClaimName.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.getServiceList = this.getServiceList.bind(this)
         this.state = {
             contract: this.props.contract,
             web3: this.props.web3,
@@ -53,34 +54,37 @@ class PatientCell extends Component {
     }
 
     componentDidMount = async () => {
-        const {accounts, contract} = this.state;
-        const unverifiedClaims = await contract.methods.patientUnverifiedServices(this.patientID).send({ from: accounts[0] });
-        this.setState({ serviceList: unverifiedClaims.events.serviceList.returnValues.services });
+        this.getServiceList();        
         // await this.props.contract.methods.getProvider(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
         // await this.props.contract.methods.getPatient(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
 
-    csc() {
+    getServiceList = async () => {
+        const { accounts, contract } = this.state;
+        const unverifiedClaims = await contract.methods.patientUnverifiedServices(this.patientID).send({ from: accounts[0] });
+        this.setState({ serviceList: unverifiedClaims.events.serviceList.returnValues.services });
+        console.log(this.props.name + ': current serviceList', this.state.serviceList)
+    }
+
+    provideService() {
         this.toggle();
         this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
             console.log('Creating Service Claim')
-            let list = this.state.serviceList;
-            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, claims: [] });
-            this.setState({ serviceList: list })
-            console.log(this.state.serviceList)
+            console.log(info.events.SCID.returnValues)
+            this.getServiceList();
         })
     }
 
-    ac(serviceClaimID) {
+    fileClaim(serviceClaimID) {
         console.log("creating claim")
         this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
-            console.log('Adding Claim')
-            let list = this.state.serviceList;
-            this.setState({ serviceList: list })
-            console.log(info.events.ClaimCreated.returnValues.id)
+            console.log('Added Claim')
+            console.log(info.events.ClaimCreated.returnValues)
+            this.getServiceList();
         })
     }
 
+      //Patient service claims populated in each patient cell are unverified claims
     render() {
         console.log("rendering")
         return (
@@ -94,11 +98,11 @@ class PatientCell extends Component {
                             </Col>
                             <Col md={6} style={{ textAlign: 'center' }}>
                                 {/* <button className="button" id='create_btn' style={{backgroundColor: '#12b823'}}><span>Create Service Claim</span></button> */}
-                                {/* <Button color='success' onClick={this.csc}>Create Service Claim</Button> */}
+                                {/* <Button color='success' onClick={this.provideService}>Create Service Claim</Button> */}
                                 <Button color="success" onClick={this.toggle}>Create Service Claim</Button>
                                 <ServiceModal modal={this.state.modal} toggle={this.toggle} className={this.props.className}
                                     updateServiceClaimName={this.updateServiceClaimName}
-                                    csc={this.csc} />
+                                    provideService={this.provideService} />
                                 <br></br>
                                 <br></br>
                                 {/* <button className="button" id='add_btn' style={{backgroundColor: '#f0c107'}}><span>Add Claim</span></button> */}
@@ -116,7 +120,7 @@ class PatientCell extends Component {
                                                 </div>
                                             )}
 
-                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.ac(item.serviceClaimID)}> {item.serviceName} </DropdownItem> })}
+                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimID)}> {item.serviceName} </DropdownItem> })}
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Col>

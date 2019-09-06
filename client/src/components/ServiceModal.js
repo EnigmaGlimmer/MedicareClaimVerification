@@ -12,7 +12,7 @@ class ServiceModal extends React.Component {
             <Input onChange={this.props.updateServiceClaimName} placeholder="Name of Service"/>
           </ModalBody>
           <ModalFooter>
-            <Button color="success" onClick={this.props.csc}>Create</Button>{' '}
+            <Button color="success" onClick={this.props.provideService}>Create</Button>{' '}
             <Button color="danger" onClick={this.props.toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>
