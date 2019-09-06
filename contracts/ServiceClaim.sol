@@ -11,7 +11,7 @@ contract ServiceClaim {
 
     // ServiceClaim Information
     bytes32 serviceClaimID;
-    string name;
+    string public name;
     uint256 amount;
     bool verified;
     bool paid;

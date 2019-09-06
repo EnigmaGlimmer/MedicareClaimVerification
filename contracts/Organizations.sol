@@ -17,6 +17,7 @@ contract Organizations {
     mapping (bytes32=>Provider) public providerMap; //ID of provider to specific provider -
     mapping (bytes32=>Insurer) public insurerMap; //ID of insurance provider to specific insurer
     mapping (bytes32=>address) public serviceClaimsMap; //ID of serviceClaim to the specific ServiceClaim contract instance
+    mapping (address=>string) public serviceName;
 
     //Events for organization creation    event ServiceCreated(address serviceClaimAddr);
     event SCID(bytes32 ID, address addr);
@@ -34,6 +35,11 @@ contract Organizations {
 
     event idList(bytes32[] ids);
     event serviceList(address[] services);
+
+    struct SC {
+        bytes32 name;
+        address addr;
+    }
 
     struct Patient {
         bytes32 id;
@@ -55,12 +61,20 @@ contract Organizations {
         bytes32[] providers;
     }
 
-
-
     constructor() public {
         preLoadInfo();
     }
 
+    // function stringToBytes32(string memory source) public returns (bytes32 result) {
+    //     bytes memory tempEmptyStringTest = bytes(source);
+    //     if (tempEmptyStringTest.length == 0) {
+    //         return 0x0;
+    //     }
+
+    //     assembly {
+    //         result := mload(add(source, 32))
+    //     }
+    // }
 
     function preLoadInfo() public{
         bytes32 insurerID = addInsurer("CMS");
@@ -134,7 +148,9 @@ contract Organizations {
         serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
         //patient.unverifiedClaims.push(address(serviceClaim));
+        // SC memory newSC = SC(stringToBytes32(_name), address(serviceClaim));
         patient.unclaimedServices.push(address(serviceClaim));
+        serviceName[address(serviceClaim)] = _name;
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
@@ -158,13 +174,13 @@ contract Organizations {
                 break;
             }
         }
-
+        // string memory name = myServiceClaim.name();
+        // SC memory newSC = SC(stringToBytes32(name), address(myServiceClaim));
         cP.unverifiedClaims.push(address(myServiceClaim));
         emit ClaimCreated(newClaimID, _amount);
         return newClaimID;
     }
-
-    
+ 
     /** @dev invoke the verifyClaim function in the ServiceClaim contract
     @param _serviceClaimID the id of the ServiceClaim contract
     */
@@ -185,6 +201,8 @@ contract Organizations {
                 break;
             }
         }
+        // string memory name = myServiceClaim.name();
+        // SC memory newSC = SC(stringToBytes32(name), address(myServiceClaim));
         cP.verifiedClaims.push(address(myServiceClaim));
         emit ClaimVerified(_serviceClaimID);
     }
