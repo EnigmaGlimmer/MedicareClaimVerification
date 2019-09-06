@@ -17606,10 +17606,16 @@
       "links": {},
       "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
       "transactionHash": "0xb1acc2ddfe76d856d2c37505e64cc0f5e690d7f9ec5401b2a93f3cf20aece4e5"
+    },
+    "1567728586152": {
+      "events": {},
+      "links": {},
+      "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
+      "transactionHash": "0xb1acc2ddfe76d856d2c37505e64cc0f5e690d7f9ec5401b2a93f3cf20aece4e5"
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-09-05T19:42:50.901Z",
+  "updatedAt": "2019-09-06T00:10:08.438Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {

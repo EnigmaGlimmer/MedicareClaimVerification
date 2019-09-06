@@ -141,9 +141,9 @@ export class ProviderApp extends Component {
     const { accounts, contract } = this.state;
     const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
     this.serviceClaimID = info.events.SCID.returnValues.ID;
-    // const unverifiedClaims = await contract.methods.patientUnverifiedServices(patientID).send({ from: accounts[0] });
-    // this.unverifiedClaims = unverifiedClaims;
-    // console.log('unv', this.unverifiedClaims)
+    const unverifiedClaims = await contract.methods.patientUnverifiedServices(patientID).send({ from: accounts[0] });
+    this.unverifiedClaims = unverifiedClaims;
+    console.log('unv', this.unverifiedClaims)
     // const verifiedClaims = await contract.methods.patientVerifiedServices(patientID).send({ from: accounts[0] });
     // this.verifiedClaims = verifiedClaims;
     // console.log('ver', this.verifiedClaims)
@@ -209,6 +209,7 @@ export class ProviderApp extends Component {
                                     sd={sd}
                                     provideService={this.provideService}
                                     fileClaim={this.fileClaim}
+                                    web3={this.state.web3}
                                     accounts={this.state.accounts}
                                     contract={this.state.contract}
                                     notification_claimAdded={this.notification_claimAdded}

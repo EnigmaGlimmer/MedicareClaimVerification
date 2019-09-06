@@ -160,9 +160,10 @@ export class PatientApp extends Component {
         console.log('ver', this.verifiedClaims)
     }
 
-    verifyClaim = async(serviceClaimID) => {        
+    verifyClaim = async(serviceClaimID) => {
         const { accounts, contract } = this.state;
         const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
+        console.log(info);
         this.getClaims(this.id);
     }
 

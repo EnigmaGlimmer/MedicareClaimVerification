@@ -17,6 +17,9 @@ class PatientCell extends Component {
         this.updateServiceClaimName = this.updateServiceClaimName.bind(this);
         this.toggle = this.toggle.bind(this);
         this.state = {
+            contract: this.props.contract,
+            web3: this.props.web3,
+            accounts: this.props.accounts,
             modal: false,
             dropdownOpen: false,
             serviceList: [
@@ -50,8 +53,11 @@ class PatientCell extends Component {
     }
 
     componentDidMount = async () => {
-        await this.props.contract.methods.getProvider(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
-        await this.props.contract.methods.getPatient(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
+        const {accounts, contract} = this.state;
+        const unverifiedClaims = await contract.methods.patientUnverifiedServices(this.patientID).send({ from: accounts[0] });
+        this.setState({ serviceList: unverifiedClaims.events.serviceList.returnValues.services });
+        // await this.props.contract.methods.getProvider(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
+        // await this.props.contract.methods.getPatient(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
 
     csc() {

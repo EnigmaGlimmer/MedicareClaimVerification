@@ -108,14 +108,16 @@ class App extends Component {
         return (
             <div>
                 {
-                    this.state.patientLoginSuccess ? <PatientApp sd={this.solidityData}
+                    this.state.patientLoginSuccess ? <PatientApp 
+                        sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id} /> : null
                 }
                 {
-                    this.state.providerLoginSuccess ? <ProviderApp sd={this.solidityData}
+                    this.state.providerLoginSuccess ? <ProviderApp 
+                        sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}

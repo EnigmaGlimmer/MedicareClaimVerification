@@ -20,7 +20,7 @@ class ServiceCell extends Component {
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">
-                <CardHeader>Wheelchair</CardHeader>
+                <CardHeader>{this.props.content}</CardHeader>
                     <CardBody>
                         <Row>
                             <Col md={8} style={{ maxWidth: '50%' }}>
