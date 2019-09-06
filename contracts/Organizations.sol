@@ -21,6 +21,7 @@ contract Organizations {
     //Events for organization creation    event ServiceCreated(address serviceClaimAddr);
     event SCID(bytes32 ID, address addr);
     event ClaimCreated(uint256 id, uint256 amount);
+    event ClaimVerified(bytes32 id);
     event PatientCreated(bytes32 id, string name);
     event ProviderCreated(bytes32 id, string name);
     event InsurerCreated(bytes32 id, string name);
@@ -37,6 +38,7 @@ contract Organizations {
     struct Patient {
         bytes32 id;
         string name;
+        address[] unclaimedServices;
         address[] unverifiedClaims;
         address[] verifiedClaims;
     }
@@ -76,9 +78,10 @@ contract Organizations {
     */
     function addPatient(string memory _name, bytes32 _providerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
+        address[] memory uServiceList;
         address[] memory uClaimList;
         address[] memory vClaimList;
-        Patient memory newPatient = Patient(id, _name, uClaimList, vClaimList);
+        Patient memory newPatient = Patient(id, _name, uServiceList, uClaimList, vClaimList);
         //bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[id] = newPatient;
         providerMap[_providerID].patients.push(newPatient.id);
@@ -130,7 +133,8 @@ contract Organizations {
         bytes32 serviceClaimID = keccak256(abi.encodePacked(address(serviceClaim)));
         serviceClaimsMap[serviceClaimID] = address(serviceClaim);
         Patient storage patient = patientMap[_patientID];
-        patient.unverifiedClaims.push(address(serviceClaim));
+        //patient.unverifiedClaims.push(address(serviceClaim));
+        patient.unclaimedServices.push(address(serviceClaim));
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
@@ -144,6 +148,18 @@ contract Organizations {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         uint256 newClaimID = myServiceClaim.fileClaim(_amount);
+
+        bytes32 patID = myServiceClaim.patientID();
+        Patient storage cP = patientMap[patID];
+
+        for(uint i = 0; i < cP.unclaimedServices.length; i++){
+            if(cP.unclaimedServices[i] == address(myServiceClaim)){
+                delete(cP.unclaimedServices[i]);
+                break;
+            }
+        }
+
+        cP.unverifiedClaims.push(address(myServiceClaim));
         emit ClaimCreated(newClaimID, _amount);
         return newClaimID;
     }
@@ -163,13 +179,14 @@ contract Organizations {
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
 
-        cP.verifiedClaims.push(address(myServiceClaim));
         for(uint i = 0; i < cP.unverifiedClaims.length; i++){
             if(cP.unverifiedClaims[i] == address(myServiceClaim)){
                 delete(cP.unverifiedClaims[i]);
                 break;
             }
         }
+        cP.verifiedClaims.push(address(myServiceClaim));
+        emit ClaimVerified(_serviceClaimID);
     }
 
     /** @dev invoke the payProvider function in the ServiceClaim contract
@@ -210,13 +227,20 @@ contract Organizations {
         return providerMap[_id];
     }
 
-    function patientUnverifiedServices(bytes32 _id) public returns (address[] memory){
+
+    function patientUnclaimedServices(bytes32 _id) public returns (address[] memory){
+        Patient storage cP = patientMap[_id];
+        emit serviceList(cP.unclaimedServices);
+        return(cP.unclaimedServices);
+    }
+
+    function patientUnverifiedClaims(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         emit serviceList(cP.unverifiedClaims);
         return(cP.unverifiedClaims);
     }
 
-    function patientVerifiedServices(bytes32 _id) public returns (address[] memory){
+    function patientVerifiedClaims(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         emit serviceList(cP.verifiedClaims);
         return(cP.verifiedClaims);

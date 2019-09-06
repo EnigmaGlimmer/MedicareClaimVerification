@@ -16,11 +16,7 @@ class PatientCell extends Component {
         this.toggleDropDown = this.toggleDropDown.bind(this);
         this.updateServiceClaimName = this.updateServiceClaimName.bind(this);
         this.toggle = this.toggle.bind(this);
-        this.getServiceList = this.getServiceList.bind(this)
         this.state = {
-            contract: this.props.contract,
-            web3: this.props.web3,
-            accounts: this.props.accounts,
             modal: false,
             dropdownOpen: false,
             serviceList: [
@@ -54,37 +50,33 @@ class PatientCell extends Component {
     }
 
     componentDidMount = async () => {
-        this.getServiceList();        
-        // await this.props.contract.methods.getProvider(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
-        // await this.props.contract.methods.getPatient(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
-    }
-
-    getServiceList = async () => {
-        const { accounts, contract } = this.state;
-        const unverifiedClaims = await contract.methods.patientUnverifiedServices(this.patientID).send({ from: accounts[0] });
-        this.setState({ serviceList: unverifiedClaims.events.serviceList.returnValues.services });
-        console.log(this.props.name + ': current serviceList', this.state.serviceList)
+        const unv = this.props.contract.methods.patientUnverifiedClaims(this.patientID).send({ from: this.props.accounts[0] });
+        
+        // await this.props.contract.methods.providerMap(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
+        // await this.props.contract.methods.insurerMap(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
 
     provideService() {
         this.toggle();
         this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
             console.log('Creating Service Claim')
-            console.log(info.events.SCID.returnValues)
-            this.getServiceList();
+            let list = this.state.serviceList;
+            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, claims: [] });
+            this.setState({ serviceList: list })
+            console.log(this.state.serviceList)
         })
     }
 
     fileClaim(serviceClaimID) {
         console.log("creating claim")
         this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
-            console.log('Added Claim')
-            console.log(info.events.ClaimCreated.returnValues)
-            this.getServiceList();
+            console.log('Adding Claim')
+            let list = this.state.serviceList;
+            this.setState({ serviceList: list })
+            console.log(info.events.ClaimCreated.returnValues.id)
         })
     }
 
-      //Patient service claims populated in each patient cell are unverified claims
     render() {
         console.log("rendering")
         return (
