@@ -158,6 +158,7 @@ contract Organizations {
         //SC memory newSC = SC(_name, address(serviceClaim));
         patient.unclaimedServices.push(address(serviceClaim));
         serviceName[address(serviceClaim)] = _name;
+        SCMap[address(serviceClaim)] = _name;
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
