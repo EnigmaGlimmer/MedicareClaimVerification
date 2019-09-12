@@ -18,7 +18,7 @@ class ServiceCell extends Component {
 
     verifyClaim() {
         if (this.checked) {
-            this.props.verifyClaim(this.props.service)
+            this.props.verifyClaim(this.props.serviceID)
         }
     }
 
@@ -27,7 +27,7 @@ class ServiceCell extends Component {
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">
-                    <CardHeader>{this.props.service}</CardHeader>
+                    <CardHeader>{this.props.serviceName}</CardHeader>
                     <CardBody>
                         <Row>
                             <Col md={8} style={{ maxWidth: '50%' }}>
