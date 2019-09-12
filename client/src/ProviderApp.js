@@ -116,6 +116,7 @@ export class ProviderApp extends Component {
     const { accounts, contract } = this.state;
     const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
     this.serviceClaimID = info.events.SCID.returnValues.ID;
+    console.log('provided service ID ',this.serviceClaimID)
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
     return info;
   }

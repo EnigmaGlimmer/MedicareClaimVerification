@@ -146,10 +146,17 @@ export class PatientApp extends Component {
         var list = []
         const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
         console.log('unv', unv.events)
-        for (let i = 0; i < unv.events.SCName.length; i++) {
-            list.push(unv.events.SCName[i].returnValues.name, unv.events.serviceList.returnValues.services[i])
+        if(unv.events.SCName){
+            if(!unv.events.SCName.length){
+                list.push([unv.events.SCName.returnValues.name, unv.events.serviceList.returnValues.services[0]])
+            }
+            else {
+                for (let i = 0; i < unv.events.SCName.length; i++) {
+                    list.push([unv.events.SCName[i].returnValues.name, unv.events.serviceList.returnValues.services[i]])
+                }
+            }
+            this.setState({ unverifiedClaims: list })
         }
-        this.setState({ unverifiedClaims: list })
         console.log("state of unv", this.state.unverifiedClaims)
     }
 
