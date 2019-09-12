@@ -23165,10 +23165,16 @@
       "links": {},
       "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
       "transactionHash": "0x4b285bcc70bff33c04e7cf920621282f79a613f72a8f599ddc20b284c2f170f6"
+    },
+    "1568320339827": {
+      "events": {},
+      "links": {},
+      "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
+      "transactionHash": "0x4b285bcc70bff33c04e7cf920621282f79a613f72a8f599ddc20b284c2f170f6"
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-09-11T23:31:52.441Z",
+  "updatedAt": "2019-09-12T20:32:37.416Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {

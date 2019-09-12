@@ -167,21 +167,6 @@ export class PatientApp extends Component {
         this.getUnverifiedClaims(this.patientId);
     }
 
-    // fetchData = async () => {
-    //     const { accounts, contract } = this.state;
-    //     let patientList = [];
-    //     const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
-    //     this.solidityData = info;
-    //     console.log("Fetched data", info)
-    //     const patients = this.solidityData.events.PatientCreated;
-    //     this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
-    //     for (let i = 0; i < patients.length; i++) {
-    //         patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
-    //     }
-    //     console.log(patientList)
-    //     this.setState({ patients: patientList })
-    // };
-
     render() {
         let sd = this.solidityData
         console.log("Rendering PatientApp ", sd)
@@ -202,7 +187,7 @@ export class PatientApp extends Component {
                                     contract={this.state.contract}
                                     accounts={this.state.accounts}
                                     serviceName={output[0]}
-                                    serviceID={output[1]}
+                                    serviceAddr={output[1]}
                                     verifyClaim={this.verifyClaim}
                                 />
                             }) : null
