@@ -22,7 +22,7 @@ contract Organizations {
     //Events for organization creation    event ServiceCreated(address serviceClaimAddr);
     event SCID(bytes32 ID, address addr);
     event ClaimCreated(uint256 id, uint256 amount);
-    event ClaimVerified(bytes32 id);
+    event ClaimVerified(address addr);
     event PatientCreated(bytes32 id, string name);
     event ProviderCreated(bytes32 id, string name);
     event InsurerCreated(bytes32 id, string name);
@@ -194,10 +194,10 @@ contract Organizations {
     @param _serviceClaimID the id of the ServiceClaim contract
     */
     /** @dev invoke the verifyClaim function in the ServiceClaim contract
-    @param _serviceClaimID the id of the ServiceClaim contract
+    @param _serviceClaimAddress the address of the ServiceClaim contract
     */
-    function verifyClaim(bytes32 _serviceClaimID) public {
-        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+    function verifyClaim(address _serviceClaimAddress) public {
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
         require(myServiceClaim.verifyClaim(), "Claim was not Verified");
         // Add the claim address to verified list
         // Delete the claim address from unverified list
@@ -210,10 +210,10 @@ contract Organizations {
                 break;
             }
         }
-        string memory name = myServiceClaim.name();
+        //string memory name = myServiceClaim.name();
         //SC memory newSC = SC(name, address(myServiceClaim));
         cP.verifiedClaims.push(address(myServiceClaim));
-        emit ClaimVerified(_serviceClaimID);
+        emit ClaimVerified(_serviceClaimAddress);
     }
 
     /** @dev invoke the payProvider function in the ServiceClaim contract
