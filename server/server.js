@@ -5,6 +5,13 @@ const app = express()
 const port = 4000
 const bodyParser = require("body-parser");
 
+const idMapping = {
+  'UCSD Medical': {id: '0xb12d1ac9dbfc9766d319f7dddcced62a4a5b042bbcfd3c15eda087af861488f4', role: 'Provider'},
+  'Ken': {id: '0x208432b29a1d0dc0bafe10c0bf4ae03bdc4f3ca37894c85e7c3cadbf65719b39', role: 'Patient'},
+  'Danny': {id: '0x22299a2d4f3047b228c319c2a0569bcf4e9a117d8488cb391600a84c19145290', role: 'Patient'},
+  'Antonio': {id: '0x55f5cf1d81bd8db77408ca0c82606729cc9cd581b02513f6281ddca07e686418', role: 'Patient'}
+}
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -83,5 +90,16 @@ app.use('/serviceClaimCreated', function (req, res) {
       }
     });
 });
+
+app.use('/login', function(req, res){
+  var username = req.body.username;
+  console.log(username)
+  if(!idMapping[username]){
+    res.status(200).json({ message: 'NOK' })
+  }
+  else {
+    res.status(200).json({ message: 'OK', result: idMapping[username] })
+  }
+})
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

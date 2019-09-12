@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import ServiceCell from './components/ServiceCell'
-import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
+import { Card, CardBody } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 
@@ -21,7 +21,7 @@ export class PatientApp extends Component {
         this.unverifiedClaims = []
         this.verifiedClaims = []
         this.patientId = this.props.id
-        this.solidityData = this.props.sd;
+        // this.solidityData = this.props.sd;
         this.patientname = null;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
@@ -112,24 +112,8 @@ export class PatientApp extends Component {
         var _ = this;
         setInterval(function () {
             _.getUnverifiedClaims(_.patientId);
-        }, 20000);
+        }, 10000);
     };
-
-    // provideService = async (serviceName, providerID, patientID) => {
-    //     const { accounts, contract } = this.state;
-    //     const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
-    //     this.serviceClaimID = info.events.SCID.returnValues.ID;
-    //     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
-    //     return info;
-    // }
-
-    // fileClaim = async (serviceClaimID, amount) => {
-    //     const { accounts, contract } = this.state;
-    //     serviceClaimID = serviceClaimID || this.serviceClaimID;
-    //     const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
-    //     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
-    //     return info;
-    // }
 
     getClaims = async (id) => {
         const { accounts, contract } = this.state;
@@ -146,8 +130,8 @@ export class PatientApp extends Component {
         var list = []
         const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
         console.log('unv', unv.events)
-        if(unv.events.SCName){
-            if(!unv.events.SCName.length){
+        if (unv.events.SCName) {
+            if (!unv.events.SCName.length) {
                 list.push([unv.events.SCName.returnValues.name, unv.events.serviceList.returnValues.services[0]])
             }
             else {
@@ -168,14 +152,15 @@ export class PatientApp extends Component {
     }
 
     render() {
-        let sd = this.solidityData
-        console.log("Rendering PatientApp ", sd)
+        // let sd = this.solidityData
+        // console.log("Rendering PatientApp ", sd)
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
         return (
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
+
                 <ul>
                     {
                         this.state.unverifiedClaims &&
@@ -183,14 +168,19 @@ export class PatientApp extends Component {
                             this.state.unverifiedClaims.map((output, i) => {
                                 console.log(output)
                                 return <ServiceCell
-                                    sd={sd}
+                                    // sd={sd}
                                     contract={this.state.contract}
                                     accounts={this.state.accounts}
                                     serviceName={output[0]}
                                     serviceAddr={output[1]}
                                     verifyClaim={this.verifyClaim}
                                 />
-                            }) : null
+                            }) : 
+                            <Card body outline color="primary">
+                                <CardBody>
+                                    You do not have any unverified claims yet.
+                                </CardBody>
+                            </Card>
                     }
                 </ul>
             </div>

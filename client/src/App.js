@@ -19,14 +19,16 @@ class App extends Component {
             accounts: null,
             web3: null
         };
+        this.role = 'Patient';
+        this.username = null;
         this.id = null;
         this.solidityData = null;
-        this.updateID = this.updateID.bind(this)
+        this.updateUsername = this.updateUsername.bind(this)
         // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
     }
 
-    updateID({ target }) {
-        this.id = target.value;
+    updateUsername({ target }) {
+        this.username = target.value;
     }
 
     handleKeyPress = (event) => {
@@ -41,21 +43,6 @@ class App extends Component {
         this.solidityData = info;
         console.log("Fetched data", info)
     };
-
-    // redirectAfterLogin() {
-    //     if (this.state.patientLoginSuccess) {
-    //         console.log('heading to patient')
-    //         return (
-    //             <Redirect to='/Patient'/>
-    //         );
-    //     }
-    //     else if (this.state.providerLoginSuccess) {
-    //         console.log('heading to provider')
-    //         return (
-    //             <Redirect to='/Provider'/>
-    //         );
-    //     }
-    // }
 
     componentDidMount = async () => {
         try {
@@ -87,17 +74,49 @@ class App extends Component {
 
     onFormSubmit = async (e) => {
         e.preventDefault()
-        const { accounts, contract } = this.state;
-        const i1 = await contract.methods.getPatient(this.id).send({ from: accounts[0] })
-        const i2 = await contract.methods.getProvider(this.id).send({ from: accounts[0] })
-        if (i1.events.PatientRetrieval.returnValues[0][0] === this.id) {
-            log.loggedIn = true;
-            this.setState({ patientLoginSuccess: true })
-        }
-        else if (i2.events.ProviderRetrieval.returnValues[0][0] === this.id) {
-            log.loggedIn = true;
-            this.setState({ providerLoginSuccess: true })
-        }
+        this.ajax_login()
+        // const { accounts, contract } = this.state;
+        // const i1 = await contract.methods.getPatient(this.id).send({ from: accounts[0] })
+        // const i2 = await contract.methods.getProvider(this.id).send({ from: accounts[0] })
+        // if (i1.events.PatientRetrieval.returnValues[0][0] === this.id) {
+        //     log.loggedIn = true;
+        //     this.setState({ patientLoginSuccess: true })
+        // }
+        // else if (i2.events.ProviderRetrieval.returnValues[0][0] === this.id) {
+        //     log.loggedIn = true;
+        //     this.setState({ providerLoginSuccess: true })
+        // }
+    }
+
+    ajax_login() {
+        console.log(this.username)
+        $.ajax({
+            url: 'http://localhost:4000/login',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            crossDomain: true,
+            dataType: 'json',
+            xhrFields: { withCredentials: true },
+            data: {
+                username: this.username
+            },
+            success: (data) => {
+                if (data.message === 'OK') {
+                    console.log('Success logging in', data.result)
+                    this.id = data.result.id;
+                    log.loggedIn = true;
+                    if(data.result.role === 'Patient'){
+                        this.setState({ patientLoginSuccess: true })
+                    }
+                    else {
+                        this.setState({ providerLoginSuccess: true })
+                    }
+                }
+                else {
+                    console.log('ERROR logging in');
+                }
+            }
+        });
     }
 
     render() {
@@ -107,7 +126,7 @@ class App extends Component {
         return (
             <div>
                 {
-                    this.state.patientLoginSuccess ? <PatientApp 
+                    this.state.patientLoginSuccess ? <PatientApp
                         sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
@@ -115,7 +134,7 @@ class App extends Component {
                         id={this.id} /> : null
                 }
                 {
-                    this.state.providerLoginSuccess ? <ProviderApp 
+                    this.state.providerLoginSuccess ? <ProviderApp
                         sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
@@ -124,14 +143,20 @@ class App extends Component {
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess ?
+                <div style={{ textAlign: 'center' }}>
+                    <h1>Medicare Insurance Claim Tracking</h1>
                     <Card id='login'>
-                        <Form id="form" onSubmit={this.onFormSubmit} style={{ textAlign: 'center' }}>
+                        <Form id="form" onSubmit={this.onFormSubmit}>
+                            <h4>Login</h4>
                             <FormGroup>
-                                <Input onChange={this.updateID} />
+                                <Input placeholder='Username' onChange={this.updateUsername} />
+                                <br></br>
+                                <Input placeholder='Password' />
                             </FormGroup>
                             <Button type="submit" color='success'>Enter</Button>
                         </Form>
-                    </Card> : null
+                    </Card>
+                    </div> : null
                 }
             </div>
         );
