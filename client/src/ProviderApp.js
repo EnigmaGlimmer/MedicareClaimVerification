@@ -125,11 +125,6 @@ export class ProviderApp extends Component {
     const { accounts, contract } = this.state;
     const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
-  //   contract.events.serviceList(function(err, res) {
-  //     if(!err){
-  //         console.log('serviceList update: ', res)
-  //     }
-  // })
     return info;
   }
 

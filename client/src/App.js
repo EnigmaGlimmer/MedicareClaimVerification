@@ -15,6 +15,7 @@ class App extends Component {
         this.state = {
             patientLoginSuccess: false,
             providerLoginSuccess: false,
+            insurerLoginSuccess: false,
             contract: null,
             accounts: null,
             web3: null
@@ -41,7 +42,6 @@ class App extends Component {
         const { accounts, contract } = this.state;
         const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
         this.solidityData = info;
-        console.log("Fetched data", info)
     };
 
     componentDidMount = async () => {
@@ -89,7 +89,6 @@ class App extends Component {
     }
 
     ajax_login() {
-        console.log(this.username)
         $.ajax({
             url: 'http://localhost:4000/login',
             type: 'POST',
@@ -108,7 +107,7 @@ class App extends Component {
                     if(data.result.role === 'Patient'){
                         this.setState({ patientLoginSuccess: true })
                     }
-                    else {
+                    else if(data.result.role === 'Provider') {
                         this.setState({ providerLoginSuccess: true })
                     }
                 }

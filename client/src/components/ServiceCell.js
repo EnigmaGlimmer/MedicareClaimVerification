@@ -4,26 +4,26 @@ import "./PatientCell.css"
 import "./ToggleSwitch.css"
 
 class ServiceCell extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.check = false;
         this.updateChecked = this.updateChecked.bind(this)
         this.verifyClaim = this.verifyClaim.bind(this)
+        this.id = 'togBtn' + this.props.i;
     }
 
     updateChecked() {
-        this.checked = document.getElementById("togBtn").checked;
-        console.log(this.checked)
+        this.checked = document.getElementById("togBtn"+this.props.i).checked;
     }
 
     verifyClaim() {
         if (this.checked) {
+            this.props.deleteClaimFromList(this.props.i)
             this.props.verifyClaim(this.props.serviceAddr)
         }
     }
 
     render() {
-        console.log("rendering", this.check)
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">
@@ -36,7 +36,7 @@ class ServiceCell extends Component {
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>
                                 <CardText>Verify claim</CardText>
                                 <div style={{ display: "inline-flex" }}>
-                                    <label className="switch"><input type="checkbox" id="togBtn" onClick={this.updateChecked} /><div className="slider round"><span className="on">Yes</span><span className="off">No</span></div></label>
+                                    <label className="switch"><input type="checkbox" id={this.id} onClick={this.updateChecked} /><div className="slider round"><span className="on">Yes</span><span className="off">No</span></div></label>
                                 </div>
 
                             </Col>

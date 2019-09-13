@@ -18,6 +18,7 @@ class PatientCell extends Component {
         this.toggle = this.toggle.bind(this);
         this.state = {
             modal: false,
+            contract: this.props.contract,
             dropdownOpen: false,
             serviceList: [
                 /*
@@ -36,14 +37,14 @@ class PatientCell extends Component {
     }
 
     toggle() {
-        console.log("toggling modal")
+        // console.log("toggling modal")
         this.setState(prevState => ({
             modal: !prevState.modal
         }));
     }
 
     toggleDropDown() {
-        console.log("toggling dropdown")
+        // console.log("toggling dropdown")
         this.setState({
             dropdownOpen: !this.state.dropdownOpen
         });
@@ -51,7 +52,6 @@ class PatientCell extends Component {
 
     componentDidMount = async () => {
         // const unv = await this.props.contract.methods.patientUnverifiedClaims(this.patientID).send({ from: this.props.accounts[0] });
-        // console.log('unv', unv)
         // await this.props.contract.methods.providerMap(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
         // await this.props.contract.methods.insurerMap(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }
@@ -59,26 +59,27 @@ class PatientCell extends Component {
     provideService() {
         this.toggle();
         this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
-            console.log('Creating Service Claim')
             let list = this.state.serviceList;
             list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, claims: [] });
             this.setState({ serviceList: list })
-            console.log(this.state.serviceList)
+            console.log('Creating Service Claim', this.state.serviceList)
         })
     }
 
     fileClaim(serviceClaimID) {
-        console.log("creating claim")
         this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
-            console.log('Adding Claim')
             let list = this.state.serviceList;
             this.setState({ serviceList: list })
-            console.log(info.events.ClaimCreated.returnValues.id)
+            this.state.contract.events.serviceList(function(err, res) {
+                if(!err){
+                    console.log('serviceList update: ', res)
+                }
+            })
+            console.log('Adding Claim', info.events.ClaimCreated.returnValues.id)
         })
     }
 
     render() {
-        console.log("rendering")
         return (
             <CardGroup style={{ padding: '10px' }}>
                 <Card body outline color="primary">
