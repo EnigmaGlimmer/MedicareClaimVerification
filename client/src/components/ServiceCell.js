@@ -18,8 +18,8 @@ class ServiceCell extends Component {
 
     verifyClaim() {
         if (this.checked) {
-            this.props.deleteClaimFromList(this.props.i)
             this.props.verifyClaim(this.props.serviceAddr)
+            this.props.deleteClaimFromList(this.props.i)
         }
     }
 

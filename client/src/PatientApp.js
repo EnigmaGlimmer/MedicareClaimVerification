@@ -108,11 +108,17 @@ export class PatientApp extends Component {
     }
 
     componentDidMount = async () => {
-        this.getUnverifiedClaims(this.patientId);
         var _ = this;
-        setInterval(function () {
-            _.getUnverifiedClaims(_.patientId);
-        }, 10000);
+        this.getUnverifiedClaims(this.patientId);
+        this.state.contract.events.ClaimCreated(function(err, res) {
+            if(!err){
+                _.getUnverifiedClaims(_.patientId);
+            }
+        })
+        // var _ = this;
+        // setInterval(function () {
+        //     _.getUnverifiedClaims(_.patientId);
+        // }, 10000);
     };
 
     deleteClaimFromList(i) {
@@ -157,8 +163,8 @@ export class PatientApp extends Component {
     verifyClaim = async (serviceClaimID) => {
         const { accounts, contract } = this.state;
         const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
-        this.getUnverifiedClaims(this.patientId);
-        console.log('confirmation', info)
+        // this.getUnverifiedClaims(this.patientId);
+        // console.log('confirmation', info)
         // const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });
         // console.log('verifiedClaims', ver, 'confirmation', info)
     }

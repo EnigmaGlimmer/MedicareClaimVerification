@@ -70,12 +70,6 @@ class PatientCell extends Component {
         this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
             let list = this.state.serviceList;
             this.setState({ serviceList: list })
-            this.state.contract.events.serviceList(function(err, res) {
-                if(!err){
-                    console.log('serviceList update: ', res)
-                }
-            })
-            console.log('Adding Claim', info.events.ClaimCreated.returnValues.id)
         })
     }
 
