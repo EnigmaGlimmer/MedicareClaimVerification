@@ -27,6 +27,7 @@ export class PatientApp extends Component {
         this.updatePatientName = this.updatePatientName.bind(this);
         this.getClaims = this.getClaims.bind(this)
         this.getUnverifiedClaims = this.getUnverifiedClaims.bind(this)
+        // this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
         // this.provideService = this.provideService.bind(this);
         // this.fileClaim = this.fileClaim.bind(this);
     }
@@ -108,12 +109,23 @@ export class PatientApp extends Component {
 
     componentDidMount = async () => {
         console.log(this.patientId)
-        // // this.getUnverifiedClaims(this.patientId);
-        // var _ = this;
-        // setInterval(function () {
-        //     _.getUnverifiedClaims(_.patientId);
-        // }, 10000);
+        this.getUnverifiedClaims(this.patientId);
+        var _ = this;
+        setInterval(function () {
+            _.getUnverifiedClaims(_.patientId);
+        }, 10000);
     };
+
+    // deleteClaimFromList(name){
+    //     let list = this.state.unverifiedClaims;
+    //     let targetIndex = 0;
+    //     for(let i = 0; i < list.length; i++){
+    //         if(list[i][0] === name){
+    //             targetIndex = i
+    //         }
+    //     }
+    //     list.splice(i, 1)
+    // }
 
     getClaims = async (id) => {
         const { accounts, contract } = this.state;
@@ -149,6 +161,8 @@ export class PatientApp extends Component {
         const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
         console.log(info);
         this.getUnverifiedClaims(this.patientId);
+        const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });
+        console.log('ver', ver)
     }
 
     render() {

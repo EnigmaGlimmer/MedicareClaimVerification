@@ -22718,10 +22718,16 @@
       "links": {},
       "address": "0x8B1893fCfa5AC5d97032d36A22F2d02E376Ebe85",
       "transactionHash": "0xf9676d560247d668b97d1447c5fbd121e760d9468da8d75d9a49dd2fd7eefa6f"
+    },
+    "1568337028495": {
+      "events": {},
+      "links": {},
+      "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
+      "transactionHash": "0xd97f241cb493634ef98f20c965a934c81d44804a1710e6c409ebc455a684fad2"
     }
   },
   "schemaVersion": "3.0.11",
-  "updatedAt": "2019-09-12T22:49:55.912Z",
+  "updatedAt": "2019-09-13T01:11:23.740Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {
