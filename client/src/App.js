@@ -151,7 +151,7 @@ class App extends Component {
                             <FormGroup>
                                 <Input placeholder='Username' onChange={this.updateUsername} />
                                 <br></br>
-                                <Input placeholder='Password' />
+                                <Input type='password' placeholder='Password' />
                             </FormGroup>
                             <Button type="submit" color='success'>Enter</Button>
                         </Form>

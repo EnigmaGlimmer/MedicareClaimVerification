@@ -50,8 +50,8 @@ class PatientCell extends Component {
     }
 
     componentDidMount = async () => {
-        const unv = await this.props.contract.methods.patientUnverifiedClaims(this.patientID).send({ from: this.props.accounts[0] });
-        console.log('unv', unv)
+        // const unv = await this.props.contract.methods.patientUnverifiedClaims(this.patientID).send({ from: this.props.accounts[0] });
+        // console.log('unv', unv)
         // await this.props.contract.methods.providerMap(this.props.sd.events.ProviderCreated.returnValues.id).send({ from: this.props.accounts[0] });
         // await this.props.contract.methods.insurerMap(this.props.sd.events.InsurerCreated.returnValues.id).send({ from: this.props.accounts[0] });
     }

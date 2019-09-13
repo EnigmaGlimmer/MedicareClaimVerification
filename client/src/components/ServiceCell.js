@@ -18,7 +18,7 @@ class ServiceCell extends Component {
 
     verifyClaim() {
         if (this.checked) {
-            this.props.verifyClaim(this.props.serviceID)
+            this.props.verifyClaim(this.props.serviceAddr)
         }
     }
 

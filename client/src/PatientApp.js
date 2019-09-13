@@ -108,11 +108,11 @@ export class PatientApp extends Component {
 
     componentDidMount = async () => {
         console.log(this.patientId)
-        this.getUnverifiedClaims(this.patientId);
-        var _ = this;
-        setInterval(function () {
-            _.getUnverifiedClaims(_.patientId);
-        }, 10000);
+        // // this.getUnverifiedClaims(this.patientId);
+        // var _ = this;
+        // setInterval(function () {
+        //     _.getUnverifiedClaims(_.patientId);
+        // }, 10000);
     };
 
     getClaims = async (id) => {

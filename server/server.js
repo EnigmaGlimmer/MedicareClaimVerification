@@ -93,7 +93,6 @@ app.use('/serviceClaimCreated', function (req, res) {
 
 app.use('/login', function(req, res){
   var username = req.body.username;
-  console.log(username)
   if(!idMapping[username]){
     res.status(200).json({ message: 'NOK' })
   }
