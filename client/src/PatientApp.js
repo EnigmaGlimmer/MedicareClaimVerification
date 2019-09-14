@@ -142,6 +142,7 @@ export class PatientApp extends Component {
         const { accounts, contract } = this.state;
         var list = []
         const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
+        console.log('wtf is happening', unv)
         if (unv.events.SCName) {
             if (!unv.events.SCName.length) {
                 if (parseInt(unv.events.serviceList.returnValues.services[0]) !== 0) {
@@ -163,8 +164,8 @@ export class PatientApp extends Component {
     verifyClaim = async (serviceClaimID) => {
         const { accounts, contract } = this.state;
         const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
+        console.log('confirmation', info)
         // this.getUnverifiedClaims(this.patientId);
-        // console.log('confirmation', info)
         // const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });
         // console.log('verifiedClaims', ver, 'confirmation', info)
     }
@@ -192,6 +193,7 @@ export class PatientApp extends Component {
                                     verifyClaim={this.verifyClaim}
                                     i={i}
                                     deleteClaimFromList={this.deleteClaimFromList}
+                                    arrLength ={this.state.unverifiedClaims.length}
                                 />
                             }) :
                             <CardGroup style={{ textAlign: 'center', padding: '50px' }}>

@@ -42,6 +42,7 @@ class App extends Component {
         const { accounts, contract } = this.state;
         const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
         this.solidityData = info;
+        console.log('Solidity Information preloaded')
     };
 
     componentDidMount = async () => {

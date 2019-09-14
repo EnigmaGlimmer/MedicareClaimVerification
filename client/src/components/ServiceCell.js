@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, CardHeader, Card, Input, CardTitle, CardText, CardGroup, CardBody, Col, Row } from 'reactstrap';
 import "./PatientCell.css"
 import "./ToggleSwitch.css"
+// import { arrayify } from "ethers/utils";
 
 class ServiceCell extends Component {
     constructor(props) {
@@ -19,6 +20,14 @@ class ServiceCell extends Component {
     verifyClaim() {
         if (this.checked) {
             this.props.verifyClaim(this.props.serviceAddr)
+            for(let index = this.props.i; index < this.props.arrLength - 1; index++){
+                document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
+                this.checked = document.getElementById("togBtn"+index).checked
+                console.log(this.props.i, this.checked)
+            }
+            if(document.getElementById("togBtn"+(this.props.i+1))){
+                
+            }
             this.props.deleteClaimFromList(this.props.i)
         }
     }

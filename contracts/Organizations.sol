@@ -28,6 +28,7 @@ contract Organizations {
     event InsurerCreated(bytes32 id, string name);
     event PatientRetrieval(Patient patient);
     event ProviderRetrieval(Provider provider);
+    event ServiceClaimInfo(address addr, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
 
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
@@ -302,6 +303,30 @@ contract Organizations {
     function getAdmin() public view returns (uint) {
         return admin;
     }
+
+    function getAllServices() public {
+       for (uint i = 0; i < SCList.length; i++) {
+           ServiceClaim sc = ServiceClaim(SCList[i]);
+           emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+       }
+   }
+   function getAllVerifiedServices() public {
+       for (uint i = 0; i < SCList.length; i++) {
+           ServiceClaim sc = ServiceClaim(SCList[i]);
+           if (sc.verified() == true) {
+               emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+           }
+       }
+   }
+   function getAllUnverifiedServices() public {
+       for (uint i = 0; i < SCList.length; i++) {
+           ServiceClaim sc = ServiceClaim(SCList[i]);
+           if (sc.verified() == false) {
+               emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+           }
+       }
+   }
+
 
 
 
