@@ -6,7 +6,7 @@ import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 
-import "./ProviderApp.css";
+import "./App.css";
 
 export class PatientApp extends Component {
     constructor(props) {
@@ -142,7 +142,7 @@ export class PatientApp extends Component {
         const { accounts, contract } = this.state;
         var list = []
         const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
-        console.log('wtf is happening', unv)
+        console.log('results from patientUnverifiedClaims', unv)
         if (unv.events.SCName) {
             if (!unv.events.SCName.length) {
                 if (parseInt(unv.events.serviceList.returnValues.services[0]) !== 0) {
@@ -172,7 +172,7 @@ export class PatientApp extends Component {
 
     render() {
         // let sd = this.solidityData
-        // console.log("Rendering PatientApp ", sd)
+        console.log("Rendering PatientApp")
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
@@ -180,7 +180,7 @@ export class PatientApp extends Component {
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
 
-                <ul>
+                <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&
                             this.state.unverifiedClaims.length > 0 ?

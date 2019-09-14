@@ -6,7 +6,7 @@ import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 
-import "./ProviderApp.css";
+import "./App.css";
 
 export class ProviderApp extends Component {
   constructor(props) {
@@ -170,7 +170,7 @@ export class ProviderApp extends Component {
         <Row>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
-            <ul>
+            <ul id='cells'>
               {this.state.patients.map((o, i) => {
                 return <PatientCell name={o[0]} 
                                     key={i}

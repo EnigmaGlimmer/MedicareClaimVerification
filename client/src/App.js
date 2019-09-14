@@ -7,6 +7,7 @@ import { log } from './App-unused';
 import $ from 'jquery'
 import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
+import InsurerApp from './InsurerApp'
 import './Login.css'
 
 class App extends Component {
@@ -111,6 +112,9 @@ class App extends Component {
                     else if(data.result.role === 'Provider') {
                         this.setState({ providerLoginSuccess: true })
                     }
+                    else{
+                        this.setState({ insurerLoginSuccess: true })
+                    }
                 }
                 else {
                     console.log('ERROR logging in');
@@ -141,8 +145,16 @@ class App extends Component {
                         web3={this.state.web3}
                         id={this.id} /> : null
                 }
+                {
+                    this.state.insurerLoginSuccess ? <InsurerApp
+                        sd={this.solidityData}
+                        contract={this.state.contract}
+                        accounts={this.state.accounts}
+                        web3={this.state.web3}
+                        id={this.id} /> : null
+                }
                 {/* {this.redirectAfterLogin()} */}
-                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess ?
+                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                 <div style={{ textAlign: 'center' }}>
                     <h1>Medicare Insurance Claim Tracking</h1>
                     <Card id='login'>

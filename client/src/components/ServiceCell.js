@@ -20,14 +20,13 @@ class ServiceCell extends Component {
     verifyClaim() {
         if (this.checked) {
             this.props.verifyClaim(this.props.serviceAddr)
-            for(let index = this.props.i; index < this.props.arrLength - 1; index++){
-                document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
-                this.checked = document.getElementById("togBtn"+index).checked
-                console.log(this.props.i, this.checked)
-            }
-            if(document.getElementById("togBtn"+(this.props.i+1))){
-                
-            }
+            this.checked = false;
+            document.getElementById(this.id).checked = false;
+            // for(let index = this.props.i; index < this.props.arrLength - 1; index++){
+            //     document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
+            //     this.checked = document.getElementById("togBtn"+index).checked
+            //     console.log(index, this.checked)
+            // }
             this.props.deleteClaimFromList(this.props.i)
         }
     }

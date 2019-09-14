@@ -30,7 +30,7 @@
   padding: 10px;
 }
 
-ul{
+#cells{
   overflow:hidden; 
   overflow-y:scroll; 
   height:600px;
