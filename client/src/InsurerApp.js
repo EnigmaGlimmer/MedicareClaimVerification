@@ -14,6 +14,17 @@ export class InsurerApp extends Component {
             activeTab: '1'
         };
         this.toggle = this.toggle.bind(this);
+        this.getAllServices = this.getAllServices.bind(this)
+    }
+
+    componentDidMount = async() => {
+        this.getAllServices();
+    }
+
+    getAllServices = async() => {
+        const { accounts, contract } = this.state;
+        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
+        console.log (services);
     }
 
     toggle(tab) {

@@ -199,7 +199,7 @@ contract Organizations {
                 break;
             }
         }
-        string memory name = myServiceClaim.name();
+        // string memory name = myServiceClaim.name();
         //SC memory newSC = SC(name, address(myServiceClaim));
         cP.unverifiedClaims.push(address(myServiceClaim));
         emit ClaimCreated(newClaimID, _amount);
