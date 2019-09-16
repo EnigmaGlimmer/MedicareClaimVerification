@@ -10,11 +10,11 @@ contract ServiceClaim {
     bytes32 public patientID;
 
     // ServiceClaim Information
-    bytes32 serviceClaimID;
+    bytes32 public serviceClaimID;
     string public name;
-    uint256 amount;
-    bool verified;
-    bool paid;
+    uint256 public amount;
+    bool public verified;
+    bool public paid;
 
 
     event ClaimAdded(uint256 amount);
