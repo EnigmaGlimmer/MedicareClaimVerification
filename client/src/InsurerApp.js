@@ -22,14 +22,15 @@ export class InsurerApp extends Component {
 
     componentDidMount = async () => {
         this.getAllServices();
+        var _ = this;
         this.state.contract.events.ClaimCreated(function (err, res) {
             if (!err) {
-                this.getAllServices();
+                _.getAllServices();
             }
         })
         this.state.contract.events.ClaimVerified(function (err, res) {
             if (!err) {
-                this.getAllServices();
+                _.getAllServices();
             }
         })
     }
@@ -38,14 +39,18 @@ export class InsurerApp extends Component {
         const { accounts, contract } = this.state;
         const services = await contract.methods.getAllServices().send({ from: accounts[0] });
         console.log('calling getAllServices', services);
+        let verlist = []
+        let unvlist = []
         for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
             if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
-                this.ver.push(services.events.ServiceClaimInfo[i])
+                verlist.push(services.events.ServiceClaimInfo[i])
             }
             else {
-                this.unv.push(services.events.ServiceClaimInfo[i])
+                unvlist.push(services.events.ServiceClaimInfo[i])
             }
         }
+        this.ver = verlist;
+        this.unv = unvlist;
         this.setState({ state: this.state });
     }
 

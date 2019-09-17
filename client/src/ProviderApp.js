@@ -110,6 +110,9 @@ export class ProviderApp extends Component {
     }
     console.log(patientList)
     this.setState({ patients: patientList })
+    // const { accounts, contract } = this.state;
+    // const info = await contract.methods.getPatients().send({ from: accounts[0] });
+    // console.log("please work", info)
   };
 
   provideService = async(serviceName, providerID, patientID) => {
