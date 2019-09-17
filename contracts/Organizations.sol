@@ -1,24 +1,16 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
-
-
 import "./SafeMath.sol";
 import "./ServiceClaim.sol";
-
 contract Organizations {
-
     uint admin;
-
-
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data
-
     mapping (bytes32=>Patient) public patientMap; //ID of patient to specific provider -
     mapping (bytes32=>Provider) public providerMap; //ID of provider to specific provider -
     mapping (bytes32=>Insurer) public insurerMap; //ID of insurance provider to specific insurer
     mapping (bytes32=>address) public serviceClaimsMap; //ID of serviceClaim to the specific ServiceClaim contract instance
     mapping (address=>string) public serviceName;
-
     //Events for organization creation    event ServiceCreated(address serviceClaimAddr);
     event SCID(bytes32 ID, address addr);
     event ClaimCreated(uint256 id, uint256 amount);
@@ -29,16 +21,13 @@ contract Organizations {
     event PatientRetrieval(Patient patient);
     event ProviderRetrieval(Provider provider);
     event ServiceClaimInfo(address addr, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
-
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
     //event insurerList(Insurer[] insurers);
-
     event idList(bytes32[] ids);
     event serviceList(address[] services);
     event SCName(string name);
     event SCEvent(SC);
-
     struct SC {
         address scAddr;
         bytes32 id;
@@ -50,15 +39,14 @@ contract Organizations {
         bool verified;
         bool paid;
     }
-
     bytes32 globalInsurerID;
   
     SC[] scs;
-
     mapping (address=>string) SCMap;
     address[] SCList;
-
-
+    bytes32[] patientList;
+    bytes32[] providerList;
+    bytes32[] insurerList;
     struct Patient {
         bytes32 id;
         string name;
@@ -67,36 +55,19 @@ contract Organizations {
         address[] unverifiedClaims;
         address[] verifiedClaims;
     }
-
     struct Provider {
         bytes32 id;
         string name;
         bytes32[] patients;
     }
-
     struct Insurer {
         bytes32 id;
         string name;
         bytes32[] providers;
     }
-
     constructor() public {
         preLoadInfo();
     }
-
-    // function stringToBytes32(string memory source) public returns (bytes32 result) {
-    //     bytes memory tempEmptyStringTest = bytes(source);
-    //     if (tempEmptyStringTest.length == 0) {
-    //         return 0x0;
-    //     }
-
-    //     assembly {
-    //         result := mload(add(source, 32))
-    //     }
-    // }
-
-
-
     function preLoadInfo() public{
         bytes32 insurerID = addInsurer("CMS");
         bytes32 providerID = addProvider("UCSD Medical", insurerID);
@@ -105,7 +76,6 @@ contract Organizations {
         addPatient("Antonio", providerID);
     }
     // ------------------------------ Adds Users to Network --------------------------- //
-
     /** @dev add a patient to the network
     @param _name is the name of the patient
     @param _providerID is the current provider of the patient
@@ -119,11 +89,14 @@ contract Organizations {
         Patient memory newPatient = Patient(id, _name, uServiceList, uClaimList, vClaimList);
         //bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[id] = newPatient;
+        patientList.push(id);
         providerMap[_providerID].patients.push(newPatient.id);
         emit PatientCreated(id, _name);
         return id;
     }
-
+    function getPatients() public view returns(bytes32[] memory nice) {
+        return patientList;
+    }
     /** @dev add a provider to the network
     @param _name name of the provider
     @param _insurerID id of insurance provider
@@ -136,10 +109,13 @@ contract Organizations {
         //bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
         providerMap[id] = newProvider;
         insurerMap[_insurerID].providers.push(newProvider.id);
+        providerList.push(id);
         emit ProviderCreated(id, _name);
         return id;
     }
-
+    function getProviders() public view returns(bytes32[] memory nice) {
+        return providerList;
+    }
     /** @dev add an insurnace provider to the network
     @param _name the name of the insurance provider
     @return pID of the insurance provider
@@ -150,12 +126,14 @@ contract Organizations {
         Insurer memory newInsurer = Insurer(id, _name, emptyList);
         //bytes32 insurerHash = keccak256(abi.encodePacked(newInsurer));
         insurerMap[id] = newInsurer;
+        insurerList.push(id);
         emit InsurerCreated(id, _name);
         return id;
     }
-
+    function getInsurers() public view returns(bytes32[] memory nice) {
+        return insurerList;
+    }
     // ------------------------------ Functionality of the Network --------------------------- //
-
     /** @dev create an instance of a ServiceClaim contract
     @param _name name of the service
     @param _providerID provider ID
@@ -179,7 +157,6 @@ contract Organizations {
         emit SCID(serviceClaimID, address(serviceClaim));
         return serviceClaimID;
     }
-
     /** @dev add a claim to a ServiceClaim contract i.e. the provider wants to file a claim for a service rendered
     @param _serviceClaimID the ID of the ServiceClaim contract
     @param _amount the amount to be claimed by the provider
@@ -189,10 +166,8 @@ contract Organizations {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         uint256 newClaimID = myServiceClaim.fileClaim(_amount);
-
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
-
         for(uint i = 0; i < cP.unclaimedServices.length; i++){
             if(cP.unclaimedServices[i] == address(myServiceClaim)){
                 delete(cP.unclaimedServices[i]);
@@ -220,7 +195,6 @@ contract Organizations {
         // Delete the claim address from unverified list
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
-
         for(uint i = 0; i < cP.unverifiedClaims.length; i++){
             if(cP.unverifiedClaims[i] == address(myServiceClaim)){
                 delete(cP.unverifiedClaims[i]);
@@ -232,7 +206,6 @@ contract Organizations {
         cP.verifiedClaims.push(address(myServiceClaim));
         emit ClaimVerified(_serviceClaimAddress);
     }
-
     /** @dev invoke the payProvider function in the ServiceClaim contract
     @param _serviceClaimID the id of the ServiceClaim contract
     */
@@ -241,37 +214,27 @@ contract Organizations {
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         myServiceClaim.payProvider();
     }
-
-
-
     // ------------------------------ Getters of Network Data --------------------------- //
-
-
     function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
         Provider storage cP = providerMap[_id];
         emit idList(cP.patients);
         return(cP.patients);
     }
-
     function providersOfInsurer(bytes32 _id) public returns (bytes32[] memory) {
         Insurer storage cI = insurerMap[_id];
         emit idList(cI.providers);
         return(cI.providers);
     }
-
     function getPatient(bytes32 _id) public returns (bool){
         Patient memory patient = patientMap[_id];
         emit PatientRetrieval(patient);
         return true;
     }
-
     function getProvider(bytes32 _id) public returns (Provider memory){
         Provider memory provider = providerMap[_id];
         emit ProviderRetrieval(provider);
         return providerMap[_id];
     }
-
-
     function patientUnclaimedServices(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         emit serviceList(cP.unclaimedServices);
@@ -282,7 +245,6 @@ contract Organizations {
         // address[] memory a;
         // return a;
     }
-
     function patientUnverifiedClaims(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         //bytes32[] memory claimNames = new bytes32[](cP.unverifiedClaims.length);
@@ -293,13 +255,10 @@ contract Organizations {
         return(cP.unverifiedClaims);
         // address[] memory a;
         // return a;
-
     }
-
     function patientVerifiedClaims(bytes32 _id) public returns (address[] memory){
         Patient storage cP = patientMap[_id];
         emit serviceList(cP.verifiedClaims);
-
         for(uint i = 0; i < cP.verifiedClaims.length; i++){
             emit SCName(SCMap[cP.verifiedClaims[i]]);
         }
@@ -307,60 +266,33 @@ contract Organizations {
         // address[] memory a;
         // return a;
     }
-
-
-
     function setAdmin(uint _num) public {
         admin = _num;
     }
-
-
     function getAdmin() public view returns (uint) {
         return admin;
     }
-
-
     //   event ServiceClaimInfo(address addr, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
-
     function getAllServices() public {
         for (uint i = 0; i < SCList.length; i++) {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
         }
     }
-
-
-    function getAllVerifiedServices() public {
-        for (uint i = 0; i < SCList.length; i++) {
-            ServiceClaim sc = ServiceClaim(SCList[i]);
-            if (sc.verified() == true) {
-                emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
-            }
-        }
-    }
-
-    function getAllUnverifiedServices() public {
-        for (uint i = 0; i < SCList.length; i++) {
-            ServiceClaim sc = ServiceClaim(SCList[i]);
-            if (sc.verified() == false) {
-                emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
-            }
-        }
-    }
-
-
-
-// TODO
-    // function insurerUnpaidClaims(bytes32 _id) public {
+    // function getAllVerifiedServices() public {
+    //     for (uint i = 0; i < SCList.length; i++) {
+    //         ServiceClaim sc = ServiceClaim(SCList[i]);
+    //         if (sc.verified() == true) {
+    //             emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+    //         }
+    //     }
     // }
-    // function insurerPaidClaims(bytes32 _id) public {
-
-    // }
-
-    // function providerUnpaidClaims(bytes32 _id) public {
-
-    // }
-
-    //  function providerPaidClaims(bytes32 _id) public {
+    // function getAllUnverifiedServices() public {
+    //     for (uint i = 0; i < SCList.length; i++) {
+    //         ServiceClaim sc = ServiceClaim(SCList[i]);
+    //         if (sc.verified() == false) {
+    //             emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+    //         }
+    //     }
     // }
 }

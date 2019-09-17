@@ -64,7 +64,7 @@ class App extends Component {
 
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
-            this.setState({ web3, accounts, contract: instance }, this.fetchData);
+            this.setState({ web3, accounts, contract: instance });
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -110,7 +110,9 @@ class App extends Component {
                         this.setState({ patientLoginSuccess: true })
                     }
                     else if(data.result.role === 'Provider') {
-                        this.setState({ providerLoginSuccess: true })
+                        this.fetchData().then(()=> {
+                            this.setState({ providerLoginSuccess: true })
+                        })
                     }
                     else{
                         this.setState({ insurerLoginSuccess: true })

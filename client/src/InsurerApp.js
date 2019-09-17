@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import $ from 'jquery'
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
 
@@ -11,20 +11,42 @@ export class InsurerApp extends Component {
             web3: this.props.web3,
             accounts: this.props.accounts,
             contract: this.props.contract,
-            activeTab: '1'
+            activeTab: '1',
+            state: true
         };
+        this.unv = []
+        this.ver = []
         this.toggle = this.toggle.bind(this);
         this.getAllServices = this.getAllServices.bind(this)
     }
 
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         this.getAllServices();
+        this.state.contract.events.ClaimCreated(function (err, res) {
+            if (!err) {
+                this.getAllServices();
+            }
+        })
+        this.state.contract.events.ClaimVerified(function (err, res) {
+            if (!err) {
+                this.getAllServices();
+            }
+        })
     }
 
-    getAllServices = async() => {
+    getAllServices = async () => {
         const { accounts, contract } = this.state;
         const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-        console.log (services);
+        console.log('calling getAllServices', services);
+        for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+            if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
+                this.ver.push(services.events.ServiceClaimInfo[i])
+            }
+            else {
+                this.unv.push(services.events.ServiceClaimInfo[i])
+            }
+        }
+        this.setState({ state: this.state });
     }
 
     toggle(tab) {
@@ -39,7 +61,7 @@ export class InsurerApp extends Component {
         return (
             <div>
                 <h1 id='centerText'>Insurer Dashboard</h1>
-                <Nav tabs style={{justifyContent: 'center'}}>
+                <Nav tabs style={{ justifyContent: 'center' }}>
                     <NavItem>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '1' })}
@@ -59,10 +81,46 @@ export class InsurerApp extends Component {
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
-                        
+                        {
+                            this.ver.length > 0 ?
+                                this.ver.map((output, i) => {
+                                    return <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                        <Card body outline color="primary" >
+                                            <CardBody>
+                                                {output.returnValues.id}
+                                            </CardBody>
+                                        </Card>
+                                    </CardGroup>
+                                }) : <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                    <Card body outline color="primary" >
+                                        <CardBody>
+                                            No verified claims found.
+                            </CardBody>
+                                    </Card>
+                                </CardGroup>
+
+                        }
                     </TabPane>
                     <TabPane tabId="2">
-                        
+                        {
+                            this.unv.length > 0 ?
+                                this.unv.map((output, i) => {
+                                    return <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                        <Card body outline color="primary" >
+                                            <CardBody>
+                                                {output.returnValues.id}
+                                            </CardBody>
+                                        </Card>
+                                    </CardGroup>
+                                }) :
+                                <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                    <Card body outline color="primary" >
+                                        <CardBody>
+                                            No unverified claims found.
+                                </CardBody>
+                                    </Card>
+                                </CardGroup>
+                        }
                     </TabPane>
                 </TabContent>
             </div>
