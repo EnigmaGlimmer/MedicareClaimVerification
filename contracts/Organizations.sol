@@ -20,7 +20,8 @@ contract Organizations {
     event InsurerCreated(bytes32 id, string name);
     event PatientRetrieval(Patient patient);
     event ProviderRetrieval(Provider provider);
-    event ServiceClaimInfo(address addr, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
+    event ServiceClaimInfo(
+        address addr, string patientname, string providername, string claimname, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
     //event insurerList(Insurer[] insurers);
@@ -276,7 +277,10 @@ contract Organizations {
     function getAllServices() public {
         for (uint i = 0; i < SCList.length; i++) {
             ServiceClaim sc = ServiceClaim(SCList[i]);
-            emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            string memory patientname = patientMap[sc.patientID()].name;
+            string memory providername = providerMap[sc.providerID()].name;
+            emit ServiceClaimInfo(
+                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
         }
     }
     // function getAllVerifiedServices() public {
