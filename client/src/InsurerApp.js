@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import $ from 'jquery'
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
 
@@ -86,46 +86,74 @@ export class InsurerApp extends Component {
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
+                    <Table responsive bordered style={this.props.style}>
+                        <thead style={{ backgroundColor: '#ffffff' }}>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Address</th>
+                                <th>Provider</th>
+                                <th>Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         {
                             this.ver.length > 0 ?
                                 this.ver.map((output, i) => {
-                                    return <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
-                                        <Card body outline color="primary" >
-                                            <CardBody>
-                                                {output.returnValues.id}
-                                            </CardBody>
-                                        </Card>
-                                    </CardGroup>
-                                }) : <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
-                                    <Card body outline color="primary" >
-                                        <CardBody>
-                                            No verified claims found.
-                            </CardBody>
-                                    </Card>
-                                </CardGroup>
-
+                                    return <tr key={i} style={{ backgroundColor: '#ffffff' }}>
+                                        <td>{output.returnValues.id}</td>
+                                        <td>{output.returnValues.patient}</td>
+                                        <td>{output.returnValues.addr}</td>
+                                        <td>{output.returnValues.provider}</td>
+                                        <td>{output.returnValues.payed}</td>
+                                    </tr>
+                                }) : (
+                                    <tr style={{ backgroundColor: '#ffffff' }}>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                    </tr>
+                                )
                         }
+                        </tbody>
+                    </Table>
                     </TabPane>
                     <TabPane tabId="2">
+                    <Table responsive bordered style={this.props.style}>
+                        <thead style={{ backgroundColor: '#ffffff' }}>
+                            <tr>
+                                <th>ID</th>
+                                <th>Patient</th>
+                                <th>Address</th>
+                                <th>Provider</th>
+                                <th>Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         {
                             this.unv.length > 0 ?
                                 this.unv.map((output, i) => {
-                                    return <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
-                                        <Card body outline color="primary" >
-                                            <CardBody>
-                                                {output.returnValues.id}
-                                            </CardBody>
-                                        </Card>
-                                    </CardGroup>
-                                }) :
-                                <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
-                                    <Card body outline color="primary" >
-                                        <CardBody>
-                                            No unverified claims found.
-                                </CardBody>
-                                    </Card>
-                                </CardGroup>
+                                    return <tr key={i} style={{ backgroundColor: '#ffffff' }}>
+                                        <td>{output.returnValues.id}</td>
+                                        <td>{output.returnValues.patient}</td>
+                                        <td>{output.returnValues.addr}</td>
+                                        <td>{output.returnValues.provider}</td>
+                                        <td>{output.returnValues.payed}</td>
+                                    </tr>
+                                }) : (
+                                    <tr style={{ backgroundColor: '#ffffff' }}>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                    </tr>
+                                )
                         }
+                        </tbody>
+                    </Table>
                     </TabPane>
                 </TabContent>
             </div>
