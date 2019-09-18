@@ -26,8 +26,7 @@ class PatientCell extends Component {
                     {
                         serviceClaimID: null,
                         serviceName: null,
-                        amount: null,
-                        claims: []
+                        amount: null
                     }
                 */
             ]
@@ -68,8 +67,9 @@ class PatientCell extends Component {
         }
         this.toggle();
         this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
+            console.log('provideService timestamp', info.Timestamp)
             let list = this.state.serviceList;
-            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, amount: this.amount, claims: [] });
+            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, amount: this.amount });
             this.setState({ serviceList: list })
             console.log('Creating Service Claim', this.state.serviceList)
         })
@@ -77,7 +77,13 @@ class PatientCell extends Component {
 
     fileClaim(serviceClaimID, amount) {
         this.props.fileClaim(serviceClaimID, amount).then((info) => {
+            console.log('fileClaim timestamp', info.Timestamp)
             let list = this.state.serviceList;
+            for(let i = 0; i < list.length; i++){
+                if(list[i].serviceClaimID === serviceClaimID){
+                    list.splice(i, 1); 
+                }
+            }
             this.setState({ serviceList: list })
         })
     }
