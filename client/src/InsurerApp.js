@@ -32,6 +32,7 @@ export class InsurerApp extends Component {
     }
 
     componentDidMount = async () => {
+        console.log('rerendering')
         this.getAllServices();
         var _ = this;
         this.state.contract.events.ClaimCreated(function (err, res) {
@@ -47,6 +48,7 @@ export class InsurerApp extends Component {
     }
 
     getAllServices = async () => {
+        console.log('one metamask call')
         const { accounts, contract } = this.state;
         const services = await contract.methods.getAllServices().send({ from: accounts[0] });
         console.log('calling getAllServices', services);

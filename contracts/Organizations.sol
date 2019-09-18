@@ -48,6 +48,8 @@ contract Organizations {
     bytes32[] patientList;
     bytes32[] providerList;
     bytes32[] insurerList;
+    bytes32[] claimList;
+
     struct Patient {
         bytes32 id;
         string name;
@@ -169,6 +171,7 @@ contract Organizations {
         uint256 newClaimID = myServiceClaim.fileClaim(_amount);
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
+        claimList.push(_serviceClaimID);
         for(uint i = 0; i < cP.unclaimedServices.length; i++){
             if(cP.unclaimedServices[i] == address(myServiceClaim)){
                 delete(cP.unclaimedServices[i]);
@@ -283,20 +286,24 @@ contract Organizations {
                 address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
         }
     }
-    // function getAllVerifiedServices() public {
-    //     for (uint i = 0; i < SCList.length; i++) {
-    //         ServiceClaim sc = ServiceClaim(SCList[i]);
-    //         if (sc.verified() == true) {
-    //             emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
-    //         }
-    //     }
-    // }
-    // function getAllUnverifiedServices() public {
-    //     for (uint i = 0; i < SCList.length; i++) {
-    //         ServiceClaim sc = ServiceClaim(SCList[i]);
-    //         if (sc.verified() == false) {
-    //             emit ServiceClaimInfo(address(sc), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
-    //         }
-    //     }
-    // }
+    function getAllVerifiedServices() public {
+        for (uint i = 0; i < SCList.length; i++) {
+            ServiceClaim sc = ServiceClaim(SCList[i]);
+            string memory patientname = patientMap[sc.patientID()].name;
+            string memory providername = providerMap[sc.providerID()].name;
+            if (sc.verified() == true) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            }
+        }
+    }
+    function getAllUnverifiedServices() public {
+        for (uint i = 0; i < SCList.length; i++) {
+            ServiceClaim sc = ServiceClaim(SCList[i]);
+            string memory patientname = patientMap[sc.patientID()].name;
+            string memory providername = providerMap[sc.providerID()].name;
+            if (sc.verified() == false) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            }
+        }
+    }
 }

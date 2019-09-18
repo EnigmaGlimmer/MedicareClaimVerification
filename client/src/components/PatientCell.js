@@ -9,12 +9,13 @@ class PatientCell extends Component {
         this.patientID = this.props.patientID;
         this.providerID = this.props.providerID;
         this.serviceName = "";
-        this.amount = 10;
+        this.amount = null;
         this.provideService = this.provideService.bind(this);
         this.fileClaim = this.fileClaim.bind(this);
         this.toggle = this.toggle.bind(this);
         this.toggleDropDown = this.toggleDropDown.bind(this);
         this.updateServiceClaimName = this.updateServiceClaimName.bind(this);
+        this.updateAmount = this.updateAmount.bind(this);
         this.toggle = this.toggle.bind(this);
         this.state = {
             modal: false,
@@ -25,6 +26,7 @@ class PatientCell extends Component {
                     {
                         serviceClaimID: null,
                         serviceName: null,
+                        amount: null,
                         claims: []
                     }
                 */
@@ -34,6 +36,10 @@ class PatientCell extends Component {
 
     updateServiceClaimName({ target }) {
         this.serviceName = target.value
+    }
+
+    updateAmount({ target }) {
+        this.amount = target.value
     }
 
     toggle() {
@@ -57,17 +63,20 @@ class PatientCell extends Component {
     }
 
     provideService() {
+        if(this.amount === null || this.amount < 0){
+            this.amount = 0;
+        }
         this.toggle();
         this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
             let list = this.state.serviceList;
-            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, claims: [] });
+            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, amount: this.amount, claims: [] });
             this.setState({ serviceList: list })
             console.log('Creating Service Claim', this.state.serviceList)
         })
     }
 
-    fileClaim(serviceClaimID) {
-        this.props.fileClaim(serviceClaimID, this.amount).then((info) => {
+    fileClaim(serviceClaimID, amount) {
+        this.props.fileClaim(serviceClaimID, amount).then((info) => {
             let list = this.state.serviceList;
             this.setState({ serviceList: list })
         })
@@ -89,6 +98,7 @@ class PatientCell extends Component {
                                 <Button color="success" onClick={this.toggle}>Create Service Claim</Button>
                                 <ServiceModal modal={this.state.modal} toggle={this.toggle} className={this.props.className}
                                     updateServiceClaimName={this.updateServiceClaimName}
+                                    updateAmount={this.updateAmount}
                                     provideService={this.provideService} />
                                 <br></br>
                                 <br></br>
@@ -107,7 +117,7 @@ class PatientCell extends Component {
                                                 </div>
                                             )}
 
-                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimID)}> {item.serviceName} </DropdownItem> })}
+                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimID, item.amount)}> {item.serviceName} </DropdownItem> })}
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Col>
