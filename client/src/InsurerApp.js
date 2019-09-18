@@ -17,7 +17,7 @@ export class InsurerApp extends Component {
         this.unv = []
         this.ver = []
         this.toggle = this.toggle.bind(this);
-        this.getAllServices = this.getAllServices.bind(this)
+        // this.getAllServices = this.getAllServices.bind(this)
         this.copyID = this.copyID.bind(this);
     }
 
@@ -32,52 +32,90 @@ export class InsurerApp extends Component {
     }
 
     componentDidMount = async () => {
-        console.log('rerendering')
-        this.getAllServices();
+        // this.getAllVerifiedServices();
+        // this.getAllUnverifiedServices();
         var _ = this;
         this.state.contract.events.ClaimCreated(function (err, res) {
             if (!err) {
-                _.getAllServices();
+                _.getAllVerifiedServices();
             }
         })
         this.state.contract.events.ClaimVerified(function (err, res) {
             if (!err) {
-                _.getAllServices();
+                _.getAllUnverifiedServices();
             }
         })
     }
 
-    getAllServices = async () => {
-        console.log('one metamask call')
+    getAllVerifiedServices = async () => {
         const { accounts, contract } = this.state;
-        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-        console.log('calling getAllServices', services);
-        let verlist = []
-        let unvlist = []
+        const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
+        console.log('calling getAllVerifiedServices', services);
+        let list = []
         if (services.events.ServiceClaimInfo) {
             if (!services.events.ServiceClaimInfo.length) {
-                if (services.events.ServiceClaimInfo.returnValues.verified === true) {
-                    verlist.push(services.events.ServiceClaimInfo)
-                }
-                else {
-                    unvlist.push(services.events.ServiceClaimInfo)
-                }
+                    list.push(services.events.ServiceClaimInfo)
             } else {
                 for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
-                        verlist.push(services.events.ServiceClaimInfo[i])
-                    }
-                    else {
-                        unvlist.push(services.events.ServiceClaimInfo[i])
-                    }
+                        list.push(services.events.ServiceClaimInfo[i])
                 }
             }
         }
-        this.ver = verlist;
-        this.unv = unvlist;
-        console.log('ver', this.ver, 'unv', this.unv)
+        this.ver = list;
+        console.log('ver', this.ver)
         this.setState({ state: this.state });
     }
+
+    getAllUnverifiedServices = async () => {
+        const { accounts, contract } = this.state;
+        const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
+        console.log('calling getAllUnverifiedServices', services);
+        let list = []
+        if (services.events.ServiceClaimInfo) {
+            if (!services.events.ServiceClaimInfo.length) {
+                    list.push(services.events.ServiceClaimInfo)
+            } else {
+                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+                        list.push(services.events.ServiceClaimInfo[i])
+                }
+            }
+        }
+        this.unv = list;
+        console.log('unv', this.unv)
+        this.setState({ state: this.state });
+    }
+
+    // getAllServices = async () => {
+    //     console.log('one metamask call')
+    //     const { accounts, contract } = this.state;
+    //     const services = await contract.methods.getAllServices().send({ from: accounts[0] });
+    //     console.log('calling getAllServices', services);
+    //     let verlist = []
+    //     let unvlist = []
+    //     if (services.events.ServiceClaimInfo) {
+    //         if (!services.events.ServiceClaimInfo.length) {
+    //             if (services.events.ServiceClaimInfo.returnValues.verified === true) {
+    //                 verlist.push(services.events.ServiceClaimInfo)
+    //             }
+    //             else {
+    //                 unvlist.push(services.events.ServiceClaimInfo)
+    //             }
+    //         } else {
+    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+    //                 if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
+    //                     verlist.push(services.events.ServiceClaimInfo[i])
+    //                 }
+    //                 else {
+    //                     unvlist.push(services.events.ServiceClaimInfo[i])
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     this.ver = verlist;
+    //     this.unv = unvlist;
+    //     console.log('ver', this.ver, 'unv', this.unv)
+    //     this.setState({ state: this.state });
+    // }
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {

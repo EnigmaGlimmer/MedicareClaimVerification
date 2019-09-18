@@ -25,7 +25,7 @@ export class PatientApp extends Component {
         this.patientname = null;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
-        this.getClaims = this.getClaims.bind(this)
+        // this.getClaims = this.getClaims.bind(this)
         this.getUnverifiedClaims = this.getUnverifiedClaims.bind(this)
         this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
         // this.provideService = this.provideService.bind(this);
@@ -110,15 +110,11 @@ export class PatientApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         this.getUnverifiedClaims(this.patientId);
-        this.state.contract.events.ClaimCreated(function(err, res) {
-            if(!err){
+        this.state.contract.events.ClaimCreated(function (err, res) {
+            if (!err) {
                 _.getUnverifiedClaims(_.patientId);
             }
         })
-        // var _ = this;
-        // setInterval(function () {
-        //     _.getUnverifiedClaims(_.patientId);
-        // }, 10000);
     };
 
     deleteClaimFromList(i) {
@@ -128,36 +124,40 @@ export class PatientApp extends Component {
         this.setState({ unverifiedClaims: list })
     }
 
-    getClaims = async (id) => {
-        const { accounts, contract } = this.state;
-        const unverifiedClaims = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
-        this.unverifiedClaims = unverifiedClaims;
-        console.log('unv', this.unverifiedClaims)
-        const verifiedClaims = await contract.methods.patientVerifiedClaims(id).send({ from: accounts[0] });
-        this.verifiedClaims = verifiedClaims;
-        console.log('ver', this.verifiedClaims)
-    }
-
     getUnverifiedClaims = async (id) => {
         const { accounts, contract } = this.state;
         var list = []
-        const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
-        console.log('results from patientUnverifiedClaims', unv)
-        if (unv.events.SCName) {
-            if (!unv.events.SCName.length) {
-                if (parseInt(unv.events.serviceList.returnValues.services[0]) !== 0) {
-                    list.push([unv.events.SCName.returnValues.name, unv.events.serviceList.returnValues.services[0]])
+        const unv = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
+        console.log('results from getAllUnverifiedServices', unv)
+        if (unv.events.ServiceClaimInfo) {
+            if (!unv.events.ServiceClaimInfo.length) {
+                if (unv.events.ServiceClaimInfo.returnValues.patient === id) {
+                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, unv.events.ServiceClaimInfo.returnValues.addr])
                 }
-            }
-            else {
-                for (let i = 0; i < unv.events.SCName.length; i++) {
-                    if (parseInt(unv.events.serviceList.returnValues.services[i]) !== 0) {
-                        list.push([unv.events.SCName[i].returnValues.name, unv.events.serviceList.returnValues.services[i]])
+            } else {
+                for (let i = 0; i < unv.events.ServiceClaimInfo.length; i++) {
+                    if (unv.events.ServiceClaimInfo[i].returnValues.patient === id) {
+                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, unv.events.ServiceClaimInfo[i].returnValues.addr])
                     }
                 }
             }
             this.setState({ unverifiedClaims: list })
         }
+        // if (unv.events.SCName) {
+        //     if (!unv.events.SCName.length) {
+        //         if (parseInt(unv.events.serviceList.returnValues.services[0]) !== 0) {
+        //             list.push([unv.events.SCName.returnValues.name, unv.events.serviceList.returnValues.services[0]])
+        //         }
+        //     }
+        //     else {
+        //         for (let i = 0; i < unv.events.SCName.length; i++) {
+        //             if (parseInt(unv.events.serviceList.returnValues.services[i]) !== 0) {
+        //                 list.push([unv.events.SCName[i].returnValues.name, unv.events.serviceList.returnValues.services[i]])
+        //             }
+        //         }
+        //     }
+        //     this.setState({ unverifiedClaims: list })
+        // }
         console.log("state of unv", this.state.unverifiedClaims)
     }
 
@@ -193,7 +193,7 @@ export class PatientApp extends Component {
                                     verifyClaim={this.verifyClaim}
                                     i={i}
                                     deleteClaimFromList={this.deleteClaimFromList}
-                                    arrLength ={this.state.unverifiedClaims.length}
+                                    arrLength={this.state.unverifiedClaims.length}
                                 />
                             }) :
                             <CardGroup style={{ textAlign: 'center', padding: '50px' }}>

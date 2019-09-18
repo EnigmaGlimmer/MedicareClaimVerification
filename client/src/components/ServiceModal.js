@@ -10,9 +10,9 @@ class ServiceModal extends React.Component {
           <ModalBody>
             Please enter the name for the service.
             <Input onChange={this.props.updateServiceClaimName} placeholder="Name of Service"/>
-            <Input onChange={this.props.updateAmount} placeholder="Amount"/>
           </ModalBody>
           <ModalFooter>
+          <Input onChange={this.props.updateAmount} placeholder="Amount"/>
             <Button color="success" onClick={this.props.provideService}>Create</Button>{' '}
             <Button color="danger" onClick={this.props.toggle}>Cancel</Button>
           </ModalFooter>
