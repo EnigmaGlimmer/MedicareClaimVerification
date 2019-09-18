@@ -32,16 +32,19 @@ export class InsurerApp extends Component {
     }
 
     componentDidMount = async () => {
-        // this.getAllVerifiedServices();
-        // this.getAllUnverifiedServices();
+        console.log('rendering')
+        this.getAllVerifiedServices();
+        this.getAllUnverifiedServices();
         var _ = this;
-        this.state.contract.events.ClaimCreated(function (err, res) {
-            if (!err) {
+        this.state.contract.events.allEvents({
+            fromBlock: 'latest',
+        }, function (error, e) {
+            if (error) { alert('Stop') }
+            if (e.event === 'ClaimVerified') {
                 _.getAllVerifiedServices();
+
             }
-        })
-        this.state.contract.events.ClaimVerified(function (err, res) {
-            if (!err) {
+            else if (e.event === 'ClaimCreated') {
                 _.getAllUnverifiedServices();
             }
         })
@@ -54,10 +57,10 @@ export class InsurerApp extends Component {
         let list = []
         if (services.events.ServiceClaimInfo) {
             if (!services.events.ServiceClaimInfo.length) {
-                    list.push(services.events.ServiceClaimInfo)
+                list.push(services.events.ServiceClaimInfo)
             } else {
                 for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                        list.push(services.events.ServiceClaimInfo[i])
+                    list.push(services.events.ServiceClaimInfo[i])
                 }
             }
         }
@@ -73,10 +76,10 @@ export class InsurerApp extends Component {
         let list = []
         if (services.events.ServiceClaimInfo) {
             if (!services.events.ServiceClaimInfo.length) {
-                    list.push(services.events.ServiceClaimInfo)
+                list.push(services.events.ServiceClaimInfo)
             } else {
                 for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                        list.push(services.events.ServiceClaimInfo[i])
+                    list.push(services.events.ServiceClaimInfo[i])
                 }
             }
         }
@@ -114,7 +117,7 @@ export class InsurerApp extends Component {
     //     this.ver = verlist;
     //     this.unv = unvlist;
     //     console.log('ver', this.ver, 'unv', this.unv)
-    //     this.setState({ state: this.state });
+    // this.setState({ state: this.state });
     // }
 
     toggle(tab) {
@@ -147,7 +150,7 @@ export class InsurerApp extends Component {
             </NavLink>
                     </NavItem>
                 </Nav>
-                <TabContent style={{textAlign: 'center'}} activeTab={this.state.activeTab}>
+                <TabContent style={{ textAlign: 'center' }} activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
                         <Table responsive bordered style={this.props.style}>
                             <thead>
@@ -165,8 +168,8 @@ export class InsurerApp extends Component {
                                     this.ver.length > 0 ?
                                         this.ver.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={()=>this.copyID()}>
-                                                {output.returnValues.id.substring(0,8)}...
+                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID()}>
+                                                    {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
                                                 <td>{output.returnValues.patientname}</td>
                                                 <td>{output.returnValues.claimname}</td>
@@ -205,9 +208,9 @@ export class InsurerApp extends Component {
                                     this.unv.length > 0 ?
                                         this.unv.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={()=>this.copyID(output.returnValues.id)}>
-                                                {output.returnValues.id.substring(0,8)}...
-                                                    </button></td>                                                
+                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
+                                                    {output.returnValues.id.substring(0, 8)}...
+                                                    </button></td>
                                                 <td>{output.returnValues.patientname}</td>
                                                 <td>{output.returnValues.claimname}</td>
                                                 <td>{output.returnValues.providername}</td>

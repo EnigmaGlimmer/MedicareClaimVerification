@@ -33224,12 +33224,12 @@
         }
       },
       "links": {},
-      "address": "0x6c2E6Cbe7da484061eD81431aDD69feFeA0e72BA",
-      "transactionHash": "0xa901dbe943041d273b08e28997c691ef2e89674e1f1570c2a7472f90cdbcae5c"
+      "address": "0x0C5cD8d99781B031cB508A448275db51bEC8A55f",
+      "transactionHash": "0x7699a16984d760767eab0e5dd31e4befe9bd0e296fa148d9e9c7f1f79380ce9d"
     }
   },
   "schemaVersion": "3.0.16",
-  "updatedAt": "2019-09-18T02:22:41.200Z",
+  "updatedAt": "2019-09-18T02:42:54.986Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {
