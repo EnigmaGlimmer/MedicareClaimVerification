@@ -132,12 +132,12 @@ export class PatientApp extends Component {
         if (unv.events.ServiceClaimInfo) {
             if (!unv.events.ServiceClaimInfo.length) {
                 if (unv.events.ServiceClaimInfo.returnValues.patient === id) {
-                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, unv.events.ServiceClaimInfo.returnValues.addr])
+                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, unv.events.ServiceClaimInfo.returnValues.addr, unv.events.ServiceClaimInfo.returnValues.timeProvided])
                 }
             } else {
                 for (let i = 0; i < unv.events.ServiceClaimInfo.length; i++) {
                     if (unv.events.ServiceClaimInfo[i].returnValues.patient === id) {
-                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, unv.events.ServiceClaimInfo[i].returnValues.addr])
+                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, unv.events.ServiceClaimInfo[i].returnValues.addr, unv.events.ServiceClaimInfo[i].returnValues.timeProvided])
                     }
                 }
             }
@@ -163,7 +163,7 @@ export class PatientApp extends Component {
 
     verifyClaim = async (serviceClaimID) => {
         const { accounts, contract } = this.state;
-        const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
+        const info = await contract.methods.verifyClaim(serviceClaimID, Date.now()).send({ from: accounts[0] });
         console.log('confirmation', info)
         // this.getUnverifiedClaims(this.patientId);
         // const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });
@@ -190,6 +190,7 @@ export class PatientApp extends Component {
                                     accounts={this.state.accounts}
                                     serviceName={output[0]}
                                     serviceAddr={output[1]}
+                                    serviceTime={output[2]}
                                     verifyClaim={this.verifyClaim}
                                     i={i}
                                     deleteClaimFromList={this.deleteClaimFromList}

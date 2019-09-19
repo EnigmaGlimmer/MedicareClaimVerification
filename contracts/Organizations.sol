@@ -21,7 +21,8 @@ contract Organizations {
     event PatientRetrieval(Patient patient);
     event ProviderRetrieval(Provider provider);
     event ServiceClaimInfo(
-        address addr, string patientname, string providername, string claimname, bytes32 id, bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed);
+        address addr, string patientname, string providername, string claimname, bytes32 id, 
+        bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed, uint256 timeProvided, uint256 timeVerified);
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
     //event insurerList(Insurer[] insurers);
@@ -165,10 +166,10 @@ contract Organizations {
     @param _amount the amount to be claimed by the provider
     @return ClaimID the ID of the claim
     */
-    function fileClaim(bytes32 _serviceClaimID, uint256 _amount) public returns(uint256 ClaimID) {
+    function fileClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _timeProvided) public returns(uint256 ClaimID) {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        uint256 newClaimID = myServiceClaim.fileClaim(_amount);
+        uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
         claimList.push(_serviceClaimID);
@@ -192,9 +193,9 @@ contract Organizations {
     /** @dev invoke the verifyClaim function in the ServiceClaim contract
     @param _serviceClaimAddress the address of the ServiceClaim contract
     */
-    function verifyClaim(address _serviceClaimAddress) public {
+    function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified) public {
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
-        require(myServiceClaim.verifyClaim(), "Claim was not Verified");
+        require(myServiceClaim.verifyClaim(_timeVerified), "Claim was not Verified");
         // Add the claim address to verified list
         // Delete the claim address from unverified list
         bytes32 patID = myServiceClaim.patientID();
@@ -282,8 +283,10 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            emit ServiceClaimInfo(
-                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            if(sc.timeProvided() > 0){
+                emit ServiceClaimInfo(
+                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
+            }
         }
     }
     function getAllVerifiedServices() public {
@@ -291,8 +294,8 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            if (sc.verified() == true) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            if (sc.verified() == true && sc.timeVerified() > 0) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
             }
         }
     }
@@ -301,8 +304,8 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            if (sc.verified() == false) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid());
+            if (sc.verified() == false && sc.timeProvided() > 0) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
             }
         }
     }

@@ -126,7 +126,7 @@ export class ProviderApp extends Component {
 
   fileClaim = async(serviceClaimID, amount) => {
     const { accounts, contract } = this.state;
-    const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
+    const info = await contract.methods.fileClaim(serviceClaimID, amount, Date.now()).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
     console.log('Adding Claim', info.events)
     return info;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, CardHeader, Card, Input, CardTitle, CardText, CardGroup, CardBody, Col, Row } from 'reactstrap';
+import { Button, CardHeader, Card, Input, CardTitle, CardText, CardGroup, CardBody, CardSubtitle, Col, Row } from 'reactstrap';
 import "./PatientCell.css"
 import "./ToggleSwitch.css"
 // import { arrayify } from "ethers/utils";
@@ -39,7 +39,8 @@ class ServiceCell extends Component {
                     <CardBody>
                         <Row>
                             <Col md={8} style={{ maxWidth: '50%' }}>
-                                <CardTitle></CardTitle>
+                                <CardTitle>Time of Service Provision: {this.props.serviceTime}</CardTitle>
+                                <CardSubtitle>Explanation of service</CardSubtitle>
                             </Col>
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>
                                 <CardText>Verify claim</CardText>

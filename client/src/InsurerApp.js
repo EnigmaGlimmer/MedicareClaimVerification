@@ -33,92 +33,92 @@ export class InsurerApp extends Component {
 
     componentDidMount = async () => {
         console.log('rendering')
-        this.getAllVerifiedServices();
-        this.getAllUnverifiedServices();
+        // this.getAllVerifiedServices();
+        // this.getAllUnverifiedServices();
         var _ = this;
+        _.getAllServices();
         this.state.contract.events.allEvents({
             fromBlock: 'latest',
         }, function (error, e) {
             if (error) { alert('Stop') }
-            if (e.event === 'ClaimVerified') {
-                _.getAllVerifiedServices();
+            if (e.event === 'ClaimVerified' || e.event === 'ClaimCreated') {
+                _.getAllServices();
 
             }
-            else if (e.event === 'ClaimCreated') {
-                _.getAllUnverifiedServices();
-            }
+            // else if (e.event === 'ClaimCreated') {
+            //     _.getAllServices();
+            // }
         })
     }
 
-    getAllVerifiedServices = async () => {
-        const { accounts, contract } = this.state;
-        const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
-        console.log('calling getAllVerifiedServices', services);
-        let list = []
-        if (services.events.ServiceClaimInfo) {
-            if (!services.events.ServiceClaimInfo.length) {
-                list.push(services.events.ServiceClaimInfo)
-            } else {
-                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    list.push(services.events.ServiceClaimInfo[i])
-                }
-            }
-        }
-        this.ver = list;
-        console.log('ver', this.ver)
-        this.setState({ state: this.state });
-    }
-
-    getAllUnverifiedServices = async () => {
-        const { accounts, contract } = this.state;
-        const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
-        console.log('calling getAllUnverifiedServices', services);
-        let list = []
-        if (services.events.ServiceClaimInfo) {
-            if (!services.events.ServiceClaimInfo.length) {
-                list.push(services.events.ServiceClaimInfo)
-            } else {
-                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    list.push(services.events.ServiceClaimInfo[i])
-                }
-            }
-        }
-        this.unv = list;
-        console.log('unv', this.unv)
-        this.setState({ state: this.state });
-    }
-
-    // getAllServices = async () => {
-    //     console.log('one metamask call')
+    // getAllVerifiedServices = async () => {
     //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-    //     console.log('calling getAllServices', services);
-    //     let verlist = []
-    //     let unvlist = []
+    //     const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
+    //     console.log('calling getAllVerifiedServices', services);
+    //     let list = []
     //     if (services.events.ServiceClaimInfo) {
     //         if (!services.events.ServiceClaimInfo.length) {
-    //             if (services.events.ServiceClaimInfo.returnValues.verified === true) {
-    //                 verlist.push(services.events.ServiceClaimInfo)
-    //             }
-    //             else {
-    //                 unvlist.push(services.events.ServiceClaimInfo)
-    //             }
+    //             list.push(services.events.ServiceClaimInfo)
     //         } else {
     //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
-    //                     verlist.push(services.events.ServiceClaimInfo[i])
-    //                 }
-    //                 else {
-    //                     unvlist.push(services.events.ServiceClaimInfo[i])
-    //                 }
+    //                 list.push(services.events.ServiceClaimInfo[i])
     //             }
     //         }
     //     }
-    //     this.ver = verlist;
-    //     this.unv = unvlist;
-    //     console.log('ver', this.ver, 'unv', this.unv)
-    // this.setState({ state: this.state });
+    //     this.ver = list;
+    //     console.log('ver', this.ver)
+    //     this.setState({ state: this.state });
     // }
+
+    // getAllUnverifiedServices = async () => {
+    //     const { accounts, contract } = this.state;
+    //     const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
+    //     console.log('calling getAllUnverifiedServices', services);
+    //     let list = []
+    //     if (services.events.ServiceClaimInfo) {
+    //         if (!services.events.ServiceClaimInfo.length) {
+    //             list.push(services.events.ServiceClaimInfo)
+    //         } else {
+    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+    //                 list.push(services.events.ServiceClaimInfo[i])
+    //             }
+    //         }
+    //     }
+    //     this.unv = list;
+    //     console.log('unv', this.unv)
+    //     this.setState({ state: this.state });
+    // }
+
+    getAllServices = async () => {
+        const { accounts, contract } = this.state;
+        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
+        console.log('calling getAllServices', services);
+        let verlist = []
+        let unvlist = []
+        if (services.events.ServiceClaimInfo) {
+            if (!services.events.ServiceClaimInfo.length) {
+                if (services.events.ServiceClaimInfo.returnValues.verified === true) {
+                    verlist.push(services.events.ServiceClaimInfo)
+                }
+                else {
+                    unvlist.push(services.events.ServiceClaimInfo)
+                }
+            } else {
+                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+                    if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
+                        verlist.push(services.events.ServiceClaimInfo[i])
+                    }
+                    else {
+                        unvlist.push(services.events.ServiceClaimInfo[i])
+                    }
+                }
+            }
+        }
+        this.ver = verlist;
+        this.unv = unvlist;
+        console.log('ver', this.ver, 'unv', this.unv)
+    this.setState({ state: this.state });
+    }
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {
@@ -161,6 +161,8 @@ export class InsurerApp extends Component {
                                     <th>Provider</th>
                                     <th>Amount</th>
                                     <th>Paid</th>
+                                    <th>Time of Provision</th>
+                                    <th>Time of Verification</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -176,17 +178,10 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
+                                                <td>{output.returnValues.timeProvided}</td>
+                                                <td>{output.returnValues.timeVerified}</td>
                                             </tr>
-                                        }) : (
-                                            <tr>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                            </tr>
-                                        )
+                                        }) : null
                                 }
                             </tbody>
                         </Table>
@@ -201,6 +196,7 @@ export class InsurerApp extends Component {
                                     <th>Provider</th>
                                     <th>Amount</th>
                                     <th>Paid</th>
+                                    <th>Time of Provision</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -216,17 +212,9 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
+                                                <td>{output.returnValues.timeProvided}</td>
                                             </tr>
-                                        }) : (
-                                            <tr style={{ backgroundColor: '#ffffff' }}>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                                <td>N/A</td>
-                                            </tr>
-                                        )
+                                        }) : null
                                 }
                             </tbody>
                         </Table>

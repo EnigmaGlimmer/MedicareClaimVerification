@@ -15,9 +15,11 @@ contract ServiceClaim {
     uint256 public amount;
     bool public verified;
     bool public paid;
+    uint256 public timeProvided;
+    uint256 public timeVerified;
 
 
-    event ClaimAdded(uint256 amount);
+    event ClaimAdded(uint256 amount, uint256 _timeProvided);
 
 
     constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {
@@ -29,13 +31,15 @@ contract ServiceClaim {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function fileClaim(uint256 _amount) public returns(uint256) {
+    function fileClaim(uint256 _amount, uint256 _timeProvided) public returns(uint256) {
+        timeProvided = _timeProvided;
         amount = _amount;
-        emit ClaimAdded(amount);
+        emit ClaimAdded(amount, timeProvided);
         return amount;
     }
 
-    function verifyClaim() public returns(bool verifySuccess) {
+    function verifyClaim(uint256 _timeVerified) public returns(bool verifySuccess) {
+        timeVerified = _timeVerified;
         verified = true;
         return true;
     }
