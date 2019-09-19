@@ -22,7 +22,7 @@ contract Organizations {
     event ProviderRetrieval(Provider provider);
     event ServiceClaimInfo(
         address addr, string patientname, string providername, string claimname, bytes32 id,
-        bytes32 provider, bytes32 patient, uint256 amount, bool payed, uint256 timeProvided, uint256 timeFiled, uint256 timeVerified);
+        bytes32 provider, bytes32 patient, uint256 amount, bool confirmed, uint256 timeProvided, uint256 timeFiled, uint256 timeVerified);
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
     //event insurerList(Insurer[] insurers);
@@ -194,9 +194,9 @@ contract Organizations {
     /** @dev invoke the verifyClaim function in the ServiceClaim contract
     @param _serviceClaimAddress the address of the ServiceClaim contract
     */
-    function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified) public {
+    function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
-        require(myServiceClaim.verifyClaim(_timeVerified), "Claim was not Verified");
+        require(myServiceClaim.verifyClaim(_timeVerified, _confirmed), "Claim was not Verified");
         // Add the claim address to verified list
         // Delete the claim address from unverified list
         bytes32 patID = myServiceClaim.patientID();
@@ -218,7 +218,7 @@ contract Organizations {
     function payProvider(bytes32 _serviceClaimID) public {
         //require(_serviceClaim.claim().verified == true, "User has not verified service");
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        myServiceClaim.payProvider();
+        // myServiceClaim.payProvider();
     }
     // ------------------------------ Getters of Network Data --------------------------- //
     function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
@@ -286,7 +286,7 @@ contract Organizations {
             string memory providername = providerMap[sc.providerID()].name;
             if(sc.timeProvided() > 0){
                 emit ServiceClaimInfo(
-                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
+                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.confirmed(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }
@@ -296,7 +296,7 @@ contract Organizations {
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
             if (sc.timeVerified() > 0) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.confirmed(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }
@@ -305,8 +305,8 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            if (sc.timeFiled() > 0 && sc.timeProvided() > 0) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
+            if (sc.timeFiled() > 0 && sc.timeVerified() == 0) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.confirmed(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }

@@ -82,6 +82,7 @@ class PatientCell extends Component {
                     list.splice(i, 1); 
                 }
             }
+            this.amount = 0;
             this.setState({ serviceList: list })
         })
     }

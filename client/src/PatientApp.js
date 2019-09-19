@@ -167,9 +167,9 @@ export class PatientApp extends Component {
         console.log("state of unv", this.state.unverifiedClaims)
     }
 
-    verifyClaim = async (serviceClaimID) => {
+    verifyClaim = async (serviceClaimID, confirmed) => {
         const { accounts, contract } = this.state;
-        const info = await contract.methods.verifyClaim(serviceClaimID, Date.now()).send({ from: accounts[0] });
+        const info = await contract.methods.verifyClaim(serviceClaimID, Date.now(), confirmed).send({ from: accounts[0] });
         console.log('confirmation', info)
         // this.getUnverifiedClaims(this.patientId);
         // const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });

@@ -160,10 +160,10 @@ export class InsurerApp extends Component {
                                     <th>Service</th>
                                     <th>Provider</th>
                                     <th>Amount</th>
-                                    <th>Paid</th>
                                     <th>Time of Provision</th>
                                     <th>Time of Filing</th>
-                                    <th>Time of Verification</th>
+                                    <th>Time of Confirmation</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -178,10 +178,11 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.claimname}</td>
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
-                                                <td>{output.returnValues.payed ? 'True' : 'False'}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
+                                                <td>{output.returnValues.confirmed ? <span style={{color: 'green'}}>Verified</span> : 
+                                                                                        <span style={{color: 'red'}}>Disputed</span>}</td>
                                             </tr>
                                         }) : null
                                 }
@@ -197,7 +198,6 @@ export class InsurerApp extends Component {
                                     <th>Service</th>
                                     <th>Provider</th>
                                     <th>Amount</th>
-                                    <th>Paid</th>
                                     <th>Time of Provision</th>
                                     <th>Time of Filing</th>
                                 </tr>
@@ -214,7 +214,6 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.claimname}</td>
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
-                                                <td>{output.returnValues.payed ? 'True' : 'False'}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                             </tr>

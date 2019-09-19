@@ -16,21 +16,19 @@ class ServiceCell extends Component {
     }
 
     updateChecked() {
-        this.checked = document.getElementById("togBtn"+this.props.i).checked;
+        this.checked = document.getElementById("togBtn" + this.props.i).checked;
     }
 
     verifyClaim() {
-        if (this.checked) {
-            this.props.verifyClaim(this.props.serviceAddr)
-            this.checked = false;
-            document.getElementById(this.id).checked = false;
-            // for(let index = this.props.i; index < this.props.arrLength - 1; index++){
-            //     document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
-            //     this.checked = document.getElementById("togBtn"+index).checked
-            //     console.log(index, this.checked)
-            // }
-            this.props.deleteClaimFromList(this.props.i)
-        }
+        this.props.verifyClaim(this.props.serviceAddr, this.checked)
+        this.checked = false;
+        document.getElementById(this.id).checked = false;
+        // for(let index = this.props.i; index < this.props.arrLength - 1; index++){
+        //     document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
+        //     this.checked = document.getElementById("togBtn"+index).checked
+        //     console.log(index, this.checked)
+        // }
+        this.props.deleteClaimFromList(this.props.i)
     }
 
     render() {
@@ -48,7 +46,7 @@ class ServiceCell extends Component {
                                 <CardSubtitle>Explanation of service</CardSubtitle>
                             </Col>
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>
-                                <CardText>Verify claim</CardText>
+                                <CardText>Confirm claim</CardText>
                                 <div style={{ display: "inline-flex" }}>
                                     <label className="switch"><input type="checkbox" id={this.id} onClick={this.updateChecked} /><div className="slider round"><span className="on">Yes</span><span className="off">No</span></div></label>
                                 </div>
@@ -58,7 +56,7 @@ class ServiceCell extends Component {
                         <br></br>
                         <Input type="textarea" placeholder="(Optional) Please give us feedback, concerns, or just anything you wish to say..." />
                         <br></br>
-                        <Button style={{ float: 'right' }} color="success" onClick={this.verifyClaim}>Confirm</Button>
+                        <Button style={{ float: 'right' }} color="success" onClick={this.verifyClaim}>Verify</Button>
                     </CardBody>
                 </Card>
             </CardGroup>
