@@ -39,7 +39,8 @@ class ServiceCell extends Component {
                     <CardBody>
                         <Row>
                             <Col md={8} style={{ maxWidth: '50%' }}>
-                                <CardTitle>Time of Service Provision: {this.props.serviceTime}</CardTitle>
+                                <CardTitle>Time of Service Provision: {this.props.timeProvided}</CardTitle>
+                                <CardTitle>Time of Service Filing: {this.props.timeFiled}</CardTitle>
                                 <CardSubtitle>Explanation of service</CardSubtitle>
                             </Col>
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>

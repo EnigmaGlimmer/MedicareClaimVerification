@@ -13,7 +13,6 @@ contract ServiceClaim {
     bytes32 public serviceClaimID;
     string public name;
     uint256 public amount;
-    bool public verified;
     bool public paid;
     uint256 public timeProvided;
     uint256 public timeFiled;
@@ -42,7 +41,6 @@ contract ServiceClaim {
 
     function verifyClaim(uint256 _timeVerified) public returns(bool verifySuccess) {
         timeVerified = _timeVerified;
-        verified = true;
         return true;
     }
 
@@ -57,9 +55,9 @@ contract ServiceClaim {
         return amount;
     }
 
-    function isVerified() public view returns (bool){
-        return verified;
-    }
+    // function isVerified() public view returns (bool){
+    //     return verified;
+    // }
 
     function isPaid() public view returns (bool){
         return paid;

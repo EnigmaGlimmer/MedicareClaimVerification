@@ -97,7 +97,7 @@ export class InsurerApp extends Component {
         let unvlist = []
         if (services.events.ServiceClaimInfo) {
             if (!services.events.ServiceClaimInfo.length) {
-                if (services.events.ServiceClaimInfo.returnValues.verified === true) {
+                if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
                     verlist.push(services.events.ServiceClaimInfo)
                 }
                 else {
@@ -105,7 +105,7 @@ export class InsurerApp extends Component {
                 }
             } else {
                 for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    if (services.events.ServiceClaimInfo[i].returnValues.verified === true) {
+                    if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
                         verlist.push(services.events.ServiceClaimInfo[i])
                     }
                     else {
@@ -162,6 +162,7 @@ export class InsurerApp extends Component {
                                     <th>Amount</th>
                                     <th>Paid</th>
                                     <th>Time of Provision</th>
+                                    <th>Time of Filing</th>
                                     <th>Time of Verification</th>
                                 </tr>
                             </thead>
@@ -179,6 +180,7 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
                                                 <td>{output.returnValues.timeProvided}</td>
+                                                <td>{output.returnValues.timeFiled}</td>
                                                 <td>{output.returnValues.timeVerified}</td>
                                             </tr>
                                         }) : null
@@ -197,6 +199,7 @@ export class InsurerApp extends Component {
                                     <th>Amount</th>
                                     <th>Paid</th>
                                     <th>Time of Provision</th>
+                                    <th>Time of Filing</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -213,6 +216,7 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
                                                 <td>{output.returnValues.timeProvided}</td>
+                                                <td>{output.returnValues.timeFiled}</td>
                                             </tr>
                                         }) : null
                                 }

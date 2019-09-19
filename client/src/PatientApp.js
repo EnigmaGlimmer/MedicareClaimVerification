@@ -132,12 +132,18 @@ export class PatientApp extends Component {
         if (unv.events.ServiceClaimInfo) {
             if (!unv.events.ServiceClaimInfo.length) {
                 if (unv.events.ServiceClaimInfo.returnValues.patient === id) {
-                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, unv.events.ServiceClaimInfo.returnValues.addr, unv.events.ServiceClaimInfo.returnValues.timeProvided])
+                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, 
+                                unv.events.ServiceClaimInfo.returnValues.addr, 
+                                unv.events.ServiceClaimInfo.returnValues.timeProvided, 
+                                unv.events.ServiceClaimInfo.returnValues.timeFiled])
                 }
             } else {
                 for (let i = 0; i < unv.events.ServiceClaimInfo.length; i++) {
                     if (unv.events.ServiceClaimInfo[i].returnValues.patient === id) {
-                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, unv.events.ServiceClaimInfo[i].returnValues.addr, unv.events.ServiceClaimInfo[i].returnValues.timeProvided])
+                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, 
+                            unv.events.ServiceClaimInfo[i].returnValues.addr, 
+                            unv.events.ServiceClaimInfo[i].returnValues.timeProvided, 
+                            unv.events.ServiceClaimInfo[i].returnValues.timeFiled])
                     }
                 }
             }
@@ -190,7 +196,8 @@ export class PatientApp extends Component {
                                     accounts={this.state.accounts}
                                     serviceName={output[0]}
                                     serviceAddr={output[1]}
-                                    serviceTime={output[2]}
+                                    timeProvided={output[2]}
+                                    timeFiled={output[3]}
                                     verifyClaim={this.verifyClaim}
                                     i={i}
                                     deleteClaimFromList={this.deleteClaimFromList}

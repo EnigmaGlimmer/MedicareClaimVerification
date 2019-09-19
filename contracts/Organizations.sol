@@ -22,7 +22,7 @@ contract Organizations {
     event ProviderRetrieval(Provider provider);
     event ServiceClaimInfo(
         address addr, string patientname, string providername, string claimname, bytes32 id,
-        bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed, uint256 timeProvided, uint256 timeVerified);
+        bytes32 provider, bytes32 patient, uint256 amount, bool payed, uint256 timeProvided, uint256 timeFiled, uint256 timeVerified);
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
     //event insurerList(Insurer[] insurers);
@@ -144,9 +144,10 @@ contract Organizations {
     @param _patientID patient ID
     @return serviceContractHash is the id of the ServiceClaim contract
     */
-    function provideService(string memory _name, bytes32 _providerID, bytes32 _patientID) public returns(bytes32 serviceContractHash) {
+    function provideService(string memory _name, bytes32 _providerID, bytes32 _patientID, uint256 _timeProvided) public 
+    returns(bytes32 serviceContractHash) {
         bytes32 id = keccak256(abi.encodePacked(_name, _providerID, _patientID));
-        ServiceClaim serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name);
+        ServiceClaim serviceClaim = new ServiceClaim(_providerID, _patientID, id, _name, _timeProvided);
         bytes32 serviceClaimID = keccak256(abi.encodePacked(address(serviceClaim)));
         SC memory scObj = SC(address(serviceClaim), serviceClaimID, globalInsurerID, _providerID, _patientID, _name, 0, false, false);
         scs.push(scObj);
@@ -285,7 +286,7 @@ contract Organizations {
             string memory providername = providerMap[sc.providerID()].name;
             if(sc.timeProvided() > 0){
                 emit ServiceClaimInfo(
-                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
+                address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }
@@ -294,8 +295,8 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            if (sc.verified() == true && sc.timeVerified() > 0) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
+            if (sc.timeVerified() > 0) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }
@@ -304,8 +305,8 @@ contract Organizations {
             ServiceClaim sc = ServiceClaim(SCList[i]);
             string memory patientname = patientMap[sc.patientID()].name;
             string memory providername = providerMap[sc.providerID()].name;
-            if (sc.verified() == false && sc.timeProvided() > 0) {
-                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.verified(), sc.paid(), sc.timeProvided(), sc.timeVerified());
+            if (sc.timeFiled() > 0 && sc.timeProvided() > 0) {
+                emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.paid(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
     }
