@@ -16,25 +16,27 @@ contract ServiceClaim {
     bool public verified;
     bool public paid;
     uint256 public timeProvided;
+    uint256 public timeFiled;
     uint256 public timeVerified;
 
 
     event ClaimAdded(uint256 amount, uint256 _timeProvided);
 
 
-    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name) public {
+    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name, uint256 _timeProvided) public {
         providerID = _proID;
         patientID = _patID;
         serviceClaimID = _id;
         name = _name;
+        timeProvided = _timeProvided;
     }
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function fileClaim(uint256 _amount, uint256 _timeProvided) public returns(uint256) {
-        timeProvided = _timeProvided;
+    function fileClaim(uint256 _amount, uint256 _timeFiled) public returns(uint256) {
+        timeFiled = _timeFiled;
         amount = _amount;
-        emit ClaimAdded(amount, timeProvided);
+        emit ClaimAdded(amount, timeFiled);
         return amount;
     }
 

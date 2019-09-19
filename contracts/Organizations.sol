@@ -21,7 +21,7 @@ contract Organizations {
     event PatientRetrieval(Patient patient);
     event ProviderRetrieval(Provider provider);
     event ServiceClaimInfo(
-        address addr, string patientname, string providername, string claimname, bytes32 id, 
+        address addr, string patientname, string providername, string claimname, bytes32 id,
         bytes32 provider, bytes32 patient, uint256 amount, bool verified, bool payed, uint256 timeProvided, uint256 timeVerified);
     //event patientList(Patient[] patients);
     //event providerList(Provider[] providers);
