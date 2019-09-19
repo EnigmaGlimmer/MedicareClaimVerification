@@ -179,9 +179,9 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
-                                                <td>{output.returnValues.timeProvided}</td>
-                                                <td>{output.returnValues.timeFiled}</td>
-                                                <td>{output.returnValues.timeVerified}</td>
+                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
                                             </tr>
                                         }) : null
                                 }
@@ -215,8 +215,8 @@ export class InsurerApp extends Component {
                                                 <td>{output.returnValues.providername}</td>
                                                 <td>{output.returnValues.amount}</td>
                                                 <td>{output.returnValues.payed ? 'True' : 'False'}</td>
-                                                <td>{output.returnValues.timeProvided}</td>
-                                                <td>{output.returnValues.timeFiled}</td>
+                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                             </tr>
                                         }) : null
                                 }

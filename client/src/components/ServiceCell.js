@@ -11,6 +11,8 @@ class ServiceCell extends Component {
         this.updateChecked = this.updateChecked.bind(this)
         this.verifyClaim = this.verifyClaim.bind(this)
         this.id = 'togBtn' + this.props.i;
+        this.timeFiled = new Date(parseInt(this.props.timeFiled, 10)).toString().split('-')[0]
+        this.timeProvided = new Date(parseInt(this.props.timeProvided, 10)).toString().split('-')[0]
     }
 
     updateChecked() {
@@ -32,6 +34,8 @@ class ServiceCell extends Component {
     }
 
     render() {
+        console.log(this.timeProvided)
+        console.log(this.timeFiled)
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">
@@ -39,8 +43,8 @@ class ServiceCell extends Component {
                     <CardBody>
                         <Row>
                             <Col md={8} style={{ maxWidth: '50%' }}>
-                                <CardTitle>Time of Service Provision: {this.props.timeProvided}</CardTitle>
-                                <CardTitle>Time of Service Filing: {this.props.timeFiled}</CardTitle>
+                                <CardTitle>Time of Service Provision: {this.timeProvided}</CardTitle>
+                                <CardTitle>Time of Service Filing: {this.timeFiled}</CardTitle>
                                 <CardSubtitle>Explanation of service</CardSubtitle>
                             </Col>
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>

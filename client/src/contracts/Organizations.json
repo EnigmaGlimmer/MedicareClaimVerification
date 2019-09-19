@@ -34779,10 +34779,386 @@
       "links": {},
       "address": "0x5e129290fEcBAC6740e981001220caBE1A579Eb8",
       "transactionHash": "0xbaca7bb8798ff29e3c2f796506f11f7971b5c8d343a40dc9d5bec6be23b26258"
+    },
+    "1568870379288": {
+      "events": {
+        "0x2cdb195d7226065901c0e37d742237ac3e30d6dc0ce7faf49701f6ec9f0bd1ed": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "ID",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            }
+          ],
+          "name": "SCID",
+          "type": "event",
+          "signature": "0x2cdb195d7226065901c0e37d742237ac3e30d6dc0ce7faf49701f6ec9f0bd1ed"
+        },
+        "0x96e3875898071e5d91932eb150a3914f9fe70e473f6faeaad697e99a48937c9c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "ClaimCreated",
+          "type": "event",
+          "signature": "0x96e3875898071e5d91932eb150a3914f9fe70e473f6faeaad697e99a48937c9c"
+        },
+        "0xc03c381479e74431d2e456b259238f87292a5a827091c7386e197457ad47e19e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            }
+          ],
+          "name": "ClaimVerified",
+          "type": "event",
+          "signature": "0xc03c381479e74431d2e456b259238f87292a5a827091c7386e197457ad47e19e"
+        },
+        "0x86ec8adc6f97da0327b3e1dcc24fa25aea5eb7afcf6af08792e4b2d4d799fad8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "id",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "PatientCreated",
+          "type": "event",
+          "signature": "0x86ec8adc6f97da0327b3e1dcc24fa25aea5eb7afcf6af08792e4b2d4d799fad8"
+        },
+        "0x7dd222c7de5c7ba42d121aa7e2acc9d5d4a47c2eb31f55385cf51cbe459c5c9b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "id",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "ProviderCreated",
+          "type": "event",
+          "signature": "0x7dd222c7de5c7ba42d121aa7e2acc9d5d4a47c2eb31f55385cf51cbe459c5c9b"
+        },
+        "0xf73cee28a98c20f23a903356ab57dc8c514e66b0488c994b09dec06f978c839b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "id",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "InsurerCreated",
+          "type": "event",
+          "signature": "0xf73cee28a98c20f23a903356ab57dc8c514e66b0488c994b09dec06f978c839b"
+        },
+        "0x7822df68ea6ba88fa17a55a6c6fe1f7207c1653493392725ce9da7f61f8b601d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "id",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "unclaimedServices",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "unverifiedClaims",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "verifiedClaims",
+                  "type": "address[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct Organizations.Patient",
+              "name": "patient",
+              "type": "tuple"
+            }
+          ],
+          "name": "PatientRetrieval",
+          "type": "event",
+          "signature": "0x7822df68ea6ba88fa17a55a6c6fe1f7207c1653493392725ce9da7f61f8b601d"
+        },
+        "0x8c6b3078bf6d713aeae5b1ccc2dfea387cbb876de1a5c9d81a4e22d4e832c546": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "id",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "bytes32[]",
+                  "name": "patients",
+                  "type": "bytes32[]"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct Organizations.Provider",
+              "name": "provider",
+              "type": "tuple"
+            }
+          ],
+          "name": "ProviderRetrieval",
+          "type": "event",
+          "signature": "0x8c6b3078bf6d713aeae5b1ccc2dfea387cbb876de1a5c9d81a4e22d4e832c546"
+        },
+        "0x04653ea398522e1f547b141c4f7c0274d3527ae0b221c0cebf77651997c809e1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "patientname",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "providername",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "claimname",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "id",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "provider",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "patient",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "payed",
+              "type": "bool"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeProvided",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeFiled",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeVerified",
+              "type": "uint256"
+            }
+          ],
+          "name": "ServiceClaimInfo",
+          "type": "event",
+          "signature": "0x04653ea398522e1f547b141c4f7c0274d3527ae0b221c0cebf77651997c809e1"
+        },
+        "0x1c7aaf504355c6134470b4070ca50bf276d45d0205aa86ef6bd15c684ae710c4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "bytes32[]",
+              "name": "ids",
+              "type": "bytes32[]"
+            }
+          ],
+          "name": "idList",
+          "type": "event",
+          "signature": "0x1c7aaf504355c6134470b4070ca50bf276d45d0205aa86ef6bd15c684ae710c4"
+        },
+        "0xa1c275d9147cd4bbf3a6fc6b01df2bdad7272d62a5bea8ea5f90e20e7c3f48e9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address[]",
+              "name": "services",
+              "type": "address[]"
+            }
+          ],
+          "name": "serviceList",
+          "type": "event",
+          "signature": "0xa1c275d9147cd4bbf3a6fc6b01df2bdad7272d62a5bea8ea5f90e20e7c3f48e9"
+        },
+        "0x35b7f39ce99df9443c69ab69269e1ae96c0add252abdcce625838b4c386c6236": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            }
+          ],
+          "name": "SCName",
+          "type": "event",
+          "signature": "0x35b7f39ce99df9443c69ab69269e1ae96c0add252abdcce625838b4c386c6236"
+        },
+        "0xea4994dc0cbf36cb2638bc0c76aed4b592c7404ab79dbff2818c81897a3192b6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "scAddr",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "id",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "insurerID",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "providerID",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "patientID",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "verified",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "paid",
+                  "type": "bool"
+                }
+              ],
+              "indexed": false,
+              "internalType": "struct Organizations.SC",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "name": "SCEvent",
+          "type": "event",
+          "signature": "0xea4994dc0cbf36cb2638bc0c76aed4b592c7404ab79dbff2818c81897a3192b6"
+        }
+      },
+      "links": {},
+      "address": "0x778e1139b9Bdf976e4A70ca30fB2832f64e83DB9",
+      "transactionHash": "0x47dbfb7e8a571171539ad0c949072c21f16ba03def6d912f8ab4c2be0f3ecf76"
     }
   },
   "schemaVersion": "3.0.16",
-  "updatedAt": "2019-09-19T05:03:41.133Z",
+  "updatedAt": "2019-09-19T05:20:49.608Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {
