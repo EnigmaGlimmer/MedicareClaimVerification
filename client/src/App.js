@@ -133,6 +133,7 @@ class App extends Component {
             <div>
                 {
                     this.state.patientLoginSuccess ? <PatientApp
+                        username={this.username}
                         sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}

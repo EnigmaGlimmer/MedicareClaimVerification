@@ -181,7 +181,7 @@ export class InsurerApp extends Component {
                                                 <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
-                                                <td>{output.returnValues.confirmed ? <span style={{color: 'green'}}>Verified</span> : 
+                                                <td>{output.returnValues.confirmed ? <span style={{color: 'green'}}>Confirmed</span> : 
                                                                                         <span style={{color: 'red'}}>Disputed</span>}</td>
                                             </tr>
                                         }) : null

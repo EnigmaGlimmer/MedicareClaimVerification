@@ -22,7 +22,7 @@ export class PatientApp extends Component {
         this.verifiedClaims = []
         this.patientId = this.props.id
         // this.solidityData = this.props.sd;
-        this.patientname = null;
+        this.patientname = this.props.username;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
         // this.getClaims = this.getClaims.bind(this)
@@ -185,7 +185,7 @@ export class PatientApp extends Component {
         return (
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
-
+                <h5>Patient Name: {this.patientname}</h5>
                 <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&
