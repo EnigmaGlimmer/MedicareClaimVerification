@@ -171,7 +171,7 @@ export class InsurerApp extends Component {
                                     this.ver.length > 0 ?
                                         this.ver.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID()}>
+                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
                                                     {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
                                                 <td>{output.returnValues.patientname}</td>
