@@ -46,4 +46,49 @@ truffle migrate
 cd client
 npm start
 ```
+### Example Interaction
 
+This is the login page, it will require only a username. The password can be any characters.
+
+<img src="screenshots/Login.png" alt="Screenshot"/>
+
+Any changes made to the Ethereum blockchain will evoke a Metamask call, requesting your confirmation of payment.
+
+<img src="screenshots/Metamask.png" alt="Screenshot"/>
+
+###### Log into Provider Dashboard
+
+Login with "UCSD Medical" as username.
+
+<img src="screenshots/ProviderPortal.png" alt="Screenshot"/>
+
+###### Create a claim
+
+Select the green button "Create Service Claim" on the patient Ken.
+Fill in the fields.
+
+<img src="screenshots/ServiceClaim.png" alt="Screenshot"/>
+
+###### File a claim
+
+Click on the drop down menu of the patient you have created a claim for and select the claim.
+
+<img src="screenshots/FileClaim.png" alt="Screenshot"/>
+
+###### Log into Patient Dashboard
+
+Login with "Ken" as username.
+
+<img src="screenshots/PatientPortal.png" alt="Screenshot"/>
+
+###### Verify the claim
+
+The green button on the bottom of the claim will verify the claim, whether the patient confirms or disputes the claim is up to them.
+
+###### Log into Insurer Dashboard
+
+Login with "CMS" as username.
+
+<img src="screenshots/InsurerPortal.png" alt="Screenshot"/>
+
+While insurers cannot modify claims, they can see their provenance as well as their statuses of verification.
