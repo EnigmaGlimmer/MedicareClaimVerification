@@ -50,36 +50,36 @@ npm start
 
 This is the login page, it will require only a username. The password can be any characters.
 
-<img src="screenshots/Login.png" alt="Screenshot"/>
+![](/screenshots/Login.png)
 
 Any changes made to the Ethereum blockchain will evoke a Metamask call, requesting your confirmation of payment.
 
-<img src="screenshots/Metamask.png" alt="Screenshot"/>
+![](/screenshots/Metamask.png)
 
 ###### Log into Provider Dashboard
 
 Login with "UCSD Medical" as username.
 
-<img src="screenshots/ProviderPortal.png" alt="Screenshot"/>
+![](/screenshots/ProviderPortal.png)
 
 ###### Create a claim
 
 Select the green button "Create Service Claim" on the patient Ken.
 Fill in the fields.
 
-<img src="screenshots/ServiceClaim.png" alt="Screenshot"/>
+![](/screenshots/ServiceClaim.png)
 
 ###### File a claim
 
 Click on the drop down menu of the patient you have created a claim for and select the claim.
 
-<img src="screenshots/FileClaim.png" alt="Screenshot"/>
+![](/screenshots/FileClaim.png)
 
 ###### Log into Patient Dashboard
 
 Login with "Ken" as username.
 
-<img src="screenshots/PatientPortal.png" alt="Screenshot"/>
+![](/screenshots/PatientPortal.png)
 
 ###### Verify the claim
 
@@ -89,6 +89,6 @@ The green button on the bottom of the claim will verify the claim, whether the p
 
 Login with "CMS" as username.
 
-<img src="screenshots/InsurerPortal.png" alt="Screenshot"/>
+![](/screenshots/InsurerPortal.png)
 
 While insurers cannot modify claims, they can see their provenance as well as their statuses of verification.
