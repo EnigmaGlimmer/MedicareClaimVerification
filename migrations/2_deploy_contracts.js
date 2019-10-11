@@ -5,7 +5,8 @@ var AEECToken = artifacts.require("./AEECToken.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(SafeMath);
-  deployer.deploy(Organizations);
-  deployer.deploy(AEECToken);
+  deployer.deploy(AEECToken).then(function(){
+    deployer.deploy(Organizations,AEECToken.address);
+  });
   //deployer.deploy(ServiceClaim);
 };

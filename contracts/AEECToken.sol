@@ -23,6 +23,7 @@ contract AEECToken is IERC20 {
 
 	uint256 private _totalSupply;
 
+
 	/**
 	* @dev Total number of tokens in existence
 	*/
@@ -168,7 +169,7 @@ contract AEECToken is IERC20 {
 	* @param account The account that will receive the created tokens.
 	* @param amount The amount that will be created.
 	*/
-	function _mint(address account, uint256 amount) internal {
+	function _mint(address account, uint256 amount) public {
 		require(account != address(0), "Cannot mint from address 0x00.");
 		_totalSupply = _totalSupply.add(amount);
 		_balances[account] = _balances[account].add(amount);

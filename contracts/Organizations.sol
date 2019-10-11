@@ -8,6 +8,8 @@ import "./AEECToken.sol";
 contract Organizations {
     uint admin;
 
+    AEECToken public token;
+
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data
 
@@ -55,9 +57,10 @@ contract Organizations {
 
 
 
-    constructor() public {
+    constructor(address _tokenAddr) public {
         preLoadInfo();
-        
+        token = AEECToken(_tokenAddr);
+        token._mint(address(this),1000000);
     }
 
 
@@ -245,7 +248,9 @@ contract Organizations {
         return(cP.verifiedClaims);
     }
 
-
+    function getToken() public view returns(address){
+        return address(token);
+    }
 
     function setAdmin(uint _num) public {
         admin = _num;

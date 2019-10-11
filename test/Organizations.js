@@ -1,5 +1,6 @@
 const Organizations = artifacts.require("Organizations");
 const ServiceClaim = artifacts.require("ServiceClaim");
+const AEECToken = artifacts.require("AEECToken");
 
 
 let organizationsInstance;
@@ -16,7 +17,9 @@ contract('Organizations', (accounts) => {
   
   describe('Basic Organization Tests', async () => {
     before(async function(){
-      this.organizations = await Organizations.new();
+      this.aeecToken = await AEECToken.new();
+    
+      this.organizations = await Organizations.new(this.aeecToken.address);
     });
   
     it('Organization Contract is properly deployed', async () => {
@@ -222,6 +225,18 @@ contract('Organizations', (accounts) => {
       const verifiedServices = vServices.logs[0].args.services.length;
 
       assert.equal(verifiedServices,1,"There should be a verified service here");
+    });
+  });
+
+  describe('Integrates AEECToken Contract Properly', async() =>{
+    before(async function(){
+      organizationsInstance = await Organizations.deployed();
+    });
+
+    it('Organizations properly mints AEECToken', async() => {
+      const token = await organizationsInstance.getToken();
+      const tokenBalance = await token.balanceOf(organizationsInstance.address);
+      assert.equal(tokenBalance,1000000)
     });
   });
 });
