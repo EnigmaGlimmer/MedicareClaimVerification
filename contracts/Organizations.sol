@@ -1,14 +1,11 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-
 import "./SafeMath.sol";
 import "./ServiceClaim.sol";
 
 contract Organizations {
-
     uint admin;
-
 
     uint256 claimId; //Max value of the number of claims made
     uint storedData; //Miscellaneous data

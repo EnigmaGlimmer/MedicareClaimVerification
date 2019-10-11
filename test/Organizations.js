@@ -24,7 +24,7 @@ contract('Organizations', (accounts) => {
       const oAddress = organizationsInstance.address; 
       assert(oAddress, "Organization address does not exist");
     });
-  
+
   
     it('Correctly added Insurer to Organizations', async () => {
       const organizationsInstance = await Organizations.deployed();
@@ -84,13 +84,13 @@ contract('Organizations', (accounts) => {
     it('Correctly adds a claim amount', async() => {
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
       const serviceClaimInfo = await serviceClaim.logs[0].args;
-      console.log("SC: ", serviceClaimInfo);
+      //console.log("SC: ", serviceClaimInfo);
       const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
-      console.log("Filed the claim");
+      //console.log("Filed the claim");
       const currService = await ServiceClaim.at(serviceClaimInfo.addr);
-      console.log("GOT SC Instance")
+      //console.log("GOT SC Instance")
       const claimAmount = await currService.getAmount();
-      console.log("Claim Amount: ", claimAmount);
+      //console.log("Claim Amount: ", claimAmount);
       assert.equal(100,claimAmount,"Claim Amount is Incorrect");
     });
   
@@ -192,7 +192,7 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
       const serviceClaimInfo = await serviceClaim.logs[0].args;
-      console.log("BEFORE FILE CLAIM");
+      //console.log("BEFORE FILE CLAIM");
       const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
       const uvS = await organizationsInstance.patientUnverifiedClaims(patientID);
       const unverifiedServices = uvS.logs[0].args.services.length;
