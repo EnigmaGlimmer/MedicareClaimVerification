@@ -23,11 +23,6 @@ contract AEECToken is IERC20 {
 
 	uint256 private _totalSupply;
 
-	constructor(Organizations organization) public {
-		_totalSupply = 0;
-		_mint(address(organization),1000000);
-	}
-
 	/**
 	* @dev Total number of tokens in existence
 	*/

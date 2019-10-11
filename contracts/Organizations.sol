@@ -3,6 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import "./SafeMath.sol";
 import "./ServiceClaim.sol";
+import "./AEECToken.sol";
 
 contract Organizations {
     uint admin;
@@ -56,6 +57,7 @@ contract Organizations {
 
     constructor() public {
         preLoadInfo();
+        
     }
 
 
