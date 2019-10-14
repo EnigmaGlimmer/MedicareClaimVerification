@@ -1,5 +1,8 @@
 const Organizations = artifacts.require("Organizations");
 const ServiceClaim = artifacts.require("ServiceClaim");
+const AEECToken = artifacts.require("AEECToken");
+const orgArtifact = require("./../client/src/contracts/Organizations.json");
+const tokenArtifact = require("./../client/src/contracts/AEECToken.json")
 
 
 let organizationsInstance;
@@ -16,7 +19,11 @@ contract('Organizations', (accounts) => {
   
   describe('Basic Organization Tests', async () => {
     before(async function(){
-      this.organizations = await Organizations.new();
+      var aeecToken = await AEECToken.deployed(); // contract(tokenArtifact); // AEECToken.deployed();
+      console.log(aeecToken.address);
+      var organizationsInstance = await Organizations.deployed();
+      console.log(organizationsInstance.address);
+      
     });
   
     it('Organization Contract is properly deployed', async () => {
@@ -24,7 +31,7 @@ contract('Organizations', (accounts) => {
       const oAddress = organizationsInstance.address; 
       assert(oAddress, "Organization address does not exist");
     });
-  
+
   
     it('Correctly added Insurer to Organizations', async () => {
       const organizationsInstance = await Organizations.deployed();
@@ -84,13 +91,13 @@ contract('Organizations', (accounts) => {
     it('Correctly adds a claim amount', async() => {
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
       const serviceClaimInfo = await serviceClaim.logs[0].args;
-      console.log("SC: ", serviceClaimInfo);
+      //console.log("SC: ", serviceClaimInfo);
       const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
-      console.log("Filed the claim");
+      //console.log("Filed the claim");
       const currService = await ServiceClaim.at(serviceClaimInfo.addr);
-      console.log("GOT SC Instance")
+      //console.log("GOT SC Instance")
       const claimAmount = await currService.getAmount();
-      console.log("Claim Amount: ", claimAmount);
+      //console.log("Claim Amount: ", claimAmount);
       assert.equal(100,claimAmount,"Claim Amount is Incorrect");
     });
   
@@ -192,7 +199,7 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
       const serviceClaimInfo = await serviceClaim.logs[0].args;
-      console.log("BEFORE FILE CLAIM");
+      //console.log("BEFORE FILE CLAIM");
       const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
       const uvS = await organizationsInstance.patientUnverifiedClaims(patientID);
       const unverifiedServices = uvS.logs[0].args.services.length;
@@ -222,6 +229,19 @@ contract('Organizations', (accounts) => {
       const verifiedServices = vServices.logs[0].args.services.length;
 
       assert.equal(verifiedServices,1,"There should be a verified service here");
+    });
+  });
+
+  describe('Integrates AEECToken Contract Properly', async() =>{
+    before(async function(){
+      organizationsInstance = await Organizations.deployed();
+      tokenInstance = await AEECToken.deployed();
+    });
+
+    it('Organizations properly mints AEECToken', async() => {
+      //const token = await organizationsInstance.getToken();
+      const tokenBalance = await tokenInstance.balanceOf(organizationsInstance.address);
+      assert.equal(tokenBalance,1000000);
     });
   });
 });
