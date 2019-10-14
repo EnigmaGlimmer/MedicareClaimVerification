@@ -20666,10 +20666,16 @@
       "links": {},
       "address": "0x896A453f9E3E336BF2080cf89E360c92489300Ec",
       "transactionHash": "0xcb76887262be66a3d77bdbd469d4820af067c89343f86f13a7e4e91fd3980509"
+    },
+    "1571072437725": {
+      "events": {},
+      "links": {},
+      "address": "0xc6574e1279D207cc83303eADA65AB31e566e9A1B",
+      "transactionHash": "0xe5ab0c5b4ae362f05ab71bcf785d2b59fbccc3f53922439ed6813254ad23811a"
     }
   },
   "schemaVersion": "3.0.12",
-  "updatedAt": "2019-10-12T18:39:31.710Z",
+  "updatedAt": "2019-10-14T17:01:10.734Z",
   "devdoc": {
     "methods": {
       "addInsurer(string)": {
