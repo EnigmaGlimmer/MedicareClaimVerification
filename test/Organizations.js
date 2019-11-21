@@ -105,7 +105,8 @@ contract('Organizations', (accounts) => {
   it('Correctly verifies a claim', async() => {
     const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);
     const serviceClaimInfo = await serviceClaim.logs[0].args;
-    const verifyServiceClaim = await organizationsInstance.verifyClaim(serviceClaimInfo.ID);
+    const SCAddress = await organizationsInstance.serviceClaimsMap(serviceClaimInfo.ID);
+    const verifyServiceClaim = await organizationsInstance.verifyClaim(SCAddress);
     const currService = await ServiceClaim.at(serviceClaimInfo.addr);
     const claimVerify = await currService.isVerified();
     assert.equal(true,claimVerify,"Claim Verification is Incorrect");
@@ -221,9 +222,11 @@ contract('Organizations', (accounts) => {
       const organizationsInstance = await Organizations.deployed();
 
       const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
-      const serviceClaimID = await serviceClaim.logs[0].args;
+      const serviceClaimInfo = await serviceClaim.logs[0].args;
+      console.log("ID: ", serviceClaimInfo)
+      const SCAddress = await organizationsInstance.serviceClaimsMap(serviceClaimInfo.ID);
 
-      await organizationsInstance.verifyClaim(serviceClaimID.ID);
+      await organizationsInstance.verifyClaim(SCAddress);
 
       const vServices = await organizationsInstance.patientVerifiedClaims(patientID);
       const verifiedServices = vServices.logs[0].args.services.length;
