@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"cd ./client && npm start\" \"cd ./server && node server.js\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "homepage": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "concurrently": "^4.1.2",
     "dotenv": "^8.0.0",
     "ethereumjs-tx": "^2.1.0",
     "ethers": "^4.0.33",
@@ -29,7 +31,9 @@
     "md5-file": "^4.0.0",
     "nodemailer": "^6.3.0",
     "path": "^0.12.7",
+    "react-router-dom": "^5.0.1",
     "remixd": "^0.1.8-alpha.6",
+    "solc": "^0.5.11",
     "web3": "^1.2.0"
   }
 }
