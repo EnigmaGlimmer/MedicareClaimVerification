@@ -98,6 +98,8 @@ contract Organizations {
     @param _providerID is the current provider of the patient
     @return pID is a bytes32 represented id number for the patient
     */
+
+
     function addPatient(string memory _name, bytes32 _providerID) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
         address[] memory uServiceList;
@@ -111,6 +113,8 @@ contract Organizations {
         emit PatientCreated(id, _name);
         return id;
     }
+
+    
 
     function getPatients() public view returns(bytes32[] memory nice) {
         return patientList;
