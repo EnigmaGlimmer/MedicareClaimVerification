@@ -43,8 +43,7 @@ truffle migrate
 
 ###### Run the NodeJS Application
 ```
-cd client
-npm start
+npm run start
 ```
 ### Example Interaction
 

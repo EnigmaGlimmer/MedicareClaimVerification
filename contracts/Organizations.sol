@@ -36,6 +36,7 @@ contract Organizations {
     event serviceList(address[] services);
     event SCName(string name);
     event SCEvent(SC);
+
     struct SC {
         address scAddr;
         bytes32 id;
@@ -56,6 +57,7 @@ contract Organizations {
     bytes32[] providerList;
     bytes32[] insurerList;
     bytes32[] claimList;
+
 
     struct Patient {
         bytes32 id;
@@ -109,9 +111,11 @@ contract Organizations {
         emit PatientCreated(id, _name);
         return id;
     }
+
     function getPatients() public view returns(bytes32[] memory nice) {
         return patientList;
     }
+
     /** @dev add a provider to the network
     @param _name name of the provider
     @param _insurerID id of insurance provider
@@ -128,9 +132,13 @@ contract Organizations {
         emit ProviderCreated(id, _name);
         return id;
     }
+
+
     function getProviders() public view returns(bytes32[] memory nice) {
         return providerList;
     }
+
+
     /** @dev add an insurnace provider to the network
     @param _name the name of the insurance provider
     @return pID of the insurance provider
@@ -145,6 +153,8 @@ contract Organizations {
         emit InsurerCreated(id, _name);
         return id;
     }
+
+
     function getInsurers() public view returns(bytes32[] memory nice) {
         return insurerList;
     }
@@ -223,6 +233,8 @@ contract Organizations {
         cP.verifiedClaims.push(address(myServiceClaim));
         emit ClaimVerified(_serviceClaimAddress);
     }
+
+
     /** @dev invoke the payProvider function in the ServiceClaim contract
     @param _serviceClaimID the id of the ServiceClaim contract
     */
