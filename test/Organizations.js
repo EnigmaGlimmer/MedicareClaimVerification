@@ -23,9 +23,9 @@ contract('Organizations', (accounts) => {
   describe('Basic Organization Tests', async () => {
     before(async function(){
       var aeecToken = await AEECToken.deployed(); // contract(tokenArtifact); // AEECToken.deployed();
-      console.log(aeecToken.address);
+      //console.log(aeecToken.address);
       var organizationsInstance = await Organizations.deployed();
-      console.log(organizationsInstance.address);
+      //console.log(organizationsInstance.address);
     });
   
     it('Organization Contract is properly deployed', async () => {
@@ -44,7 +44,7 @@ contract('Organizations', (accounts) => {
     it('Provider Contract is properly deployed', async () => {
       const insurerInstance = await Insurer.deployed();
       const providerTx = await insurerInstance.addProvider("Anthem Blue Cross"); 
-      console.log("Provider Address: ", providerTx.logs[0].args.addr) 
+      //console.log("Provider Address: ", providerTx.logs[0].args.addr) 
       const providerInstance = await Provider.at(providerTx.logs[0].args.addr);
       const providerAddress = providerInstance.address; 
       assert(providerAddress, "Provider address does not exist");
@@ -53,10 +53,10 @@ contract('Organizations', (accounts) => {
     it('Patient Contract is properly deployed', async () => {
       const insurerInstance = await Insurer.deployed();
       const providerTx = await insurerInstance.addProvider("Anthem Blue Cross"); 
-      console.log("Provider Address: ", providerTx.logs[0].args.addr) 
+      //console.log("Provider Address: ", providerTx.logs[0].args.addr) 
       const providerInstance = await Provider.at(providerTx.logs[0].args.addr);
       const patientTx = await providerInstance.addPatient("Ken");
-      console.log("Patient Address: ", patientTx.logs[0].args.addr);
+      //console.log("Patient Address: ", patientTx.logs[0].args.addr);
       const patientInstance = await Patient.at(patientTx.logs[0].args.addr);
       const patientAddress = patientInstance.address;
       assert(patientAddress, "Patient address does not exist");
@@ -65,7 +65,7 @@ contract('Organizations', (accounts) => {
     it('Correctly added Provider to Insurer', async () => {
       const insurerInstance = await Insurer.deployed();
       const providerTx = await insurerInstance.addProvider("Anthem Blue Cross"); 
-      console.log("Provider Address: ", providerTx.logs[0].args.addr) 
+      //console.log("Provider Address: ", providerTx.logs[0].args.addr) 
       const pName = await insurerInstance.providerMap(providerTx.logs[0].args.addr);
       assert.equal("Anthem Blue Cross", pName, "Provider name does not matche given input");
     });
@@ -141,19 +141,19 @@ contract('Organizations', (accounts) => {
     });
   
   
-  it('Correctly verifies a claim', async() => {
+    it('Correctly verifies a claim', async() => {
 
-    const serviceClaimTx = await providerInstance.provideService("Glasses",patientInstance.address);    
-    //console.log("SERVICE CLAIM LOGS: ", serviceClaimTx.logs)
-    const scAddr = serviceClaimTx.logs[0].args.addr
-    const serviceClaimInstance = await ServiceClaim.at(scAddr);
-    await serviceClaimInstance.fileClaim(100, Date.now());
-    //const patientInstance = await Patient.at(patientInstance.address);
-    const verifyTx = await patientInstance.verifyClaim(scAddr, Date.now(), true);
-    const claimVerify = await serviceClaimInstance.isVerified();
-    console.log("VERIFY TX: ", claimVerify);
-    assert.equal(true,claimVerify,"Claim Verification is Incorrect");
-  });
+      const serviceClaimTx = await providerInstance.provideService("Glasses",patientInstance.address);    
+      //console.log("SERVICE CLAIM LOGS: ", serviceClaimTx.logs)
+      const scAddr = serviceClaimTx.logs[0].args.addr
+      const serviceClaimInstance = await ServiceClaim.at(scAddr);
+      await serviceClaimInstance.fileClaim(100, Date.now());
+      //const patientInstance = await Patient.at(patientInstance.address);
+      const verifyTx = await patientInstance.verifyClaim(scAddr, Date.now(), true);
+      const claimVerify = await serviceClaimInstance.isVerified();
+      //console.log("VERIFY TX: ", claimVerify);
+      assert.equal(true,claimVerify,"Claim Verification is Incorrect");
+    });
 
 
   // TODO -- Implement the Payment of a Patient!!! 
@@ -299,7 +299,7 @@ contract('Organizations', (accounts) => {
 
     it('Organizations properly mints AEECToken', async() => {
       //const token = await organizationsInstance.getToken();
-      const tokenBalance = await tokenInstance.balanceOf(organizationsInstance.address);
+      const tokenBalance = await tokenInstance.balanceOf(insurerInstance.address);
       assert.equal(tokenBalance,1000000);
     });
   });
