@@ -1,6 +1,6 @@
 addPatient -- Provider
 getPatients -- Provider 
-addProvider -- Insurer
+addProvider -- Insurer -- Done
 getProviders -- Insurer
 addInsurer -- SysAdmin?
 getInsurers -- SysAdmin?

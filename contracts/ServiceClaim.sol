@@ -5,9 +5,9 @@ import "./SafeMath.sol";
 contract ServiceClaim {
 
     // Entity Information
-    bytes32 public insurerID;
-    bytes32 public providerID;
-    bytes32 public patientID;
+    address public insurerAddr;
+    address public providerAddr;
+    address public patientAddr;
 
     // ServiceClaim Information
     bytes32 public serviceClaimID;
@@ -19,16 +19,19 @@ contract ServiceClaim {
     uint256 public timeFiled;
     uint256 public timeVerified;
 
+    event Instantiated(bool);
+
 
     event ClaimAdded(uint256 amount, uint256 _timeProvided);
 
 
-    constructor(bytes32 _proID, bytes32 _patID, bytes32 _id, string memory _name, uint256 _timeProvided) public {
-        providerID = _proID;
-        patientID = _patID;
+    constructor(address _proAddr, address _patAddr, bytes32 _id, string memory _name) public {
+        providerAddr = _proAddr;
+        patientAddr = _patAddr;
         serviceClaimID = _id;
         name = _name;
-        timeProvided = _timeProvided;
+        emit Instantiated(true);
+        // timeProvided = _timeProvided;
     }
 
     // ------------------------------ Functionality of the Network --------------------------- //
@@ -57,6 +60,10 @@ contract ServiceClaim {
         return amount;
     }
 
+    function isVerified() public view returns (bool) {
+        return confirmed;
+    }
+
     // function isVerified() public view returns (bool){
     //     return verified;
     // }
@@ -67,21 +74,21 @@ contract ServiceClaim {
 
 
     // -------------------------------- Update ----------------------------------------- //
-    function updateAmount(uint256 _amount) public returns (uint256) {
-        amount = _amount;
-        return amount;
-    }
+    // function updateAmount(uint256 _amount) public returns (uint256) {
+    //     amount = _amount;
+    //     return amount;
+    // }
 
-    function updateInsurer(bytes32 _id) public returns (bytes32) {
-        insurerID = _id;
-        return insurerID;
-    }
-    function updateProvider(bytes32 _id) public returns (bytes32) {
-        providerID = _id;
-        return providerID;
-    }
-    function updatePatient(bytes32 _id) public returns (bytes32) {
-        patientID = _id;
-        return patientID;
-    }
+    // function updateInsurer(bytes32 _id) public returns (bytes32) {
+    //     insurerID = _id;
+    //     return insurerID;
+    // }
+    // function updateProvider(bytes32 _id) public returns (bytes32) {
+    //     providerID = _id;
+    //     return providerID;
+    // }
+    // function updatePatient(bytes32 _id) public returns (bytes32) {
+    //     patientID = _id;
+    //     return patientID;
+    // }
 }
