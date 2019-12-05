@@ -78,14 +78,15 @@ contract Provider {
         return address(serviceClaim);
     }
     
-    /*
+    
     function fileClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _timeProvided) public returns(uint256 ClaimID) {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
-        claimList.push(_serviceClaimID);
+        //claimList.push(_serviceClaimID);
+        serviceClaims.push(address(myServiceClaim));
         for(uint i = 0; i < cP.unclaimedServices.length; i++){
             if(cP.unclaimedServices[i] == address(myServiceClaim)){
                 delete(cP.unclaimedServices[i]);
@@ -99,7 +100,7 @@ contract Provider {
         //emit SCEvent(newSC);
         return newClaimID;
     }
-    */
+    
 
     
 

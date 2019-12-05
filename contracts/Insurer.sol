@@ -22,6 +22,14 @@ contract Insurer {
     event ProviderRetrieval(Provider provider);
 
 
+    struct Claims {
+        address provider;
+        address patient;
+        string service;
+        bool verified;
+        bool confirmed;
+    }
+
     constructor(address _tokenAddr, string memory _name) public {
         // preLoadInfo();
         token = AEECToken(_tokenAddr);
@@ -55,7 +63,7 @@ contract Insurer {
         return providers;
     }
     // getProviders
-    function getProvider(address _addr) public gireturns (string memory){
+    function getProvider(address _addr) public returns (string memory){
         Provider provider = Provider(_addr);
         emit ProviderRetrieval(provider);
         return providerMap[_addr];

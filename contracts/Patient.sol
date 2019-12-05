@@ -48,5 +48,17 @@ contract Patient {
     function addService(address _addr) public {
         unclaimedServices.push(_addr);
     }
+    
+    function getUS() public view {
+        return unclaimedServices;
+    }
+
+    function getUC() public view {
+        return unverifiedClaims;
+    }
+
+    function getVC() public view {
+        return verifiedClaims;
+    }
 
 }
