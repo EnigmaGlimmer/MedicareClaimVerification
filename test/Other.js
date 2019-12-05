@@ -24,47 +24,44 @@ contract('Other', (accounts) => {
   describe('Organization Association Tests', async() => {
     before(async() =>{
       insurerInstance = await Insurer.deployed();
-      provider = await insurerInstance.addProvider("Anthem Blue Cross");
-      providerAddr = provider.logs[0].args.addr;
-      providerInstance = await Provider.at(providerAddr);
-      patient = await providerInstance.addPatient("Antonio");
-      patientAddr = await patient.logs[0].args.addr;
-      patientInstance = await Patient.at(patientAddr);
+      // provider = await insurerInstance.addProvider("Anthem Blue Cross");
+      // providerAddr = provider.logs[0].args.addr;
+      // providerInstance = await Provider.at(providerAddr);
+      // patient = await providerInstance.addPatient("Antonio");
+      // patientAddr = await patient.logs[0].args.addr;
+      // patientInstance = await Patient.at(patientAddr);
     });
 
     //Insurer Provider - DONE
     it('Empty Insurer Provider  List', async () => {
       var pL = await insurerInstance.getProviders();
-      console.log("Providers: ", pL);
-      //var insurerList = iL.logs[0].args.ids.length;
       assert.equal(pL.length,0,"Insurer list is not empty");
     });
 
     it('Single Insurer Provider List', async () => {
-      await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
-      var iL = await organizationsInstance.providersOfInsurer(insurerID);
-      var insurerList = iL.logs[0].args.ids.length;
-      assert.equal(insurerList,1,"Insurer list should have a member here as well");
+      provider = await insurerInstance.addProvider("Anthem Blue Cross");
+      providerAddr = provider.logs[0].args.addr;
+      providerInstance = await Provider.at(providerAddr);
+      var insurerList = await insurerInstance.getProviders();
+      assert.equal(insurerList.length,1,"Insurer list should have a member here as well");
     });
 
     //Provider Patient - DONE
     it('Empty Provider Patient List', async () => {
-      const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
-      const providerID = provider.logs[0].args.id;
-
-      var pL = await organizationsInstance.patientsOfProvider(providerID);
-      var patientsList = pL.logs[0].args.ids.length;
-      assert.equal(patientsList, 0, "Patients list not empty");
+      provider = await insurerInstance.addProvider("Anthem Blue Cross");
+      providerAddr = provider.logs[0].args.addr;
+      providerInstance = await Provider.at(providerAddr);
+      var pL = await providerInstance.getPatients(); 
+      assert.equal(pL.length, 0, "Patients list not empty");
     });
 
     it('Single Provider Patient List', async () => {
-      const provider = await organizationsInstance.addProvider("Anthem Blue Cross",insurerID);
-      const providerID = provider.logs[0].args.id;
-
-      await organizationsInstance.addPatient("Antonio",providerID);
-      var pL = await organizationsInstance.patientsOfProvider(providerID);
-      var patientsList = pL.logs[0].args.ids.length;
-      assert.equal(patientsList,1,"Patients list should have a member here");
+      provider = await insurerInstance.addProvider("Anthem Blue Cross");
+      providerAddr = provider.logs[0].args.addr;
+      providerInstance = await Provider.at(providerAddr);
+      await providerInstance.addPatient("Ken")
+      var pL = await providerInstance.getPatients(); 
+      assert.equal(pL.length,1,"Patients list should have a member here");
     });
   });
 

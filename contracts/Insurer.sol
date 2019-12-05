@@ -55,7 +55,7 @@ contract Insurer {
         return providers;
     }
     // getProviders
-    function getProvider(address _addr) public returns (string memory){
+    function getProvider(address _addr) public gireturns (string memory){
         Provider provider = Provider(_addr);
         emit ProviderRetrieval(provider);
         return providerMap[_addr];
