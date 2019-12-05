@@ -22,13 +22,8 @@ contract Insurer {
     event ProviderRetrieval(Provider provider);
 
 
-    struct Claims {
-        address provider;
-        address patient;
-        string service;
-        bool verified;
-        bool confirmed;
-    }
+    address[] unverifiedClaims;
+    address[] verifiedClaims;
 
     constructor(address _tokenAddr, string memory _name) public {
         // preLoadInfo();
@@ -56,9 +51,6 @@ contract Insurer {
         return idp;
     }
 
-
-
-
     function getProviders() public view returns (address[] memory) {
         return providers;
     }
@@ -70,10 +62,19 @@ contract Insurer {
     }
 
     // payProviders
-        function payProvider(bytes32 _serviceClaimID) public {
+    function payProvider(bytes32 _serviceClaimID) public {
         // require(_serviceClaim.claim().verified == true, "User has not verified service");
         // ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
         // myServiceClaim.payProvider();
     }
+
+    function getVerifiedClaims() public view returns (address[] memory){
+        return verifiedClaims;
+    }
+
+    function getUnverifiedClaims() public view returns (address[] memory){
+        return unverifiedClaims;
+    }
+
 
 }

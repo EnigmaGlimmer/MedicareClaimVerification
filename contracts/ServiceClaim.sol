@@ -64,6 +64,10 @@ contract ServiceClaim {
         return confirmed;
     }
 
+    function getPatientAddress() public view returns (address) {
+        return patientAddr;
+    }
+
     // function isVerified() public view returns (bool){
     //     return verified;
     // }

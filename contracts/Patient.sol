@@ -18,6 +18,7 @@ contract Patient {
     address[] public unverifiedClaims;
     address[] public verifiedClaims;
     event ClaimVerified(address addr, bool confirm);
+    event Claims(address[] claims);
 
     constructor(bytes32 _id, string memory _name) public {
         id = _id;
@@ -44,21 +45,45 @@ contract Patient {
         emit ClaimVerified(_serviceClaimAddress, _confirmed);
     }
 
+    function fileClaim(address _serviceClaimAddress) public {
+        for (uint i = 0; i < unverifiedClaims.length; i++) {
+            if(unclaimedServices[i] == _serviceClaimAddress){
+                delete(unclaimedServices[i]);
+                break;
+            }
+        }
+        unverifiedClaims.push(_serviceClaimAddress);
+        emit Claims(unverifiedClaims);
+    }
+
+     // for(uint i = 0; i < cP.unclaimedServices.length; i++){
+        //     if(cP.unclaimedServices[i] == address(myServiceClaim)){
+        //         delete(cP.unclaimedServices[i]);
+        //         break;
+        //     }
+        // }
+        // // string memory name = myServiceClaim.name();
+        // //SC memory newSC = SC(name, address(myServiceClaim));
+        // cP.unverifiedClaims.push(address(myServiceClaim));
 
     function addService(address _addr) public {
         unclaimedServices.push(_addr);
     }
     
-    function getUS() public view {
+    function getUS() public view returns (address[] memory) {
         return unclaimedServices;
     }
 
-    function getUC() public view {
+    function getUC() public view returns (address[] memory) {
         return unverifiedClaims;
     }
 
-    function getVC() public view {
+    function getVC() public view returns (address[] memory) {
         return verifiedClaims;
+    }
+
+    function getLastSC() public view returns(address){
+        return unverifiedClaims[unverifiedClaims.length-1];
     }
 
 }

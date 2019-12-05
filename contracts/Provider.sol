@@ -23,7 +23,7 @@ contract Provider {
     mapping (address=>string) public patientMap; //ID of patient to specific provider -
     event PatientCreated(address addr, string name);
     event SCID(string scName, address addr);
-    event ClaimCreated(uint256 id, uint256 amount);
+    event ClaimCreated(address addr, uint256 amount);
     event PatientRetrieval(Patient patient);
 
     constructor(string memory _name, bytes32 _id) public {
@@ -79,26 +79,17 @@ contract Provider {
     }
     
     
-    function fileClaim(bytes32 _serviceClaimID, uint256 _amount, uint256 _timeProvided) public returns(uint256 ClaimID) {
+    function fileClaim(address _serviceClaimAddr, uint256 _amount, uint256 _timeProvided) public returns(address ClaimAddr) {
         //Patient storage cPatient = patientMap[_patient];
-        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
-        bytes32 patID = myServiceClaim.patientID();
-        Patient storage cP = patientMap[patID];
-        //claimList.push(_serviceClaimID);
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddr);
+        //uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
+        address patientAddr = myServiceClaim.getPatientAddress();
+        Patient cP = Patient(patientAddr);
         serviceClaims.push(address(myServiceClaim));
-        for(uint i = 0; i < cP.unclaimedServices.length; i++){
-            if(cP.unclaimedServices[i] == address(myServiceClaim)){
-                delete(cP.unclaimedServices[i]);
-                break;
-            }
-        }
-        // string memory name = myServiceClaim.name();
-        //SC memory newSC = SC(name, address(myServiceClaim));
-        cP.unverifiedClaims.push(address(myServiceClaim));
-        emit ClaimCreated(newClaimID, _amount);
+        cP.fileClaim(address(myServiceClaim));
+        emit ClaimCreated(address(myServiceClaim), _amount);
         //emit SCEvent(newSC);
-        return newClaimID;
+        return address(myServiceClaim);
     }
     
 

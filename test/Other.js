@@ -77,62 +77,48 @@ contract('Other', (accounts) => {
     });
 
     it('Empty Unverified Claims List', async() => {
-      const organizationsInstance = await Organizations.deployed();
-
-      const unvServices = await organizationsInstance.patientUnverifiedClaims(patientID);
-      const unverifiedServices = unvServices.logs[0].args.services.length;
-
-      assert.equal(unverifiedServices,0,"There should be no unverified services here");
+      const unvServices = await insurerInstance.getUnverifiedClaims();
+      assert.equal(unvServices.length,0,"There should be no unverified services here");
     });
 
     //
     it('Single Unclaimed Service List', async() => {
-      const organizationsInstance = await Organizations.deployed();
-
-      await organizationsInstance.provideService("Glasses",providerID,patientID);
-
-      const uvS = await organizationsInstance.patientUnclaimedServices(patientID);
-      const unclaimedServices = uvS.logs[0].args.services.length;
-      
-      assert.equal(unclaimedServices,1,"There should be an unverified service here");
+      await providerInstance.provideService("Glasses", patientInstance.address);
+      const unclaimedServices = await patientInstance.getUS();
+      assert.equal(unclaimedServices.length,1,"There should be an unverified service here");
     });
 
     it('Single Unverified Claims List', async() => {
-      const organizationsInstance = await Organizations.deployed();
-      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
-      const serviceClaimInfo = await serviceClaim.logs[0].args;
-      //console.log("BEFORE FILE CLAIM");
-      const addServiceClaim = await organizationsInstance.fileClaim(serviceClaimInfo.ID, 100);
-      const uvS = await organizationsInstance.patientUnverifiedClaims(patientID);
-      const unverifiedServices = uvS.logs[0].args.services.length;
-      
-      assert.equal(unverifiedServices,1,"There should be an unverified service here");
+      await providerInstance.provideService("Glasses", patientInstance.address);
+      const scAddr = await patientInstance.getUS();
+      console.log("SC Address: ", scAddr[1]);
+      const idk = scAddr[1]
+      await providerInstance.fileClaim(idk, 100, 1);
+      const unverifiedServices = await patientInstance.getUC();
+      assert.equal(unverifiedServices.length,1,"There should be an unverified service here");
     });
 
     it('Empty Verified Claims List Test', async() => {
-      const organizationsInstance = await Organizations.deployed();
+      await providerInstance.provideService("Glasses", patientInstance.address);
+      const scAddr = await patientInstance.getLastSC();
+      console.log("SC Address: ", scAddr);
+      await providerInstance.fileClaim(scAddr, 100, 1);
+      // await patientInstance.verifyClaim(idk, Date.now(), true);
+      const verifiedServices = await patientInstance.getVC();
       
-      const vServices = await organizationsInstance.patientVerifiedClaims(patientID);
-      const verifiedServices = vServices.logs[0].args.services.length;
-      
-      assert.equal(verifiedServices,0,"There should be no verified services here");
+      assert.equal(verifiedServices.length,0,"There should be no verified services here");
     });
 
     //
     it('Single Verified Claims List', async() =>{
-      const organizationsInstance = await Organizations.deployed();
-
-      const serviceClaim = await organizationsInstance.provideService("Glasses",providerID,patientID);    
-      const serviceClaimInfo = await serviceClaim.logs[0].args;
-      console.log("ID: ", serviceClaimInfo)
-      const SCAddress = await organizationsInstance.serviceClaimsMap(serviceClaimInfo.ID);
-
-      await organizationsInstance.verifyClaim(SCAddress);
-
-      const vServices = await organizationsInstance.patientVerifiedClaims(patientID);
-      const verifiedServices = vServices.logs[0].args.services.length;
-
-      assert.equal(verifiedServices,1,"There should be a verified service here");
+      await providerInstance.provideService("Glasses", patientInstance.address);
+      const scAddr = await patientInstance.getUS();
+      console.log("SC Address: ", scAddr[1]);
+      const idk = scAddr[1]
+      await providerInstance.fileClaim(idk, 100, 1);
+      await patientInstance.verifyClaim(idk, Date.now(), true);
+      const verifiedServices = await patientInstance.getVC();
+      assert.equal(verifiedServices.length,1,"There should be a verified service here");
     });
   });
 
