@@ -21,6 +21,7 @@ contract Insurer {
 
     event ProviderCreated(address addr, string name);
     event ProviderRetrieval(Provider provider);
+    event InsurerInfo(address addr, string name);
 
 
     address[] unverifiedClaims;
@@ -33,6 +34,7 @@ contract Insurer {
         //id = _id;
         name = _name;
         preloadInfo();
+        emit InsurerInfo(address(this), _name);
     }
 
 

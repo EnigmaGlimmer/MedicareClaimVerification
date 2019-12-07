@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
-import ClaimVerification from "./contracts/Organizations.json"
+import ClaimVerification from "./contracts/Organizations.json"; 
+import Insurer from "./contracts/Insurer.json";
+import Provider from "./contracts/Provider.json";
+import Patient from "./contracts/Patient.json"
 import getWeb3 from "./utils/getWeb3";
 import { log } from './App-unused';
 import $ from 'jquery'
@@ -56,6 +59,7 @@ class App extends Component {
 
             // Get the contract instance.
             const networkId = await web3.eth.net.getId();
+
             const deployedNetwork = ClaimVerification.networks[networkId];
             const instance = new web3.eth.Contract(
                 ClaimVerification.abi,
