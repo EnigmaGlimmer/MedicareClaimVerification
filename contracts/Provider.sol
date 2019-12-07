@@ -40,7 +40,7 @@ contract Provider {
     //fileClaim
     // getPatient
     
-    function addPatient(string memory _name) public returns(bytes32 pID) {
+    function addPatient(string memory _name) public returns(address pAddr) {
         bytes32 pid = keccak256(abi.encodePacked(_name));
         //address[] memory uServiceList;
         //address[] memory uClaimList;
@@ -51,7 +51,7 @@ contract Provider {
         patients.push(address(newPatient));
         //providerMap[_providerID].patients.push(newPatient.id);
         emit PatientCreated(address(newPatient), _name);
-        return id;
+        return address(newPatient);
     }
 
     function getPatients() public view returns(address[] memory _patients) {

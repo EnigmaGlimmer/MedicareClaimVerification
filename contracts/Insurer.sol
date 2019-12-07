@@ -6,6 +6,7 @@ import "./ServiceClaim.sol";
 import "./AEECToken.sol";
 import "./Organizations.sol";
 import "./Provider.sol";
+import "./Patient.sol"; 
 
 
 contract Insurer {
@@ -31,14 +32,25 @@ contract Insurer {
         token._mint(address(this),1000000);
         //id = _id;
         name = _name;
+        preloadInfo();
     }
 
 
+
+    function preloadInfo() public {
+        // Insurer is already added
+        address pAddr = addProvider("UCSD Medecine");
+        Provider provider = Provider(pAddr);
+        address kenAddr = provider.addPatient("Ken");
+        Patient patient = Patient(kenAddr);
+        //address dannyAddr = provider.addPatient("Danny");
+        //address antAddr = provider.addPatient("Antonio");
+    }
     /** @dev add a provider to the network
     @param _name name of the provider
     @return the pID of the health provider -
      */
-    function addProvider(string memory _name) public returns(bytes32 pID) {
+    function addProvider(string memory _name) public returns(address pAddr) {
         bytes32 idp = keccak256(abi.encodePacked(_name));
         //bytes32[] memory emptyList;
         Provider newProvider = new Provider(_name, idp);
@@ -48,7 +60,7 @@ contract Insurer {
         //insurerMap[_insurerID].providers.push(newProvider.id);
         //providerList.push(id);
         emit ProviderCreated(address(newProvider), _name);
-        return idp;
+        return address(newProvider);
     }
 
     function getProviders() public view returns (address[] memory) {
