@@ -38,6 +38,10 @@ contract Insurer {
     }
 
 
+    function getInfo() public {
+        emit InsurerInfo(address(this), name);
+    }
+
 
     function preloadInfo() public {
         // Insurer is already added
@@ -88,6 +92,10 @@ contract Insurer {
 
     function getUnverifiedClaims() public view returns (address[] memory){
         return unverifiedClaims;
+    }
+
+    function getAllServices() public view returns (address[] memory) {
+        return verifiedClaims;
     }
 
 

@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import $ from 'jquery'
+import getWeb3 from "./utils/getWeb3";
 import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
+import Provider from "./contracts/Provider.json";
+
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -10,7 +13,8 @@ export class InsurerApp extends Component {
         this.state = {
             web3: this.props.web3,
             accounts: this.props.accounts,
-            contract: this.props.contract,
+            insContract: this.props.contract,
+            proContract: null,
             activeTab: '1',
             state: true
         };
@@ -36,8 +40,27 @@ export class InsurerApp extends Component {
         // this.getAllVerifiedServices();
         // this.getAllUnverifiedServices();
         var _ = this;
+
+        const { accounts, insContract, web3 } = _.state;
+        try {
+            const providerAddrs = await insContract.methods.getProviders().call({ from: accounts[0] });
+            console.log("Providers: ", providerAddrs);
+            var providerInstance = new web3.eth.Contract(Provider.abi, providerAddrs[0]);
+            //var providerInstance = ProviderContract.at(providerAddrs[0])
+            this.props.setProContract(providerInstance);
+            console.log("This should be an existing provider contract: ", this.props.proContract)
+            this.setState({ proContract: providerInstance });
+        }
+        catch(error) {
+            alert(
+                `Failed to load web3, accounts, or contract. Check console for details.`,
+            );
+            console.error(error);
+        }
+
+        _.getInsurerInfo();
         _.getAllServices();
-        this.state.contract.events.allEvents({
+        this.state.insContract.events.allEvents({
             fromBlock: 'latest',
         }, function (error, e) {
             if (error) { alert('Stop') }
@@ -89,34 +112,45 @@ export class InsurerApp extends Component {
     //     this.setState({ state: this.state });
     // }
 
+
+    getInsurerInfo = async () => {
+        const { accounts, insContract } = this.state;
+        const info = await insContract.methods.getInfo().send({ from: accounts[0] });
+        console.log('calling getInsurerInfo ', info.events.InsurerInfo.returnValues);
+        // info.events.InsurerInfo.returnValues
+    }
+
     getAllServices = async () => {
-        const { accounts, contract } = this.state;
-        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-        console.log('calling getAllServices', services);
-        let verlist = []
-        let unvlist = []
-        if (services.events.ServiceClaimInfo) {
-            if (!services.events.ServiceClaimInfo.length) {
-                if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
-                    verlist.push(services.events.ServiceClaimInfo)
-                }
-                else {
-                    unvlist.push(services.events.ServiceClaimInfo)
-                }
-            } else {
-                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
-                        verlist.push(services.events.ServiceClaimInfo[i])
-                    }
-                    else {
-                        unvlist.push(services.events.ServiceClaimInfo[i])
-                    }
-                }
-            }
-        }
-        this.ver = verlist;
-        this.unv = unvlist;
-        console.log('ver', this.ver, 'unv', this.unv)
+        //const accounts = await web3.eth.getAccounts();
+        const { accounts, insContract } = this.state;
+        const services = await insContract.methods.getAllServices().call({ from: accounts[0] });
+        console.log("Services: ", services);
+
+        // console.log('calling getAllServices', services);
+        // let verlist = []
+        // let unvlist = []
+        // if (services.events.ServiceClaimInfo) {
+        //     if (!services.events.ServiceClaimInfo.length) {
+        //         if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
+        //             verlist.push(services.events.ServiceClaimInfo)
+        //         }
+        //         else {
+        //             unvlist.push(services.events.ServiceClaimInfo)
+        //         }
+        //     } else {
+        //         for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+        //             if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
+        //                 verlist.push(services.events.ServiceClaimInfo[i])
+        //             }
+        //             else {
+        //                 unvlist.push(services.events.ServiceClaimInfo[i])
+        //             }
+        //         }
+        //     }
+        // }
+        // this.ver = verlist;
+        // this.unv = unvlist;
+        // console.log('ver', this.ver, 'unv', this.unv)
     this.setState({ state: this.state });
     }
 

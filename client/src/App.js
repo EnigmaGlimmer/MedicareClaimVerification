@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
-import ClaimVerification from "./contracts/Organizations.json"; 
+// import ClaimVerification from "./contracts/Organizations.json"; 
 import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
 import Patient from "./contracts/Patient.json"
@@ -21,15 +21,29 @@ class App extends Component {
             providerLoginSuccess: false,
             insurerLoginSuccess: false,
             contract: null,
+            proContract: null,
+            patContract: null,
             accounts: null,
             web3: null
         };
         this.role = 'Patient';
         this.username = null;
         this.id = null;
-        this.solidityData = null;
         this.updateUsername = this.updateUsername.bind(this)
+        this.setProContract = this.setProContract.bind(this)
+        this.setPatContract = this.setPatContract.bind(this)
         // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
+    }
+
+    setProContract(c){
+        console.log('New Provider Contract found')
+        this.setState({proContract: c});
+        console.log(this.state.proContract)
+    }
+
+    setPatContract(c){
+        console.log('New Patient Contract found')
+        this.setState({patContract: c});
     }
 
     updateUsername({ target }) {
@@ -60,9 +74,10 @@ class App extends Component {
             // Get the contract instance.
             const networkId = await web3.eth.net.getId();
 
-            const deployedNetwork = ClaimVerification.networks[networkId];
+            const deployedNetwork = Insurer.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetwork)
             const instance = new web3.eth.Contract(
-                ClaimVerification.abi,
+                Insurer.abi,
                 deployedNetwork && deployedNetwork.address,
             );
 
@@ -105,7 +120,7 @@ class App extends Component {
             data: {
                 username: this.username
             },
-            success: (data) => {
+            success: async (data) => {
                 if (data.message === 'OK') {
                     console.log('Success logging in', data.result)
                     this.id = data.result.id;
@@ -114,9 +129,9 @@ class App extends Component {
                         this.setState({ patientLoginSuccess: true })
                     }
                     else if(data.result.role === 'Provider') {
-                        this.fetchData().then(()=> {
+                        // this.fetchData().then(()=> {
                             this.setState({ providerLoginSuccess: true })
-                        })
+                        // })
                     }
                     else{
                         this.setState({ insurerLoginSuccess: true })
@@ -142,7 +157,8 @@ class App extends Component {
                         contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} /> : null
+                        id={this.id} 
+                        patContract={this.state.patContract}/> : null
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
@@ -150,7 +166,9 @@ class App extends Component {
                         contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} /> : null
+                        id={this.id}
+                        proContract={this.state.proContract} 
+                        setPatContract={this.setPatContract}/> : null
                 }
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
@@ -158,7 +176,9 @@ class App extends Component {
                         contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} /> : null
+                        id={this.id}
+                        setProContract={this.setProContract}
+                        proContract={this.state.proContract}/> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?

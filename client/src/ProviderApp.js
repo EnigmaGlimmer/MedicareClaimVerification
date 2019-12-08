@@ -5,6 +5,7 @@ import PatientCell from './components/PatientCell'
 import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import Patient from "./contracts/Patient.json";
 
 import "./App.css";
 
@@ -14,7 +15,8 @@ export class ProviderApp extends Component {
     this.state = {
       web3: this.props.web3,
       accounts: this.props.accounts,
-      contract: this.props.contract,
+      contract: this.props.proContract,
+      patContract: null,
       patients: [],
     };
     this.providerID = null
@@ -102,14 +104,31 @@ export class ProviderApp extends Component {
   }
 
   componentDidMount = async () => {
-    let patientList = [];
-    const patients = this.solidityData.events.PatientCreated;
-    this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
-    for (let i = 0; i < patients.length; i++) {
-      patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
-    }
-    console.log(patientList)
-    this.setState({ patients: patientList })
+    const { accounts, contract, web3 } = this.state;
+    console.log("please have a provider contract", this.props.proContract)
+    try {
+      console.log(contract);
+      const patientAddrs = await contract.methods.getPatients().call({ from: accounts[0] });
+      console.log("Patients: ", patientAddrs);
+      var patientInstance = new web3.eth.Contract(Patient.abi, patientAddrs[0]);
+      //var providerInstance = ProviderContract.at(providerAddrs[0])
+      this.props.setPatContract(patientInstance);
+      this.setState({ patContract: patientInstance });
+  }
+  catch(error) {
+      alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+  }
+    // let patientList = [];
+    // const patients = this.solidityData.events.PatientCreated;
+    // this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
+    // for (let i = 0; i < patients.length; i++) {
+    //   patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
+    // }
+    // console.log(patientList)
+    // this.setState({ patients: patientList })
     // const { accounts, contract } = this.state;
     // const info = await contract.methods.getPatients().send({ from: accounts[0] });
     // console.log("please work", info)
