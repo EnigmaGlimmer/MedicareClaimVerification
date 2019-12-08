@@ -3,7 +3,7 @@ import $ from 'jquery'
 import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
-import TokenCounter from './components/TokenCounter'
+import Banner from './components/Banner'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -17,6 +17,7 @@ export class InsurerApp extends Component {
         };
         this.unv = []
         this.ver = []
+        this.insurername = this.props.username;
         this.toggle = this.toggle.bind(this);
         this.getAllServices = this.getAllServices.bind(this)
         this.copyID = this.copyID.bind(this);
@@ -133,29 +134,27 @@ export class InsurerApp extends Component {
             <div>
                 <h1 id='centerText'>Insurer Dashboard</h1>
                 <div class="card" style={{ margin: '2vh' }}>
-                    <div class="card-body" style={{ fontSize: '300%' }}>
-                        <TokenCounter tokens={this.state.tokens} />
+                    <div class="card-body" style={{ fontSize: '200%' }}>
+                        <Banner tokens={this.state.tokens} name={this.insurername}/>
                     </div>
                 </div>
-                <Nav tabs style={{ justifyContent: 'center' }}>
-                    <NavItem>
+                <Nav tabs style={{ justifyContent: 'center'}}>
+                    <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '1' })}
-                            onClick={() => { this.toggle('1'); }}
-                        >
+                            onClick={() => { this.toggle('1'); }}>
                             Verified Claims
             </NavLink>
                     </NavItem>
-                    <NavItem>
+                    <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '2' })}
-                            onClick={() => { this.toggle('2'); }}
-                        >
+                            onClick={() => { this.toggle('2'); }}>
                             Unverified Claims
             </NavLink>
                     </NavItem>
                 </Nav>
-                <TabContent style={{ textAlign: 'center' }} activeTab={this.state.activeTab}>
+                <TabContent style={{ textAlign: 'center', padding: '50px' }} activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
                         <Table responsive bordered style={this.props.style}>
                             <thead>
@@ -212,7 +211,7 @@ export class InsurerApp extends Component {
                                     this.unv.length > 0 ?
                                         this.unv.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
+                                                <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
                                                     {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
                                                 <td>{output.returnValues.patientname}</td>

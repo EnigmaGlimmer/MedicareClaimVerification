@@ -146,6 +146,7 @@ class App extends Component {
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
+                        username={this.username}
                         sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}
@@ -154,6 +155,7 @@ class App extends Component {
                 }
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
+                        username={this.username}
                         sd={this.solidityData}
                         contract={this.state.contract}
                         accounts={this.state.accounts}

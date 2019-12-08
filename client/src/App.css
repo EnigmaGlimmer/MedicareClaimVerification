@@ -45,3 +45,11 @@
     transform: rotate(360deg);
   }
 }
+
+#navItem {
+  cursor: pointer;
+}
+
+#link {
+  cursor: copy;
+}

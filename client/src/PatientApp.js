@@ -5,7 +5,7 @@ import ServiceCell from './components/ServiceCell'
 import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
-import TokenCounter from './components/TokenCounter'
+import Banner from './components/Banner'
 import profile from './profile.png'
 
 import "./App.css";
@@ -113,11 +113,11 @@ export class PatientApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         const { accounts, contract } = _.state;
-        this.getUnverifiedClaims(this.patientId);
-        const tokens = await contract.methods.getPatientTokens(this.patientId).call({ from: accounts[0] });
+        _.getUnverifiedClaims(this.patientId);
+        const tokens = await contract.methods.getPatientTokens(_.patientId).call({ from: accounts[0] });
         console.log('Tokens', tokens)
         _.setState({ tokens: tokens })
-        this.state.contract.events.ClaimCreated(function (err, res) {
+        _.state.contract.events.ClaimCreated(function (err, res) {
             if (!err) {
                 _.getUnverifiedClaims(_.patientId);
             }
@@ -196,12 +196,8 @@ export class PatientApp extends Component {
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
                 <div class="card" style={{ margin: '2vh' }}>
-                    <div class="card-body" style={{ fontSize: '300%' }}>
-                        <span>
-                            <img src={profile} alt='Profile' height='50vh' width='50vh' style={{ verticalAlign: 'sub' }} />
-                            {this.patientname}
-                        </span>
-                        <TokenCounter tokens={this.state.tokens} />
+                    <div class="card-body" style={{ fontSize: '200%' }}>
+                    <Banner tokens={this.state.tokens} name={this.patientname}/>
                     </div>
                 </div>
                 <ul id='cells'>

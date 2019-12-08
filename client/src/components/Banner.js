@@ -9,9 +9,12 @@ class TokenCounter extends Component {
 
     render() {
         return (
-            <span style={{ float: 'right' }}> Balance: 
-            <span style={{ color: '#00e379', fontWeight: "bold" }}>
+            <span> Balance: 
+            <span style={{ color: '#00b05e' }}>
                     <Odometer format="d" duration={1000} value={this.props.tokens} />
+                </span>
+                <span style={{ float: 'right', color: '#1974bf' }}>
+                    {this.props.name}
                 </span>
             </span>
         );
