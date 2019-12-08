@@ -352,7 +352,7 @@ contract Organizations {
         
     }
 
-    function getPatientTOkens(bytes32 _pID) view public returns (uint256) {
+    function getPatientTokens(bytes32 _pID) view public returns (uint256) {
         Patient storage cP = patientMap[_pID];
         return cP.token;
     }
