@@ -36,13 +36,13 @@ export class InsurerApp extends Component {
         // this.getAllVerifiedServices();
         // this.getAllUnverifiedServices();
         var _ = this;
-        _.getAllServices();
+        //_.getAllServices();
         this.state.contract.events.allEvents({
             fromBlock: 'latest',
         }, function (error, e) {
             if (error) { alert('Stop') }
             if (e.event === 'ClaimVerified' || e.event === 'ClaimCreated') {
-                _.getAllServices();
+                //_.getAllServices();
 
             }
             // else if (e.event === 'ClaimCreated') {
@@ -89,36 +89,36 @@ export class InsurerApp extends Component {
     //     this.setState({ state: this.state });
     // }
 
-    getAllServices = async () => {
-        const { accounts, contract } = this.state;
-        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-        console.log('calling getAllServices', services);
-        let verlist = []
-        let unvlist = []
-        if (services.events.ServiceClaimInfo) {
-            if (!services.events.ServiceClaimInfo.length) {
-                if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
-                    verlist.push(services.events.ServiceClaimInfo)
-                }
-                else {
-                    unvlist.push(services.events.ServiceClaimInfo)
-                }
-            } else {
-                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-                    if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
-                        verlist.push(services.events.ServiceClaimInfo[i])
-                    }
-                    else {
-                        unvlist.push(services.events.ServiceClaimInfo[i])
-                    }
-                }
-            }
-        }
-        this.ver = verlist;
-        this.unv = unvlist;
-        console.log('ver', this.ver, 'unv', this.unv)
-    this.setState({ state: this.state });
-    }
+    // getAllServices = async () => {
+    //     const { accounts, contract } = this.state;
+    //     const services = await contract.methods.getAllServices().send({ from: accounts[0] });
+    //     console.log('calling getAllServices', services);
+    //     let verlist = []
+    //     let unvlist = []
+    //     if (services.events.ServiceClaimInfo) {
+    //         if (!services.events.ServiceClaimInfo.length) {
+    //             if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
+    //                 verlist.push(services.events.ServiceClaimInfo)
+    //             }
+    //             else {
+    //                 unvlist.push(services.events.ServiceClaimInfo)
+    //             }
+    //         } else {
+    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+    //                 if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
+    //                     verlist.push(services.events.ServiceClaimInfo[i])
+    //                 }
+    //                 else {
+    //                     unvlist.push(services.events.ServiceClaimInfo[i])
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     this.ver = verlist;
+    //     this.unv = unvlist;
+    //     console.log('ver', this.ver, 'unv', this.unv)
+    // this.setState({ state: this.state });
+    // }
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {

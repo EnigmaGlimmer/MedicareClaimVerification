@@ -66,6 +66,7 @@ contract Organizations {
         address[] unclaimedServices;
         address[] unverifiedClaims;
         address[] verifiedClaims;
+        uint256 token;
     }
     struct Provider {
         bytes32 id;
@@ -76,6 +77,7 @@ contract Organizations {
         bytes32 id;
         string name;
         bytes32[] providers;
+        uint256 token;
     }
 
 
@@ -103,7 +105,7 @@ contract Organizations {
         address[] memory uServiceList;
         address[] memory uClaimList;
         address[] memory vClaimList;
-        Patient memory newPatient = Patient(id, _name, uServiceList, uClaimList, vClaimList);
+        Patient memory newPatient = Patient(id, _name, uServiceList, uClaimList, vClaimList,0);
         //bytes32 patientHash = keccak256(abi.encodePacked(newPatient));
         patientMap[id] = newPatient;
         patientList.push(id);
@@ -146,7 +148,7 @@ contract Organizations {
     function addInsurer(string memory _name) public returns(bytes32 pID) {
         bytes32 id = keccak256(abi.encodePacked(_name));
         bytes32[] memory emptyList;
-        Insurer memory newInsurer = Insurer(id, _name, emptyList);
+        Insurer memory newInsurer = Insurer(id, _name, emptyList,1000000);
         //bytes32 insurerHash = keccak256(abi.encodePacked(newInsurer));
         insurerMap[id] = newInsurer;
         insurerList.push(id);
