@@ -29,9 +29,7 @@ contract Organizations {
     event ServiceClaimInfo(
         address addr, string patientname, string providername, string claimname, bytes32 id,
         bytes32 provider, bytes32 patient, uint256 amount, bool confirmed, uint256 timeProvided, uint256 timeFiled, uint256 timeVerified);
-    //event patientList(Patient[] patients);
-    //event providerList(Provider[] providers);
-    //event insurerList(Insurer[] insurers);
+
     event idList(bytes32[] ids);
     event serviceList(address[] services);
     event SCName(string name);
@@ -218,12 +216,16 @@ contract Organizations {
     @param _serviceClaimAddress the address of the ServiceClaim contract
     */
     function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
+        bytes32[] memory insurers = getInsurers();
+        Insurer storage insurer = insurerMap[insurers[0]];
+        insurer.token -= 10;
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
         require(myServiceClaim.verifyClaim(_timeVerified, _confirmed), "Claim was not Verified");
         // Add the claim address to verified list
         // Delete the claim address from unverified list
         bytes32 patID = myServiceClaim.patientID();
         Patient storage cP = patientMap[patID];
+        cP.token += 10;
         for(uint i = 0; i < cP.unverifiedClaims.length; i++){
             if(cP.unverifiedClaims[i] == address(myServiceClaim)){
                 delete(cP.unverifiedClaims[i]);
@@ -237,14 +239,14 @@ contract Organizations {
     }
 
 
-    /** @dev invoke the payProvider function in the ServiceClaim contract
-    @param _serviceClaimID the id of the ServiceClaim contract
-    */
-    function payProvider(bytes32 _serviceClaimID) public {
-        //require(_serviceClaim.claim().verified == true, "User has not verified service");
-        ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
-        // myServiceClaim.payProvider();
-    }
+    // /** @dev invoke the payProvider function in the ServiceClaim contract
+    // @param _serviceClaimID the id of the ServiceClaim contract
+    // */
+    // function payProvider(bytes32 _serviceClaimID) public {
+    //     //require(_serviceClaim.claim().verified == true, "User has not verified service");
+    //     ServiceClaim myServiceClaim = ServiceClaim(serviceClaimsMap[_serviceClaimID]);
+    //     // myServiceClaim.payProvider();
+    // }
     // ------------------------------ Getters of Network Data --------------------------- //
     function patientsOfProvider(bytes32 _id) public returns (bytes32[] memory) {
         Provider storage cP = providerMap[_id];
@@ -339,5 +341,19 @@ contract Organizations {
                 emit ServiceClaimInfo(address(sc), patientname, providername, sc.name(), sc.serviceClaimID(), sc.providerID(), sc.patientID(), sc.amount(), sc.confirmed(), sc.timeProvided(), sc.timeFiled(), sc.timeVerified());
             }
         }
+    }
+
+
+
+    function getInsurerTokens() view public returns (uint256) {
+        bytes32[] memory insurers = getInsurers();
+        Insurer storage insurer = insurerMap[insurers[0]];
+        return insurer.token;
+        
+    }
+
+    function getPatientTOkens(bytes32 _pID) view public returns (uint256) {
+        Patient storage cP = patientMap[_pID];
+        return cP.token;
     }
 }
