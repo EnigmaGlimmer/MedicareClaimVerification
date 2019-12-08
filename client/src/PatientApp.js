@@ -5,6 +5,8 @@ import ServiceCell from './components/ServiceCell'
 import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import TokenCounter from './components/TokenCounter'
+import profile from './profile.png'
 
 import "./App.css";
 
@@ -15,7 +17,8 @@ export class PatientApp extends Component {
             web3: this.props.web3,
             accounts: this.props.accounts,
             contract: this.props.contract,
-            unverifiedClaims: []
+            unverifiedClaims: [],
+            tokens: 0
         };
         this.providerID = null
         this.unverifiedClaims = []
@@ -109,7 +112,11 @@ export class PatientApp extends Component {
 
     componentDidMount = async () => {
         var _ = this;
+        const { accounts, contract } = _.state;
         this.getUnverifiedClaims(this.patientId);
+        const tokens = await contract.methods.getPatientTokens(this.patientId).call({ from: accounts[0] });
+        console.log('Tokens', tokens)
+        _.setState({ tokens: tokens })
         this.state.contract.events.ClaimCreated(function (err, res) {
             if (!err) {
                 _.getUnverifiedClaims(_.patientId);
@@ -132,18 +139,18 @@ export class PatientApp extends Component {
         if (unv.events.ServiceClaimInfo) {
             if (!unv.events.ServiceClaimInfo.length) {
                 if (unv.events.ServiceClaimInfo.returnValues.patient === id) {
-                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname, 
-                                unv.events.ServiceClaimInfo.returnValues.addr, 
-                                unv.events.ServiceClaimInfo.returnValues.timeProvided, 
-                                unv.events.ServiceClaimInfo.returnValues.timeFiled])
+                    list.push([unv.events.ServiceClaimInfo.returnValues.claimname,
+                    unv.events.ServiceClaimInfo.returnValues.addr,
+                    unv.events.ServiceClaimInfo.returnValues.timeProvided,
+                    unv.events.ServiceClaimInfo.returnValues.timeFiled])
                 }
             } else {
                 for (let i = 0; i < unv.events.ServiceClaimInfo.length; i++) {
                     if (unv.events.ServiceClaimInfo[i].returnValues.patient === id) {
-                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname, 
-                            unv.events.ServiceClaimInfo[i].returnValues.addr, 
-                            unv.events.ServiceClaimInfo[i].returnValues.timeProvided, 
-                            unv.events.ServiceClaimInfo[i].returnValues.timeFiled])
+                        list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname,
+                        unv.events.ServiceClaimInfo[i].returnValues.addr,
+                        unv.events.ServiceClaimInfo[i].returnValues.timeProvided,
+                        unv.events.ServiceClaimInfo[i].returnValues.timeFiled])
                     }
                 }
             }
@@ -171,6 +178,8 @@ export class PatientApp extends Component {
         const { accounts, contract } = this.state;
         const info = await contract.methods.verifyClaim(serviceClaimID, Date.now(), confirmed).send({ from: accounts[0] });
         console.log('confirmation', info)
+        const tokens = await contract.methods.getPatientTokens(this.patientId).call({ from: accounts[0] });
+        this.setState({ tokens: tokens });
         // this.getUnverifiedClaims(this.patientId);
         // const ver = await contract.methods.patientVerifiedClaims(this.patientId).send({ from: accounts[0] });
         // console.log('verifiedClaims', ver, 'confirmation', info)
@@ -179,13 +188,22 @@ export class PatientApp extends Component {
     render() {
         // let sd = this.solidityData
         console.log("Rendering PatientApp")
+        console.log('Tokens', this.state.tokens)
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
         return (
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
-                <h5>Patient Name: {this.patientname}</h5>
+                <div class="card" style={{ margin: '2vh' }}>
+                    <div class="card-body" style={{ fontSize: '300%' }}>
+                        <span>
+                            <img src={profile} alt='Profile' height='50vh' width='50vh' style={{ verticalAlign: 'sub' }} />
+                            {this.patientname}
+                        </span>
+                        <TokenCounter tokens={this.state.tokens} />
+                    </div>
+                </div>
                 <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&
@@ -213,7 +231,7 @@ export class PatientApp extends Component {
                             </CardGroup>
                     }
                 </ul>
-            </div>
+            </div >
         );
     }
 }

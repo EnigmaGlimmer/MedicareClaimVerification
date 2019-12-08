@@ -3,6 +3,7 @@ import $ from 'jquery'
 import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
+import TokenCounter from './components/TokenCounter'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -12,12 +13,12 @@ export class InsurerApp extends Component {
             accounts: this.props.accounts,
             contract: this.props.contract,
             activeTab: '1',
-            state: true
+            tokens: 0
         };
         this.unv = []
         this.ver = []
         this.toggle = this.toggle.bind(this);
-        // this.getAllServices = this.getAllServices.bind(this)
+        this.getAllServices = this.getAllServices.bind(this)
         this.copyID = this.copyID.bind(this);
     }
 
@@ -36,18 +37,15 @@ export class InsurerApp extends Component {
         // this.getAllVerifiedServices();
         // this.getAllUnverifiedServices();
         var _ = this;
-        //_.getAllServices();
+        _.getAllServices();
+
         this.state.contract.events.allEvents({
             fromBlock: 'latest',
         }, function (error, e) {
             if (error) { alert('Stop') }
             if (e.event === 'ClaimVerified' || e.event === 'ClaimCreated') {
-                //_.getAllServices();
-
+                _.getAllServices();
             }
-            // else if (e.event === 'ClaimCreated') {
-            //     _.getAllServices();
-            // }
         })
     }
 
@@ -89,36 +87,37 @@ export class InsurerApp extends Component {
     //     this.setState({ state: this.state });
     // }
 
-    // getAllServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllServices().send({ from: accounts[0] });
-    //     console.log('calling getAllServices', services);
-    //     let verlist = []
-    //     let unvlist = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
-    //                 verlist.push(services.events.ServiceClaimInfo)
-    //             }
-    //             else {
-    //                 unvlist.push(services.events.ServiceClaimInfo)
-    //             }
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
-    //                     verlist.push(services.events.ServiceClaimInfo[i])
-    //                 }
-    //                 else {
-    //                     unvlist.push(services.events.ServiceClaimInfo[i])
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     this.ver = verlist;
-    //     this.unv = unvlist;
-    //     console.log('ver', this.ver, 'unv', this.unv)
-    // this.setState({ state: this.state });
-    // }
+    getAllServices = async () => {
+        const { accounts, contract } = this.state;
+        const services = await contract.methods.getAllServices().send({ from: accounts[0] });
+        console.log('calling getAllServices', services);
+        let verlist = []
+        let unvlist = []
+        if (services.events.ServiceClaimInfo) {
+            if (!services.events.ServiceClaimInfo.length) {
+                if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
+                    verlist.push(services.events.ServiceClaimInfo)
+                }
+                else {
+                    unvlist.push(services.events.ServiceClaimInfo)
+                }
+            } else {
+                for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
+                    if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
+                        verlist.push(services.events.ServiceClaimInfo[i])
+                    }
+                    else {
+                        unvlist.push(services.events.ServiceClaimInfo[i])
+                    }
+                }
+            }
+        }
+        this.ver = verlist;
+        this.unv = unvlist;
+        console.log('ver', this.ver, 'unv', this.unv)
+        const tokens = await contract.methods.getInsurerTokens().call({ from: accounts[0] });
+        this.setState({ tokens: tokens });
+    }
 
     toggle(tab) {
         if (this.state.activeTab !== tab) {
@@ -129,9 +128,15 @@ export class InsurerApp extends Component {
     }
 
     render() {
+        console.log('Tokens', this.state.tokens)
         return (
             <div>
                 <h1 id='centerText'>Insurer Dashboard</h1>
+                <div class="card" style={{ margin: '2vh' }}>
+                    <div class="card-body" style={{ fontSize: '300%' }}>
+                        <TokenCounter tokens={this.state.tokens} />
+                    </div>
+                </div>
                 <Nav tabs style={{ justifyContent: 'center' }}>
                     <NavItem>
                         <NavLink
@@ -181,8 +186,8 @@ export class InsurerApp extends Component {
                                                 <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
-                                                <td>{output.returnValues.confirmed ? <span style={{color: 'green'}}>Confirmed</span> : 
-                                                                                        <span style={{color: 'red'}}>Disputed</span>}</td>
+                                                <td>{output.returnValues.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
+                                                    <span style={{ color: 'red' }}>Disputed</span>}</td>
                                             </tr>
                                         }) : null
                                 }

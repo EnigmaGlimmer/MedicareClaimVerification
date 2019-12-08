@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
-import Claim from "./contracts/Organizations.json"; 
+import ClaimVerification from "./contracts/Organizations.json"; 
 import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
 import Patient from "./contracts/Patient.json"
