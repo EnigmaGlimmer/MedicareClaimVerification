@@ -170,8 +170,8 @@ export class ProviderApp extends Component {
     }
     return (
       <div>
-        <Header dashboard={'Provider Dashboard'}/>
-        <Row>
+        <Header/>
+        <Row style={{marginTop: '1.2rem'}}>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
             <ul id='cells'>

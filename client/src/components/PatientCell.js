@@ -100,7 +100,7 @@ class PatientCell extends Component {
                             <Col md={6} style={{ textAlign: 'center' }}>
                                 {/* <button className="button" id='create_btn' style={{backgroundColor: '#12b823'}}><span>Create Service Claim</span></button> */}
                                 {/* <Button color='success' onClick={this.provideService}>Create Service Claim</Button> */}
-                                <Button color="success" onClick={this.toggle}>Create Service Claim</Button>
+                                <Button color="success" onClick={this.toggle}>Provide Service</Button>
                                 <ServiceModal modal={this.state.modal} toggle={this.toggle} className={this.props.className}
                                     updateServiceClaimName={this.updateServiceClaimName}
                                     updateAmount={this.updateAmount}

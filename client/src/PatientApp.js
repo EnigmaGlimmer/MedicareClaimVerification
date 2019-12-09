@@ -196,8 +196,8 @@ export class PatientApp extends Component {
         }
         return (
             <div>
-                <Header dashboard={'Patient Dashboard'}/>
-                <Banner tokens={this.state.tokens} name={this.patientname}/>
+                <Header/>
+                <Banner tokens={this.state.tokens} name={this.patientname} dashboard={'Patient'}/>
                 <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&

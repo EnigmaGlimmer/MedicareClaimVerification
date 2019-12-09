@@ -133,8 +133,8 @@ export class InsurerApp extends Component {
         console.log('Tokens', this.state.tokens)
         return (
             <div>
-                <Header dashboard={'Insurer Dashboard'}/>
-                <Banner tokens={this.state.tokens} name={this.insurername}/>
+                <Header/>
+                <Banner tokens={this.state.tokens} name={this.insurername} dashboard={'Insurer'}/>
                 <Nav tabs style={{ justifyContent: 'center', width: '90%', margin: 'auto'}}>
                     <NavItem id='navItem'>
                         <NavLink
