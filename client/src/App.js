@@ -12,6 +12,7 @@ import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
+import aeec_logo from './aeec.png'
 
 class App extends Component {
     constructor(props) {
@@ -165,6 +166,7 @@ class App extends Component {
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                 <div style={{ textAlign: 'center' }}>
+                    <img src={aeec_logo} alt='AEEC' height='100' width='100' />
                     <h1>Medicare Insurance Claim Tracking</h1>
                     <Card id='login'>
                         <Form id="form" onSubmit={this.onFormSubmit}>

@@ -5,6 +5,8 @@ import ServiceCell from './components/ServiceCell'
 import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import Header from './components/Header'
+
 import Banner from './components/Banner'
 import profile from './profile.png'
 
@@ -194,12 +196,8 @@ export class PatientApp extends Component {
         }
         return (
             <div>
-                <h1 id='centerText'>Patient Dashboard</h1>
-                <div class="card" style={{ margin: '2vh' }}>
-                    <div class="card-body" style={{ fontSize: '200%' }}>
-                    <Banner tokens={this.state.tokens} name={this.patientname}/>
-                    </div>
-                </div>
+                <Header dashboard={'Patient Dashboard'}/>
+                <Banner tokens={this.state.tokens} name={this.patientname}/>
                 <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&

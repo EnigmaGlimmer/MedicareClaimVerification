@@ -4,6 +4,7 @@ import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, Card
 import classnames from 'classnames';
 import "./App.css";
 import Banner from './components/Banner'
+import Header from './components/Header'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -132,13 +133,9 @@ export class InsurerApp extends Component {
         console.log('Tokens', this.state.tokens)
         return (
             <div>
-                <h1 id='centerText'>Insurer Dashboard</h1>
-                <div class="card" style={{ margin: '2vh' }}>
-                    <div class="card-body" style={{ fontSize: '200%' }}>
-                        <Banner tokens={this.state.tokens} name={this.insurername}/>
-                    </div>
-                </div>
-                <Nav tabs style={{ justifyContent: 'center'}}>
+                <Header dashboard={'Insurer Dashboard'}/>
+                <Banner tokens={this.state.tokens} name={this.insurername}/>
+                <Nav tabs style={{ justifyContent: 'center', width: '90%', margin: 'auto'}}>
                     <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '1' })}

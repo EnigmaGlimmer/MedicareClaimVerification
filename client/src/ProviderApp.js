@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import PatientCell from './components/PatientCell'
+import Header from './components/Header'
 import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
@@ -169,7 +170,7 @@ export class ProviderApp extends Component {
     }
     return (
       <div>
-        <h1 id='centerText'>Provider Dashboard</h1>
+        <Header dashboard={'Provider Dashboard'}/>
         <Row>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>

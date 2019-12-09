@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Odometer from 'react-odometerjs';
-import 'odometer/themes/odometer-theme-minimal.css';
+import 'odometer/themes/odometer-theme-default.css';
 
 class TokenCounter extends Component {
     constructor(props) {
@@ -9,14 +9,18 @@ class TokenCounter extends Component {
 
     render() {
         return (
-            <span> Balance: 
-            <span style={{ color: '#00b05e' }}>
-                    <Odometer format="d" duration={1000} value={this.props.tokens} />
-                </span>
-                <span style={{ float: 'right', color: '#1974bf' }}>
-                    {this.props.name}
-                </span>
-            </span>
+            <div class="card" style={{ backgroundColor:'#fcfeff', marginBottom:'2vh' }}>
+                <div class="card-body" style={{ fontSize: '200%'}}>
+                    <span> Balance:
+                        <span style={{ color: '#00b05e', marginLeft: '1rem' }}>
+                            <Odometer format="d" duration={1000} value={this.props.tokens} />
+                        </span>
+                        <span style={{ float: 'right', color: '#1974bf' }}>
+                            {this.props.name}
+                        </span>
+                    </span>
+                </div>
+            </div>
         );
     }
 }
