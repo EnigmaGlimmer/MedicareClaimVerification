@@ -6,7 +6,7 @@ class ServiceModal extends React.Component {
     return (
       <div>
         <Modal isOpen={this.props.modal} toggle={this.props.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.props.toggle}>Create Service Claim</ModalHeader>
+          <ModalHeader toggle={this.props.toggle}>Provide Service</ModalHeader>
           <ModalBody>
             Please enter the name for the service.
             <Input onChange={this.props.updateServiceClaimName} placeholder="Name of Service"/>

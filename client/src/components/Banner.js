@@ -9,7 +9,7 @@ class TokenCounter extends Component {
 
     render() {
         return (
-            <span> Balance: 
+            <span> AEEC Token Balance: 
             <span style={{ color: '#00b05e' }}>
                     <Odometer format="d" duration={1000} value={this.props.tokens} />
                 </span>
