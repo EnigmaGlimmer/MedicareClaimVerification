@@ -13,7 +13,7 @@ export class InsurerApp extends Component {
         this.state = {
             web3: this.props.web3,
             accounts: this.props.accounts,
-            insContract: this.props.contract,
+            insContract: this.props.insContract,
             proContract: null,
             activeTab: '1',
             state: true
@@ -41,15 +41,10 @@ export class InsurerApp extends Component {
         // this.getAllUnverifiedServices();
         var _ = this;
 
-        const { accounts, insContract, web3 } = _.state;
+        const { insContract } = _.state;
         try {
-            const providerAddrs = await insContract.methods.getProviders().call({ from: accounts[0] });
+            const providerAddrs = await insContract.methods.getProviders().call();
             console.log("Providers: ", providerAddrs);
-            var providerInstance = new web3.eth.Contract(Provider.abi, providerAddrs[0]);
-            //var providerInstance = ProviderContract.at(providerAddrs[0])
-            this.props.setProContract(providerInstance);
-            console.log("This should be an existing provider contract: ", this.props.proContract)
-            this.setState({ proContract: providerInstance });
         }
         catch(error) {
             alert(

@@ -6,7 +6,7 @@ import ServiceModal from "./ServiceModal.js";
 class PatientCell extends Component {
     constructor(props, context) {
         super(props, context);
-        this.patientID = this.props.patientID;
+        this.patientAddr = this.props.patientAddr;
         this.providerID = this.props.providerID;
         this.serviceName = "";
         this.amount = null;
@@ -66,19 +66,19 @@ class PatientCell extends Component {
             this.amount = 0;
         }
         this.toggle();
-        this.props.provideService(this.serviceName, this.providerID, this.patientID).then((info) => {
+        this.props.provideService(this.serviceName, this.patientAddr).then((info) => {
             let list = this.state.serviceList;
-            list.push({ serviceClaimID: info.events.SCID.returnValues.ID, serviceName: this.serviceName, amount: this.amount });
+            list.push({ serviceClaimAddr: info.events.SCID.returnValues.addr, serviceName: this.serviceName, amount: this.amount });
             this.setState({ serviceList: list })
             console.log('Creating Service Claim', this.state.serviceList)
         })
     }
 
-    fileClaim(serviceClaimID, amount) {
-        this.props.fileClaim(serviceClaimID, amount).then((info) => {
+    fileClaim(serviceClaimAddr, amount) {
+        this.props.fileClaim(serviceClaimAddr, amount).then((info) => {
             let list = this.state.serviceList;
             for(let i = 0; i < list.length; i++){
-                if(list[i].serviceClaimID === serviceClaimID){
+                if(list[i].serviceClaimAddr === serviceClaimAddr){
                     list.splice(i, 1); 
                 }
             }
@@ -122,7 +122,7 @@ class PatientCell extends Component {
                                                 </div>
                                             )}
 
-                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimID, item.amount)}> {item.serviceName} </DropdownItem> })}
+                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimAddr, item.amount)}> {item.serviceName} </DropdownItem> })}
                                     </DropdownMenu>
                                 </ButtonDropdown>
                             </Col>

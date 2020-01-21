@@ -20,9 +20,9 @@ class App extends Component {
             patientLoginSuccess: false,
             providerLoginSuccess: false,
             insurerLoginSuccess: false,
-            contract: null,
-            proContract: null,
-            patContract: null,
+            insurerContract: null,
+            providerContracts: {},
+            patientContracts: {},
             accounts: null,
             web3: null
         };
@@ -30,20 +30,25 @@ class App extends Component {
         this.username = null;
         this.id = null;
         this.updateUsername = this.updateUsername.bind(this)
-        this.setProContract = this.setProContract.bind(this)
-        this.setPatContract = this.setPatContract.bind(this)
+        this.addProContract = this.addProContract.bind(this)
+        this.addPatContract = this.addPatContract.bind(this)
         // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
     }
 
-    setProContract(c){
+    addProContract(n, c){
         console.log('New Provider Contract found')
-        this.setState({proContract: c});
-        console.log(this.state.proContract)
+        var contracts = this.state.providerContracts;
+        contracts[n] = c;
+        this.setState({providerContracts: contracts});
+        console.log(this.state.providerContracts)
     }
 
-    setPatContract(c){
+    addPatContract(n, c){
         console.log('New Patient Contract found')
-        this.setState({patContract: c});
+        var contracts = this.state.patientContracts;
+        contracts[n] = c;
+        this.setState({patientContracts: contracts});
+        console.log(this.state.patientContracts)
     }
 
     updateUsername({ target }) {
@@ -74,16 +79,33 @@ class App extends Component {
             // Get the contract instance.
             const networkId = await web3.eth.net.getId();
 
-            const deployedNetwork = Insurer.networks[networkId];
-            console.log('what is deployedNetwork', deployedNetwork)
-            const instance = new web3.eth.Contract(
+            const deployedNetworkIns = Insurer.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkIns)
+            const instanceIns = new web3.eth.Contract(
                 Insurer.abi,
-                deployedNetwork && deployedNetwork.address,
+                deployedNetworkIns && deployedNetworkIns.address,
             );
+
+            const deployedNetworkPro = Provider.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkPro)
+            const instancePro = new web3.eth.Contract(
+                Provider.abi,
+                deployedNetworkPro && deployedNetworkPro.address,
+            );
+
+            const deployedNetworkPat = Patient.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkPat)
+            const instancePat = new web3.eth.Contract(
+                Patient.abi,
+                deployedNetworkPat && deployedNetworkPat.address,
+            );
+
+            this.addProContract('UCSD Medical', instancePro)
+            this.addPatContract('Ken', instancePat)
 
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
-            this.setState({ web3, accounts, contract: instance });
+            this.setState({ web3, accounts, contractIns: instanceIns});
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -154,31 +176,35 @@ class App extends Component {
                     this.state.patientLoginSuccess ? <PatientApp
                         username={this.username}
                         sd={this.solidityData}
-                        contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id} 
-                        patContract={this.state.patContract}/> : null
+                        patContract={this.state.patientContracts[this.username]}
+                        proContract={this.state.providerContracts['UCSD Medical']}
+                        insContract={this.state.contractIns}
+                        /> : null
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
                         sd={this.solidityData}
-                        contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
-                        proContract={this.state.proContract} 
-                        setPatContract={this.setPatContract}/> : null
+                        proContract={this.state.providerContracts[this.username]}
+                        insContract={this.state.contractIns}
+                        addPatContract={this.addPatContract}
+                        /> : null
                 }
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
                         sd={this.solidityData}
-                        contract={this.state.contract}
+                        insContract={this.state.contractIns}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
-                        setProContract={this.setProContract}
-                        proContract={this.state.proContract}/> : null
+                        proContract={this.state.providerContracts[this.username]}
+                        addProContract={this.addProContract}
+                        /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?

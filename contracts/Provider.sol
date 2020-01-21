@@ -92,7 +92,9 @@ contract Provider {
         return address(myServiceClaim);
     }
     
-
-    
+    function getPatientName(address _addr) public view returns (string memory) {
+        string memory patient = patientMap[_addr];
+        return patient;
+    }
 
 }
