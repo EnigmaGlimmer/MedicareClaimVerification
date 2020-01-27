@@ -33,7 +33,6 @@
     "path": "^0.12.7",
     "react-odometerjs": "^2.1.1",
     "react-router-dom": "^5.0.1",
-    "remixd": "^0.1.8-alpha.6",
     "solc": "^0.5.11",
     "web3": "^1.2.0"
   }
