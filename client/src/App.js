@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
-import ClaimVerification from "./contracts/Organizations.json"
+// import ClaimVerification from "./contracts/Organizations.json"; 
+import Insurer from "./contracts/Insurer.json";
+import Provider from "./contracts/Provider.json";
+import Patient from "./contracts/Patient.json"
 import getWeb3 from "./utils/getWeb3";
 import { log } from './App-unused';
 import $ from 'jquery'
 import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
+import InsurerApp from './InsurerApp'
 import './Login.css'
 
 class App extends Component {
@@ -15,16 +19,36 @@ class App extends Component {
         this.state = {
             patientLoginSuccess: false,
             providerLoginSuccess: false,
-            contract: null,
+            insurerLoginSuccess: false,
+            insurerContract: null,
+            providerContracts: {},
+            patientContracts: {},
             accounts: null,
             web3: null
         };
         this.role = 'Patient';
         this.username = null;
         this.id = null;
-        this.solidityData = null;
         this.updateUsername = this.updateUsername.bind(this)
+        this.addProContract = this.addProContract.bind(this)
+        this.addPatContract = this.addPatContract.bind(this)
         // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
+    }
+
+    addProContract(n, c){
+        console.log('New Provider Contract found')
+        var contracts = this.state.providerContracts;
+        contracts[n] = c;
+        this.setState({providerContracts: contracts});
+        console.log(this.state.providerContracts)
+    }
+
+    addPatContract(n, c){
+        console.log('New Patient Contract found')
+        var contracts = this.state.patientContracts;
+        contracts[n] = c;
+        this.setState({patientContracts: contracts});
+        console.log(this.state.patientContracts)
     }
 
     updateUsername({ target }) {
@@ -41,7 +65,7 @@ class App extends Component {
         const { accounts, contract } = this.state;
         const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
         this.solidityData = info;
-        console.log("Fetched data", info)
+        console.log('Solidity Information preloaded')
     };
 
     componentDidMount = async () => {
@@ -54,15 +78,34 @@ class App extends Component {
 
             // Get the contract instance.
             const networkId = await web3.eth.net.getId();
-            const deployedNetwork = ClaimVerification.networks[networkId];
-            const instance = new web3.eth.Contract(
-                ClaimVerification.abi,
-                deployedNetwork && deployedNetwork.address,
+
+            const deployedNetworkIns = Insurer.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkIns)
+            const instanceIns = new web3.eth.Contract(
+                Insurer.abi,
+                deployedNetworkIns && deployedNetworkIns.address,
             );
+
+            const deployedNetworkPro = Provider.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkPro)
+            const instancePro = new web3.eth.Contract(
+                Provider.abi,
+                deployedNetworkPro && deployedNetworkPro.address,
+            );
+
+            const deployedNetworkPat = Patient.networks[networkId];
+            console.log('what is deployedNetwork', deployedNetworkPat)
+            const instancePat = new web3.eth.Contract(
+                Patient.abi,
+                deployedNetworkPat && deployedNetworkPat.address,
+            );
+
+            this.addProContract('UCSD Medical', instancePro)
+            this.addPatContract('Ken', instancePat)
 
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
-            this.setState({ web3, accounts, contract: instance }, this.fetchData);
+            this.setState({ web3, accounts, contractIns: instanceIns});
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -89,7 +132,6 @@ class App extends Component {
     }
 
     ajax_login() {
-        console.log(this.username)
         $.ajax({
             url: 'http://localhost:4000/login',
             type: 'POST',
@@ -100,7 +142,7 @@ class App extends Component {
             data: {
                 username: this.username
             },
-            success: (data) => {
+            success: async (data) => {
                 if (data.message === 'OK') {
                     console.log('Success logging in', data.result)
                     this.id = data.result.id;
@@ -108,8 +150,13 @@ class App extends Component {
                     if(data.result.role === 'Patient'){
                         this.setState({ patientLoginSuccess: true })
                     }
-                    else {
-                        this.setState({ providerLoginSuccess: true })
+                    else if(data.result.role === 'Provider') {
+                        // this.fetchData().then(()=> {
+                            this.setState({ providerLoginSuccess: true })
+                        // })
+                    }
+                    else{
+                        this.setState({ insurerLoginSuccess: true })
                     }
                 }
                 else {
@@ -127,22 +174,40 @@ class App extends Component {
             <div>
                 {
                     this.state.patientLoginSuccess ? <PatientApp
+                        username={this.username}
                         sd={this.solidityData}
-                        contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} /> : null
+                        id={this.id} 
+                        patContract={this.state.patientContracts['Ken']}
+                        proContract={this.state.providerContracts['UCSD Medical']}
+                        insContract={this.state.contractIns}
+                        /> : null
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
                         sd={this.solidityData}
-                        contract={this.state.contract}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} /> : null
+                        id={this.id}
+                        proContract={this.state.providerContracts[this.username]}
+                        insContract={this.state.contractIns}
+                        addPatContract={this.addPatContract}
+                        /> : null
+                }
+                {
+                    this.state.insurerLoginSuccess ? <InsurerApp
+                        sd={this.solidityData}
+                        insContract={this.state.contractIns}
+                        accounts={this.state.accounts}
+                        web3={this.state.web3}
+                        id={this.id}
+                        proContract={this.state.providerContracts[this.username]}
+                        addProContract={this.addProContract}
+                        /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
-                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess ?
+                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                 <div style={{ textAlign: 'center' }}>
                     <h1>Medicare Insurance Claim Tracking</h1>
                     <Card id='login'>

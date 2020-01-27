@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import ServiceCell from './components/ServiceCell'
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 
-import "./ProviderApp.css";
+import "./App.css";
 
 export class PatientApp extends Component {
     constructor(props) {
@@ -14,21 +14,22 @@ export class PatientApp extends Component {
         this.state = {
             web3: this.props.web3,
             accounts: this.props.accounts,
-            contract: this.props.contract,
-            unverifiedClaims: []
+            patContract: this.props.patContract,
+            proContract: this.props.proContract,
+            insContract: this.props.insContract,
+            unverifiedClaims: [],
+            unclaimedServiecs: []
         };
         this.providerID = null
         this.unverifiedClaims = []
         this.verifiedClaims = []
         this.patientId = this.props.id
-        // this.solidityData = this.props.sd;
-        this.patientname = null;
+        this.patientname = this.props.username;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
-        this.getClaims = this.getClaims.bind(this)
         this.getUnverifiedClaims = this.getUnverifiedClaims.bind(this)
-        // this.provideService = this.provideService.bind(this);
-        // this.fileClaim = this.fileClaim.bind(this);
+        this.getUnclaimedServices = this.getUnclaimedServices.bind(this)
+        this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
     }
 
     notification_patientCellCreated(patientname) {
@@ -107,80 +108,87 @@ export class PatientApp extends Component {
     }
 
     componentDidMount = async () => {
-        console.log(this.patientId)
-        // // this.getUnverifiedClaims(this.patientId);
-        // var _ = this;
-        // setInterval(function () {
-        //     _.getUnverifiedClaims(_.patientId);
-        // }, 10000);
+        var _ = this;
+        this.getUnverifiedClaims(this.patientId);
+        this.getUnclaimedServices(this.patientId);
+        console.log('provider contract: ', this.state.proContract)
+        console.log('patient contract: ', this.state.patContract)
+        // this.state.proContract.events.ClaimCreated(function (err, res) {
+        //     if (!err) {
+        //         _.getUnverifiedClaims(_.patientId);
+        //     }
+        // })
+        this.state.patContract.events.Claims()
+            .on('data', (event) => {
+                console.log('detected event! ', event);
+                _.getUnverifiedClaims(_.patientId);
+                _.getUnclaimedServices(_.patientId);
+            })
+            .on('error', console.error);
     };
 
-    getClaims = async (id) => {
-        const { accounts, contract } = this.state;
-        const unverifiedClaims = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
-        this.unverifiedClaims = unverifiedClaims;
-        console.log('unv', this.unverifiedClaims)
-        const verifiedClaims = await contract.methods.patientVerifiedClaims(id).send({ from: accounts[0] });
-        this.verifiedClaims = verifiedClaims;
-        console.log('ver', this.verifiedClaims)
+    deleteClaimFromList(i) {
+        console.log('Deleting Claim')
+        let list = this.state.unverifiedClaims;
+        list.splice(i, 1)
+        this.setState({ unverifiedClaims: list })
     }
 
     getUnverifiedClaims = async (id) => {
-        const { accounts, contract } = this.state;
-        var list = []
-        const unv = await contract.methods.patientUnverifiedClaims(id).send({ from: accounts[0] });
-        console.log('unv', unv.events)
-        if (unv.events.SCName) {
-            if (!unv.events.SCName.length) {
-                list.push([unv.events.SCName.returnValues.name, unv.events.serviceList.returnValues.services[0]])
-            }
-            else {
-                for (let i = 0; i < unv.events.SCName.length; i++) {
-                    list.push([unv.events.SCName[i].returnValues.name, unv.events.serviceList.returnValues.services[i]])
-                }
-            }
-            this.setState({ unverifiedClaims: list })
-        }
+        const { patContract } = this.state;
+        const unv = await patContract.methods.getUC().call();
+        console.log('results from unverifiedClaims', unv)
+        this.setState({ unverifiedClaims: unv })
         console.log("state of unv", this.state.unverifiedClaims)
     }
 
-    verifyClaim = async (serviceClaimID) => {
-        const { accounts, contract } = this.state;
-        const info = await contract.methods.verifyClaim(serviceClaimID).send({ from: accounts[0] });
-        console.log(info);
-        this.getUnverifiedClaims(this.patientId);
+    getUnclaimedServices = async (id) => {
+        const { patContract } = this.state;
+        const unv = await patContract.methods.getUS().call();
+        console.log('results from unclaimedServices', unv)
+        this.setState({ unclaimedServices: unv })
+        console.log("state of unc", this.state.unclaimedServices)
+    }
+
+    verifyClaim = async (serviceClaimID, confirmed) => {
+        const { accounts, patContract } = this.state;
+        const info = await patContract.methods.verifyClaim(serviceClaimID, Date.now(), confirmed).send({ from: accounts[0] });
+        console.log('confirmation', info)
     }
 
     render() {
         // let sd = this.solidityData
-        // console.log("Rendering PatientApp ", sd)
+        console.log("Rendering PatientApp")
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
         return (
             <div>
                 <h1 id='centerText'>Patient Dashboard</h1>
-
-                <ul>
+                <h5>Patient Name: {this.patientname}</h5>
+                <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&
                             this.state.unverifiedClaims.length > 0 ?
                             this.state.unverifiedClaims.map((output, i) => {
-                                console.log(output)
                                 return <ServiceCell
-                                    // sd={sd}
-                                    contract={this.state.contract}
-                                    accounts={this.state.accounts}
                                     serviceName={output[0]}
                                     serviceAddr={output[1]}
+                                    timeProvided={output[2]}
+                                    timeFiled={output[3]}
                                     verifyClaim={this.verifyClaim}
+                                    i={i}
+                                    deleteClaimFromList={this.deleteClaimFromList}
+                                    arrLength={this.state.unverifiedClaims.length}
                                 />
-                            }) : 
-                            <Card body outline color="primary">
-                                <CardBody>
-                                    You do not have any unverified claims yet.
+                            }) :
+                            <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                <Card body outline color="primary" >
+                                    <CardBody>
+                                        You do not have any unverified claims yet.
                                 </CardBody>
-                            </Card>
+                                </Card>
+                            </CardGroup>
                     }
                 </ul>
             </div>

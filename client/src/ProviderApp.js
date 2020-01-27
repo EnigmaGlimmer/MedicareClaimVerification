@@ -5,8 +5,9 @@ import PatientCell from './components/PatientCell'
 import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import Patient from "./contracts/Patient.json";
 
-import "./ProviderApp.css";
+import "./App.css";
 
 export class ProviderApp extends Component {
   constructor(props) {
@@ -14,7 +15,8 @@ export class ProviderApp extends Component {
     this.state = {
       web3: this.props.web3,
       accounts: this.props.accounts,
-      contract: this.props.contract,
+      proContract: this.props.proContract,
+      patContract: this.props.patContract,
       patients: [],
     };
     this.providerID = null
@@ -26,7 +28,7 @@ export class ProviderApp extends Component {
     this.fileClaim = this.fileClaim.bind(this);
   }
 
-  notification_patientCellCreated(patientname){
+  notification_patientCellCreated(patientname) {
     $.ajax({
       url: 'http://localhost:4000/patientCellCreated',
       type: 'POST',
@@ -48,7 +50,7 @@ export class ProviderApp extends Component {
     });
   }
 
-  notification_claimAdded(patientname, serviceID, service, amount){
+  notification_claimAdded(patientname, serviceID, service, amount) {
     $.ajax({
       url: 'http://localhost:4000/claimAdded',
       type: 'POST',
@@ -73,7 +75,7 @@ export class ProviderApp extends Component {
     });
   }
 
-  notification_serviceClaimCreated(patientname, serviceID, service){
+  notification_serviceClaimCreated(patientname, serviceID, service) {
     $.ajax({
       url: 'http://localhost:4000/serviceClaimCreated',
       type: 'POST',
@@ -102,69 +104,63 @@ export class ProviderApp extends Component {
   }
 
   componentDidMount = async () => {
-    let patientList = [];
-    const patients = this.solidityData.events.PatientCreated;
-    this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
-    for (let i = 0; i < patients.length; i++) {
-      patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
+    const { accounts, proContract } = this.state;
+    try {
+      const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
+      const patientAddrs = await proContract.methods.getPatients().call();
+      console.log("Patients: ", patientAddrs);
+      var list = [];
+      for(var i = 0; i < patientAddrs.length; i++){
+        var addr = patientAddrs[i];
+        var name = await proContract.methods.getPatientName(addr).call();
+        list.push({name, addr})
+      }
+      this.setState({ patients: list })
+      console.log(this.state.patients)
     }
-    console.log(patientList)
-    this.setState({ patients: patientList })
+    catch (error) {
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
   };
 
-  provideService = async(serviceName, providerID, patientID) => {
-    const { accounts, contract } = this.state;
-    const info = await contract.methods.provideService(serviceName, providerID, patientID).send({ from: accounts[0] });
-    this.serviceClaimID = info.events.SCID.returnValues.ID;
-    console.log('provided service ID ',this.serviceClaimID)
+  provideService = async (serviceName, patientAddr) => {
+    const { accounts, proContract } = this.state;
+    const info = await proContract.methods.provideService(serviceName, patientAddr).send({ from: accounts[0] });
+    this.serviceClaimAddr = info.events.SCID.returnValues.addr;
+    console.log('provided service Addr ', this.serviceClaimAddr)
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
     return info;
   }
 
-  fileClaim = async(serviceClaimID, amount) => {
-    const { accounts, contract } = this.state;
-    const info = await contract.methods.fileClaim(serviceClaimID, amount).send({ from: accounts[0] });
+  fileClaim = async (serviceClaimAddr, amount) => {
+    const { accounts, proContract } = this.state;
+    const info = await proContract.methods.fileClaim(serviceClaimAddr, amount, Date.now()).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
-    contract.events.serviceList(function(err, res) {
-      if(!err){
-          console.log('serviceList update: ', res)
-      }
-  })
+    console.log('Adding Claim', info.events)
     return info;
   }
 
-  onFormSubmit = async(e) => {
+  onFormSubmit = async (e) => {
     e.preventDefault()
     const { accounts, contract } = this.state;
     const info = await contract.methods.addPatient(this.patientname, this.solidityData.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-    console.log("Added patient",info)
+    console.log("Added patient", info)
     let patientList = this.state.patients;
     const newPatient = [info.events.PatientCreated.returnValues.name, info.events.PatientCreated.returnValues.id];
     patientList.push(newPatient);
     console.log(patientList)
-    this.setState({patients: patientList})
+    this.setState({ patients: patientList })
     ReactDOM.findDOMNode(this.refs.sold).innerHTML = "<p>Added new patient! Check your list!</p>";
     ReactDOM.findDOMNode(this.refs.sold).style.color = "#acd854";
     // this.notification_patientCellCreated(this.patientname);
   }
 
-  // fetchData = async () => {
-  //   const { accounts, contract } = this.state;
-  //   let patientList = [];
-  //   const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
-  //   this.solidityData = info;
-  //   console.log("Fetched data",info)
-  //   const patients = this.solidityData.events.PatientCreated;
-  //   this.providerID = this.solidityData.events.ProviderCreated.returnValues.id;
-  //   for (let i = 0; i < patients.length; i++) {
-  //     patientList.push([patients[i].returnValues.name, patients[i].returnValues.id]);
-  //   }
-  //   console.log(patientList)
-  //   this.setState({ patients: patientList })
-  // };
-
   render() {
     let sd = this.solidityData
+    console.log('Rendering ProviderApp')
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -174,20 +170,20 @@ export class ProviderApp extends Component {
         <Row>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
-            <ul>
+            <ul id='cells'>
               {this.state.patients.map((o, i) => {
-                return <PatientCell name={o[0]} 
-                                    key={i}
-                                    patientID={o[1]}
-                                    providerID={this.providerID}
-                                    sd={sd}
-                                    provideService={this.provideService}
-                                    fileClaim={this.fileClaim}
-                                    web3={this.state.web3}
-                                    accounts={this.state.accounts}
-                                    contract={this.state.contract}
-                                    notification_claimAdded={this.notification_claimAdded}
-                                    />
+                return <PatientCell name={o.name}
+                  key={i}
+                  patientAddr={o.addr}
+                  providerID={this.providerID}
+                  sd={sd}
+                  provideService={this.provideService}
+                  fileClaim={this.fileClaim}
+                  web3={this.state.web3}
+                  accounts={this.state.accounts}
+                  contract={this.state.contract}
+                  notification_claimAdded={this.notification_claimAdded}
+                />
               })}
             </ul>
           </Col>
@@ -200,7 +196,7 @@ export class ProviderApp extends Component {
               <div className="text-right">
                 <Button type="submit" color='success'>Enter</Button>
               </div>
-              <div ref="sold" className="expandable" id="nav"/>
+              <div ref="sold" className="expandable" id="nav" />
             </Form>
           </Col>
         </Row>

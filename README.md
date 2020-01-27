@@ -43,7 +43,51 @@ truffle migrate
 
 ###### Run the NodeJS Application
 ```
-cd client
-npm start
+npm run start
 ```
+### Example Interaction
 
+This is the login page, it will require only a username. The password can be any characters.
+
+![](/screenshots/Login.png)
+
+Any changes made to the Ethereum blockchain will evoke a Metamask call, requesting your confirmation of payment.
+
+![](/screenshots/Metamask.png)
+
+###### Log into Provider Dashboard
+
+Login with "UCSD Medical" as username.
+
+![](/screenshots/ProviderPortal.png)
+
+###### Create a claim
+
+Select the green button "Create Service Claim" on the patient Ken.
+Fill in the fields.
+
+![](/screenshots/ServiceClaim.png)
+
+###### File a claim
+
+Click on the drop down menu of the patient you have created a claim for and select the claim.
+
+![](/screenshots/FileClaim.png)
+
+###### Log into Patient Dashboard
+
+Login with "Ken" as username.
+
+![](/screenshots/PatientPortal.png)
+
+###### Verify the claim
+
+The green button on the bottom of the claim will verify the claim, whether the patient confirms or disputes the claim is up to them.
+
+###### Log into Insurer Dashboard
+
+Login with "CMS" as username.
+
+![](/screenshots/InsurerPortal.png)
+
+While insurers cannot modify claims, they can see their provenance as well as their statuses of verification.

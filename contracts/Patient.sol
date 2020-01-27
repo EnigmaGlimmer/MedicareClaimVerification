@@ -1,0 +1,95 @@
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+import "./SafeMath.sol";
+import "./ServiceClaim.sol";
+import "./AEECToken.sol";
+import "./Organizations.sol";
+import "./Provider.sol";
+import "./Insurer.sol";
+
+contract Patient {
+
+
+    bytes32 id;
+    string name;
+    //mapping (address=>string) SCMap;
+    address[] public unclaimedServices;
+    address[] public unverifiedClaims;
+    address[] public verifiedClaims;
+    event ClaimVerified(address addr, bool confirm);
+    event Claims(address[] claims);
+    event ClaimLength(uint256 claimLength);
+    event ClaimAdded(address addr);
+
+    constructor(bytes32 _id, string memory _name) public {
+        id = _id;
+        name = _name;
+    }
+
+    // verifyClaim
+    function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        require(myServiceClaim.verifyClaim(_timeVerified, _confirmed), "Claim was not Verified");
+        // Add the claim address to verified list
+        // Delete the claim address from unverified list
+        //bytes32 patID = myServiceClaim.patientID();
+        //Patient storage cP = patientMap[patID];
+        for(uint i = 0; i < unverifiedClaims.length; i++){
+            if(unverifiedClaims[i] == address(myServiceClaim)){
+                delete(unverifiedClaims[i]);
+                break;
+            }
+        }
+        //string memory name = myServiceClaim.name();
+        //SC memory newSC = SC(name, address(myServiceClaim));
+        verifiedClaims.push(address(myServiceClaim));
+        emit ClaimVerified(_serviceClaimAddress, _confirmed);
+    }
+
+    function addService(address _addr) public returns (address[] memory) {
+        unclaimedServices.push(_addr);
+        emit ClaimAdded(_addr);
+    }
+
+    function fileClaim(address _serviceClaimAddress) public {
+        for (uint i = 0; i < unverifiedClaims.length; i++) {
+            if(unclaimedServices[i] == _serviceClaimAddress){
+                delete(unclaimedServices[i]);
+                break;
+            }
+        }
+        unverifiedClaims.push(_serviceClaimAddress);
+        emit ClaimLength(unverifiedClaims.length);
+        emit Claims(unverifiedClaims);
+    }
+
+     // for(uint i = 0; i < cP.unclaimedServices.length; i++){
+        //     if(cP.unclaimedServices[i] == address(myServiceClaim)){
+        //         delete(cP.unclaimedServices[i]);
+        //         break;
+        //     }
+        // }
+        // // string memory name = myServiceClaim.name();
+        // //SC memory newSC = SC(name, address(myServiceClaim));
+        // cP.unverifiedClaims.push(address(myServiceClaim));
+
+
+    
+    function getUS() public view returns (address[] memory) {
+        return unclaimedServices;
+    }
+
+    function getUC() public view returns (address[] memory) {
+        return unverifiedClaims;
+    }
+
+    function getVC() public view returns (address[] memory) {
+        return verifiedClaims;
+    }
+
+    function getLastSC() public view returns(address){
+        return unverifiedClaims[unverifiedClaims.length-1];
+    }
+
+}
