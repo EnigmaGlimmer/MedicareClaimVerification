@@ -17,7 +17,8 @@ export class PatientApp extends Component {
             patContract: this.props.patContract,
             proContract: this.props.proContract,
             insContract: this.props.insContract,
-            unverifiedClaims: []
+            unverifiedClaims: [],
+            unclaimedServiecs: []
         };
         this.providerID = null
         this.unverifiedClaims = []
@@ -27,6 +28,7 @@ export class PatientApp extends Component {
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
         this.getUnverifiedClaims = this.getUnverifiedClaims.bind(this)
+        this.getUnclaimedServices = this.getUnclaimedServices.bind(this)
         this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
     }
 
@@ -108,12 +110,21 @@ export class PatientApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         this.getUnverifiedClaims(this.patientId);
-        console.log(this.state.proContract)
-        this.state.proContract.events.ClaimCreated(function (err, res) {
-            if (!err) {
+        this.getUnclaimedServices(this.patientId);
+        console.log('provider contract: ', this.state.proContract)
+        console.log('patient contract: ', this.state.patContract)
+        // this.state.proContract.events.ClaimCreated(function (err, res) {
+        //     if (!err) {
+        //         _.getUnverifiedClaims(_.patientId);
+        //     }
+        // })
+        this.state.patContract.events.Claims()
+            .on('data', (event) => {
+                console.log('detected event! ', event);
                 _.getUnverifiedClaims(_.patientId);
-            }
-        })
+                _.getUnclaimedServices(_.patientId);
+            })
+            .on('error', console.error);
     };
 
     deleteClaimFromList(i) {
@@ -127,8 +138,16 @@ export class PatientApp extends Component {
         const { patContract } = this.state;
         const unv = await patContract.methods.getUC().call();
         console.log('results from unverifiedClaims', unv)
-        this.setState({unverifiedClaims: unv})
+        this.setState({ unverifiedClaims: unv })
         console.log("state of unv", this.state.unverifiedClaims)
+    }
+
+    getUnclaimedServices = async (id) => {
+        const { patContract } = this.state;
+        const unv = await patContract.methods.getUS().call();
+        console.log('results from unclaimedServices', unv)
+        this.setState({ unclaimedServices: unv })
+        console.log("state of unc", this.state.unclaimedServices)
     }
 
     verifyClaim = async (serviceClaimID, confirmed) => {

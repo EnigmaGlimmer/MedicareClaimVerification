@@ -179,7 +179,7 @@ class App extends Component {
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id} 
-                        patContract={this.state.patientContracts[this.username]}
+                        patContract={this.state.patientContracts['Ken']}
                         proContract={this.state.providerContracts['UCSD Medical']}
                         insContract={this.state.contractIns}
                         /> : null

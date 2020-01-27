@@ -83,12 +83,14 @@ contract Provider {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddr);
         //uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
+        serviceClaims.push(address(myServiceClaim));
+        //emit SCEvent(newSC);
+        
         address patientAddr = myServiceClaim.getPatientAddress();
         Patient cP = Patient(patientAddr);
-        serviceClaims.push(address(myServiceClaim));
+        emit PatientRetrieval(cP);
         cP.fileClaim(address(myServiceClaim));
         emit ClaimCreated(address(myServiceClaim), _amount);
-        //emit SCEvent(newSC);
         return address(myServiceClaim);
     }
     

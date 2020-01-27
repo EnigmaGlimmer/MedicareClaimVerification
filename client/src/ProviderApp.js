@@ -106,7 +106,7 @@ export class ProviderApp extends Component {
   componentDidMount = async () => {
     const { accounts, proContract } = this.state;
     try {
-      // const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
+      const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
       const patientAddrs = await proContract.methods.getPatients().call();
       console.log("Patients: ", patientAddrs);
       var list = [];
