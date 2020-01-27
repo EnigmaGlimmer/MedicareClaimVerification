@@ -65,8 +65,7 @@ contract Provider {
         return true;
     }
 
-    function provideService(string memory _name, address _patientAddress) public
-    returns(address SCAddress) {
+    function provideService(string memory _name, address _patientAddress) public returns(address SCAddress) {
         bytes32 sid = keccak256(abi.encodePacked(_name, id, _patientAddress));
         ServiceClaim serviceClaim = new ServiceClaim(address(this), _patientAddress, sid, _name);
         serviceClaims.push(address(serviceClaim));
@@ -83,7 +82,7 @@ contract Provider {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddr);
         //uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
-        serviceClaims.push(address(myServiceClaim));
+        //serviceClaims.push(address(myServiceClaim));
         //emit SCEvent(newSC);
         
         address patientAddr = myServiceClaim.getPatientAddress();

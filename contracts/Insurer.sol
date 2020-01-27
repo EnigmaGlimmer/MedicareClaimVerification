@@ -45,7 +45,7 @@ contract Insurer {
 
     function preloadInfo() public {
         // Insurer is already added
-        address pAddr = addProvider("UCSD Medecine");
+        address pAddr = addProvider("UCSD Medical");
         Provider provider = Provider(pAddr);
         address kenAddr = provider.addPatient("Ken");
         Patient patient = Patient(kenAddr);

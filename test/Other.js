@@ -32,16 +32,16 @@ contract('Other', (accounts) => {
       // patientInstance = await Patient.at(patientAddr);
     });
 
-    //Insurer Provider - DONE
-    it('Empty Insurer Provider  List', async () => {
-      var pL = await insurerInstance.getProviders();
-      assert.equal(pL.length,0,"Insurer list is not empty");
-    });
+    // //Insurer Provider - DONE
+    // it('Empty Insurer Provider  List', async () => {
+    //   var pL = await insurerInstance.getProviders();
+    //   assert.equal(pL.length,0,"Insurer list is not empty");
+    // });
 
     it('Single Insurer Provider List', async () => {
-      provider = await insurerInstance.addProvider("Anthem Blue Cross");
-      providerAddr = provider.logs[0].args.addr;
-      providerInstance = await Provider.at(providerAddr);
+      // provider = await insurerInstance.addProvider("Anthem Blue Cross");
+      // providerAddr = provider.logs[0].args.addr;
+      // providerInstance = await Provider.at(providerAddr);
       var insurerList = await insurerInstance.getProviders();
       assert.equal(insurerList.length,1,"Insurer list should have a member here as well");
     });

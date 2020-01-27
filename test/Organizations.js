@@ -1,4 +1,3 @@
-const Organizations = artifacts.require("Organizations");
 const ServiceClaim = artifacts.require("ServiceClaim");
 const AEECToken = artifacts.require("AEECToken");
 const orgArtifact = require("./../client/src/contracts/Organizations.json");
@@ -8,7 +7,6 @@ const Provider = artifacts.require("Provider");
 const Patient = artifacts.require("Patient");
 
 
-let organizationsInstance;
 let insurer; 
 let insurerID; 
 let provider;
@@ -24,17 +22,7 @@ contract('Organizations', (accounts) => {
     before(async function(){
       var aeecToken = await AEECToken.deployed(); // contract(tokenArtifact); // AEECToken.deployed();
       //console.log(aeecToken.address);
-      var organizationsInstance = await Organizations.deployed();
-      //console.log(organizationsInstance.address);
     });
-  
-    it('Organization Contract is properly deployed', async () => {
-      const organizationsInstance = await Organizations.deployed();
-      const oAddress = organizationsInstance.address; 
-      assert(oAddress, "Organization address does not exist");
-    });
-
-
     it('Insurer Contract is properly deployed', async () => {
       const insurerInstance = await Insurer.deployed();
       const insurerAddress = insurerInstance.address; 
@@ -179,7 +167,7 @@ contract('Organizations', (accounts) => {
       tokenInstance = await AEECToken.deployed();
     });
 
-    it('Organizations properly mints AEECToken', async() => {
+    it('Insurer properly mints AEECToken', async() => {
       //const token = await organizationsInstance.getToken();
       const tokenBalance = await tokenInstance.balanceOf(insurerInstance.address);
       assert.equal(tokenBalance,1000000);
