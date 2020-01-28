@@ -123,7 +123,7 @@ contract('Organizations', (accounts) => {
       const serviceClaimTx = await providerInstance.provideService("Glasses",patientInstance.address);    
       //console.log("SERVICE CLAIM LOGS: ", serviceClaimTx.logs)
       const serviceClaimInstance = await ServiceClaim.at(serviceClaimTx.logs[0].args.addr);
-      const fileClaimTx = await serviceClaimInstance.fileClaim(100, Date.now());
+      const fileClaimTx = await serviceClaimInstance.file(100, Date.now());
       const claimAmount = await serviceClaimInstance.getAmount();
       assert.equal(100,claimAmount,"Claim Amount is Incorrect");
     });
@@ -135,7 +135,7 @@ contract('Organizations', (accounts) => {
       //console.log("SERVICE CLAIM LOGS: ", serviceClaimTx.logs)
       const scAddr = serviceClaimTx.logs[0].args.addr
       const serviceClaimInstance = await ServiceClaim.at(scAddr);
-      await serviceClaimInstance.fileClaim(100, Date.now());
+      await serviceClaimInstance.file(100, Date.now());
       //const patientInstance = await Patient.at(patientInstance.address);
       const verifyTx = await patientInstance.verifyClaim(scAddr, Date.now(), true);
       const claimVerify = await serviceClaimInstance.isVerified();

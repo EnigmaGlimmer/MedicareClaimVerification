@@ -77,7 +77,7 @@ contract('Other', (accounts) => {
     });
 
     it('Empty Unverified Claims List', async() => {
-      const unvServices = await insurerInstance.getUnverifiedClaims();
+      const unvServices = await insurerInstance.getAllUnverifiedClaims();
       assert.equal(unvServices.length,0,"There should be no unverified services here");
     });
 

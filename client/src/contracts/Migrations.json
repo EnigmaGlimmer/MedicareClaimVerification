@@ -1387,12 +1387,12 @@
     "1580167245004": {
       "events": {},
       "links": {},
-      "address": "0x69A3F8B4f988Bb3c18210B438334141B130c3869",
-      "transactionHash": "0x74775d9ad3ab6e9a04ca9d2262bd48306fe0405cbf7f8856ded8909fa5292a83"
+      "address": "0xb6f1e53d67aCFBca82Eb42F91526Df7053Bb65Eb",
+      "transactionHash": "0xa14924855e6047bc61fbbcae3567e63d5740f494aa4bf164a6244799392ca840"
     }
   },
   "schemaVersion": "3.0.12",
-  "updatedAt": "2020-01-27T23:46:28.745Z",
+  "updatedAt": "2020-01-28T00:01:30.463Z",
   "devdoc": {
     "methods": {}
   },

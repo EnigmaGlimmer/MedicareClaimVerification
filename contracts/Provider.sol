@@ -71,7 +71,7 @@ contract Provider {
         serviceClaims.push(address(serviceClaim));
         serviceClaimMap[_patientAddress] = address(serviceClaim);
         Patient cP = Patient(_patientAddress);
-        cP.addService(address(serviceClaim));
+        cP.recordService(address(serviceClaim));
         SCMap[address(serviceClaim)] = _name;
         emit SCID(_name, address(serviceClaim));
         return address(serviceClaim);
@@ -88,7 +88,7 @@ contract Provider {
         address patientAddr = myServiceClaim.getPatientAddress();
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
-        cP.fileClaim(address(myServiceClaim));
+        cP.recordClaim(address(myServiceClaim));
         emit ClaimCreated(address(myServiceClaim), _amount);
         return address(myServiceClaim);
     }

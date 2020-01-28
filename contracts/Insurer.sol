@@ -86,11 +86,11 @@ contract Insurer {
         // myServiceClaim.payProvider();
     }
 
-    function getVerifiedClaims() public view returns (address[] memory){
+    function getAllVerifiedClaims() public view returns (address[] memory){
         return verifiedClaims;
     }
 
-    function getUnverifiedClaims() public view returns (address[] memory){
+    function getAllUnverifiedClaims() public view returns (address[] memory){
         return unverifiedClaims;
     }
 
