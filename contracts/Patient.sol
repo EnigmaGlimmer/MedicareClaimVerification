@@ -30,7 +30,7 @@ contract Patient {
     // verifyClaim
     function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
-        require(myServiceClaim.verifyClaim(_timeVerified, _confirmed), "Claim was not Verified");
+        require(myServiceClaim.verify(_timeVerified, _confirmed), "Claim was not Verified");
         // Add the claim address to verified list
         // Delete the claim address from unverified list
         //bytes32 patID = myServiceClaim.patientID();
@@ -47,12 +47,16 @@ contract Patient {
         emit ClaimVerified(_serviceClaimAddress, _confirmed);
     }
 
-    function addService(address _addr) public returns (address[] memory) {
+    function recordService(address _addr) public returns (address[] memory) {
         unclaimedServices.push(_addr);
         emit ClaimAdded(_addr);
     }
 
+<<<<<<< HEAD
     function fileClaim(address _serviceClaimAddress) public returns (address[] memory){
+=======
+    function recordClaim(address _serviceClaimAddress) public {
+>>>>>>> 210a1b2488ab5cdb5ed8e92ed38652c2a5417fef
         for (uint i = 0; i < unverifiedClaims.length; i++) {
             if(unclaimedServices[i] == _serviceClaimAddress){
                 delete(unclaimedServices[i]);

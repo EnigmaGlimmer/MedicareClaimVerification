@@ -36,14 +36,14 @@ contract ServiceClaim {
 
     // ------------------------------ Functionality of the Network --------------------------- //
 
-    function fileClaim(uint256 _amount, uint256 _timeFiled) public returns(uint256) {
+    function file(uint256 _amount, uint256 _timeFiled) public returns(uint256) {
         timeFiled = _timeFiled;
         amount = _amount;
         emit ClaimAdded(amount, timeFiled);
         return amount;
     }
 
-    function verifyClaim(uint256 _timeVerified, bool _confirmed) public returns(bool verifySuccess) {
+    function verify(uint256 _timeVerified, bool _confirmed) public returns(bool verifySuccess) {
         timeVerified = _timeVerified;
         confirmed = _confirmed;
         return true;

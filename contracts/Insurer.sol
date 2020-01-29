@@ -45,7 +45,7 @@ contract Insurer {
 
     function preloadInfo() public {
         // Insurer is already added
-        address pAddr = addProvider("UCSD Medecine");
+        address pAddr = addProvider("UCSD Medical");
         Provider provider = Provider(pAddr);
         address kenAddr = provider.addPatient("Ken");
         Patient patient = Patient(kenAddr);
@@ -86,11 +86,11 @@ contract Insurer {
         // myServiceClaim.payProvider();
     }
 
-    function getVerifiedClaims() public view returns (address[] memory){
+    function getAllVerifiedClaims() public view returns (address[] memory){
         return verifiedClaims;
     }
 
-    function getUnverifiedClaims() public view returns (address[] memory){
+    function getAllUnverifiedClaims() public view returns (address[] memory){
         return unverifiedClaims;
     }
 
