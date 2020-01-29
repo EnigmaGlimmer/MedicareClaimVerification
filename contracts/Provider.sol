@@ -25,6 +25,7 @@ contract Provider {
     event SCID(string scName, address addr);
     event ClaimCreated(address addr, uint256 amount);
     event PatientRetrieval(Patient patient);
+    event Claims(address[] unverifiedClaims);
 
     constructor(string memory _name, bytes32 _id) public {
         // preLoadInfo();
@@ -89,7 +90,7 @@ contract Provider {
         address patientAddr = myServiceClaim.getPatientAddress();
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
-        cP.fileClaim(address(myServiceClaim));
+        emit Claims(cP.fileClaim(address(myServiceClaim)));
         emit ClaimCreated(address(myServiceClaim), _amount);
         return address(myServiceClaim);
     }

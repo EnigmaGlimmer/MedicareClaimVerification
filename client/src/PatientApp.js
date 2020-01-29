@@ -118,7 +118,7 @@ export class PatientApp extends Component {
         //         _.getUnverifiedClaims(_.patientId);
         //     }
         // })
-        this.state.patContract.events.Claims()
+        this.state.proContract.events.Claims()
             .on('data', (event) => {
                 console.log('detected event! ', event);
                 _.getUnverifiedClaims(_.patientId);
