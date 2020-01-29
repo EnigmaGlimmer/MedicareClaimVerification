@@ -52,11 +52,7 @@ contract Patient {
         emit ClaimAdded(_addr);
     }
 
-<<<<<<< HEAD
     function fileClaim(address _serviceClaimAddress) public returns (address[] memory){
-=======
-    function recordClaim(address _serviceClaimAddress) public {
->>>>>>> 210a1b2488ab5cdb5ed8e92ed38652c2a5417fef
         for (uint i = 0; i < unverifiedClaims.length; i++) {
             if(unclaimedServices[i] == _serviceClaimAddress){
                 delete(unclaimedServices[i]);

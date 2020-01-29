@@ -89,11 +89,7 @@ contract Provider {
         address patientAddr = myServiceClaim.getPatientAddress();
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
-<<<<<<< HEAD
         emit Claims(cP.fileClaim(address(myServiceClaim)));
-=======
-        cP.recordClaim(address(myServiceClaim));
->>>>>>> 210a1b2488ab5cdb5ed8e92ed38652c2a5417fef
         emit ClaimCreated(address(myServiceClaim), _amount);
         return address(myServiceClaim);
     }
