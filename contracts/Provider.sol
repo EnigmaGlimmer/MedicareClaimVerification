@@ -18,6 +18,7 @@ contract Provider {
 
     mapping(address=>address) serviceClaimMap; //mapping from patient address to serviceClaim address
     mapping (address=>string) SCMap;
+    mapping (string=>address) newP;
 
 
     mapping (address=>string) public patientMap; //ID of patient to specific provider -
@@ -38,7 +39,7 @@ contract Provider {
     //addPatient
     //getPatints
     //provideService
-    //fileClaim
+    //fileClaimy 
     // getPatient
     
     function addPatient(string memory _name) public returns(address pAddr) {
@@ -52,8 +53,14 @@ contract Provider {
         patients.push(address(newPatient));
         //providerMap[_providerID].patients.push(newPatient.id);
         emit PatientCreated(address(newPatient), _name);
+        newP[_name] = address(newPatient);
         return address(newPatient);
     }
+
+    function getNewPatient(string memory _name) public view returns(address newAddr) {
+        return newP[_name];
+    }
+
 
     function getPatients() public view returns(address[] memory _patients) {
         return patients;
@@ -89,7 +96,7 @@ contract Provider {
         address patientAddr = myServiceClaim.getPatientAddress();
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
-        emit Claims(cP.fileClaim(address(myServiceClaim)));
+        cP.fileClaim(address(myServiceClaim));
         emit ClaimCreated(address(myServiceClaim), _amount);
         return address(myServiceClaim);
     }

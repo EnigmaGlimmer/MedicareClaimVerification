@@ -5,6 +5,7 @@ import ServiceCell from './components/ServiceCell'
 import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import Patient from "./contracts/Patient.json"
 
 import "./App.css";
 
@@ -14,7 +15,8 @@ export class PatientApp extends Component {
         this.state = {
             web3: this.props.web3,
             accounts: this.props.accounts,
-            patContract: this.props.patContract,
+            patContractAddress: this.props.patContractAddress, //this stores the address that will be used to create a contract
+            patContract: null,
             proContract: this.props.proContract,
             insContract: this.props.insContract,
             unverifiedClaims: [],
@@ -109,22 +111,29 @@ export class PatientApp extends Component {
 
     componentDidMount = async () => {
         var _ = this;
-        this.getUnverifiedClaims(this.patientId);
-        this.getUnclaimedServices(this.patientId);
-        console.log('provider contract: ', this.state.proContract)
-        console.log('patient contract: ', this.state.patContract)
-        // this.state.proContract.events.ClaimCreated(function (err, res) {
-        //     if (!err) {
-        //         _.getUnverifiedClaims(_.patientId);
-        //     }
-        // })
-        this.state.proContract.events.Claims()
-            .on('data', (event) => {
-                console.log('detected event! ', event);
-                _.getUnverifiedClaims(_.patientId);
-                _.getUnclaimedServices(_.patientId);
-            })
-            .on('error', console.error);
+        // var event = _.state.patContract.Claims();
+        const contract = new this.state.web3.eth.Contract(Patient.abi, this.state.patContractAddress);
+        console.log('localPatientContract', contract)
+        this.setState({patContract: contract})
+        console.log('patientId', _.patientId)
+        console.log('provider contract: ', _.state.proContract)
+        // console.log('patient contract: ', _.state.patContract)
+        if(_.state.patContract){
+            _.getUnverifiedClaims();
+            _.getUnclaimedServices();
+        }
+        setInterval(function(){
+            console.log('getting info')
+            if(_.state.patContract){
+                _.getUnverifiedClaims();
+                _.getUnclaimedServices();
+            }
+        }, 5000);
+        // event.watch(function(error, result){
+        //     console.log('detected event Claims!')
+        //     if (!error)
+        //         console.log(result);
+        // });
     };
 
     deleteClaimFromList(i) {
@@ -134,20 +143,20 @@ export class PatientApp extends Component {
         this.setState({ unverifiedClaims: list })
     }
 
-    getUnverifiedClaims = async (id) => {
+    getUnverifiedClaims = async () => {
         const { patContract } = this.state;
         const unv = await patContract.methods.getUC().call();
-        console.log('results from unverifiedClaims', unv)
+        console.log('unv', unv)
         this.setState({ unverifiedClaims: unv })
-        console.log("state of unv", this.state.unverifiedClaims)
+        // console.log("length of unv", this.state.unverifiedClaims.length)
     }
 
-    getUnclaimedServices = async (id) => {
+    getUnclaimedServices = async () => {
         const { patContract } = this.state;
-        const unv = await patContract.methods.getUS().call();
-        console.log('results from unclaimedServices', unv)
-        this.setState({ unclaimedServices: unv })
-        console.log("state of unc", this.state.unclaimedServices)
+        const unc = await patContract.methods.getUS().call();
+        console.log('unc', unc)
+        this.setState({ unclaimedServices: unc })
+        // console.log("length of unc", this.state.unclaimedServices.length)
     }
 
     verifyClaim = async (serviceClaimID, confirmed) => {

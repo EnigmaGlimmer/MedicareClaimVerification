@@ -16,7 +16,6 @@ export class ProviderApp extends Component {
       web3: this.props.web3,
       accounts: this.props.accounts,
       proContract: this.props.proContract,
-      patContract: this.props.patContract,
       patients: [],
     };
     this.providerID = null
@@ -106,8 +105,17 @@ export class ProviderApp extends Component {
   componentDidMount = async () => {
     const { accounts, proContract } = this.state;
     try {
-      const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
-      const patientAddrs = await proContract.methods.getPatients().call();
+      var patientAddrs = await proContract.methods.getPatients().call();
+      if(patientAddrs.length === 0){
+        console.log('adding initial patient');
+        const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
+        const newPatientAddress = await proContract.methods.getNewPatient('Ken').call();
+        console.log('New Patient Contract Address added', newPatientAddress)
+        // Send "Ken and newAddress back to App.js"
+        this.props.addPatContractAddress('Ken', newPatientAddress)
+      }
+      patientAddrs = await proContract.methods.getPatients().call();
+  
       console.log("Patients: ", patientAddrs);
       var list = [];
       for(var i = 0; i < patientAddrs.length; i++){

@@ -6,12 +6,23 @@ import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
 import Patient from "./contracts/Patient.json"
 import getWeb3 from "./utils/getWeb3";
-import { log } from './App-unused';
 import $ from 'jquery'
 import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
+
+// export const log = {
+//     localPatientContract : null,
+//     setLocalPatientContract(contract){
+//         this.localPatientContract = contract;
+//         localStorage.setItem('localPatientContract', contract);
+//       },
+//     clearLocalPatientContract(){
+//         this.localPatientContract = null;
+//         localStorage.setItem('localPatientContract', null);
+//       }
+// }
 
 class App extends Component {
     constructor(props) {
@@ -24,31 +35,34 @@ class App extends Component {
             providerContracts: {},
             patientContracts: {},
             accounts: null,
-            web3: null
+            web3: null,
         };
+        this.web3 = null;
         this.role = 'Patient';
         this.username = null;
         this.id = null;
         this.updateUsername = this.updateUsername.bind(this)
         this.addProContract = this.addProContract.bind(this)
-        this.addPatContract = this.addPatContract.bind(this)
-        // this.redirectAfterLogin = this.redirectAfterLogin.bind(this);
+        this.addPatContractAddress = this.addPatContractAddress.bind(this)
     }
 
-    addProContract(n, c){
+    addPatContractAddress = async(name, patContractAddress) => {
+        console.log('New Patient Contract found')
+        // var contracts = this.state.providerContracts;
+        // const contract = new this.web3.eth.Contract(Patient.abi, patContractAddress);
+        // contracts[name] = contract;
+        // console.log('patientContracts', contracts)
+        window.localStorage.setItem('patContractAddress', patContractAddress);
+        console.log('added localPatientContract address:', window.localStorage.getItem('patContractAddress'))
+        // this.setState({ patientContracts: contracts })
+    }
+
+    addProContract(n, c) {
         console.log('New Provider Contract found')
         var contracts = this.state.providerContracts;
         contracts[n] = c;
-        this.setState({providerContracts: contracts});
+        this.setState({ providerContracts: contracts });
         console.log(this.state.providerContracts)
-    }
-
-    addPatContract(n, c){
-        console.log('New Patient Contract found')
-        var contracts = this.state.patientContracts;
-        contracts[n] = c;
-        this.setState({patientContracts: contracts});
-        console.log(this.state.patientContracts)
     }
 
     updateUsername({ target }) {
@@ -70,42 +84,43 @@ class App extends Component {
 
     componentDidMount = async () => {
         try {
+            console.log('localPatientContract', window.localStorage.getItem('patContractAddress'))
             // Get network provider and web3 instance.
-            const web3 = await getWeb3();
+            this.web3 = await getWeb3();
 
             // Use web3 to get the user's accounts.
-            const accounts = await web3.eth.getAccounts();
+            const accounts = await this.web3.eth.getAccounts();
 
             // Get the contract instance.
-            const networkId = await web3.eth.net.getId();
+            const networkId = await this.web3.eth.net.getId();
 
             const deployedNetworkIns = Insurer.networks[networkId];
             console.log('what is deployedNetwork', deployedNetworkIns)
-            const instanceIns = new web3.eth.Contract(
+            const instanceIns = new this.web3.eth.Contract(
                 Insurer.abi,
                 deployedNetworkIns && deployedNetworkIns.address,
             );
 
             const deployedNetworkPro = Provider.networks[networkId];
             console.log('what is deployedNetwork', deployedNetworkPro)
-            const instancePro = new web3.eth.Contract(
+            const instancePro = new this.web3.eth.Contract(
                 Provider.abi,
                 deployedNetworkPro && deployedNetworkPro.address,
             );
 
-            const deployedNetworkPat = Patient.networks[networkId];
-            console.log('what is deployedNetwork', deployedNetworkPat)
-            const instancePat = new web3.eth.Contract(
-                Patient.abi,
-                deployedNetworkPat && deployedNetworkPat.address,
-            );
+            // const deployedNetworkPat = Patient.networks[networkId];
+            // console.log('what is deployedNetwork', deployedNetworkPat)
+            // const instancePat = new web3.eth.Contract(
+            //     Patient.abi,
+            //     deployedNetworkPat && deployedNetworkPat.address,
+            // );
 
             this.addProContract('UCSD Medical', instancePro)
-            this.addPatContract('Ken', instancePat)
+            // this.addPatContract('Ken', instancePat)
 
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
-            this.setState({ web3, accounts, contractIns: instanceIns});
+            this.setState({ web3: this.web3, accounts, contractIns: instanceIns });
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -146,16 +161,16 @@ class App extends Component {
                 if (data.message === 'OK') {
                     console.log('Success logging in', data.result)
                     this.id = data.result.id;
-                    log.loggedIn = true;
-                    if(data.result.role === 'Patient'){
+                    // log.loggedIn = true;
+                    if (data.result.role === 'Patient') {
                         this.setState({ patientLoginSuccess: true })
                     }
-                    else if(data.result.role === 'Provider') {
+                    else if (data.result.role === 'Provider') {
                         // this.fetchData().then(()=> {
-                            this.setState({ providerLoginSuccess: true })
+                        this.setState({ providerLoginSuccess: true })
                         // })
                     }
-                    else{
+                    else {
                         this.setState({ insurerLoginSuccess: true })
                     }
                 }
@@ -178,11 +193,12 @@ class App extends Component {
                         sd={this.solidityData}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id} 
-                        patContract={this.state.patientContracts['Ken']}
+                        id={this.id}
+                        // patContract={this.state.patientContracts['Ken']}
+                        patContractAddress={window.localStorage.getItem('patContractAddress')}
                         proContract={this.state.providerContracts['UCSD Medical']}
                         insContract={this.state.contractIns}
-                        /> : null
+                    /> : null
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
@@ -192,8 +208,8 @@ class App extends Component {
                         id={this.id}
                         proContract={this.state.providerContracts[this.username]}
                         insContract={this.state.contractIns}
-                        addPatContract={this.addPatContract}
-                        /> : null
+                        addPatContractAddress={this.addPatContractAddress}
+                    /> : null
                 }
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
@@ -204,23 +220,23 @@ class App extends Component {
                         id={this.id}
                         proContract={this.state.providerContracts[this.username]}
                         addProContract={this.addProContract}
-                        /> : null
+                    /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
-                <div style={{ textAlign: 'center' }}>
-                    <h1>Medicare Insurance Claim Tracking</h1>
-                    <Card id='login'>
-                        <Form id="form" onSubmit={this.onFormSubmit}>
-                            <h4>Login</h4>
-                            <FormGroup>
-                                <Input placeholder='Username' onChange={this.updateUsername} />
-                                <br></br>
-                                <Input type='password' placeholder='Password' />
-                            </FormGroup>
-                            <Button type="submit" color='success'>Enter</Button>
-                        </Form>
-                    </Card>
+                    <div style={{ textAlign: 'center' }}>
+                        <h1>Medicare Insurance Claim Tracking</h1>
+                        <Card id='login'>
+                            <Form id="form" onSubmit={this.onFormSubmit}>
+                                <h4>Login</h4>
+                                <FormGroup>
+                                    <Input placeholder='Username' onChange={this.updateUsername} />
+                                    <br></br>
+                                    <Input type='password' placeholder='Password' />
+                                </FormGroup>
+                                <Button type="submit" color='success'>Enter</Button>
+                            </Form>
+                        </Card>
                     </div> : null
                 }
             </div>
