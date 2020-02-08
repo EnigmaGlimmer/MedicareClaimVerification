@@ -6,6 +6,7 @@ import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 import Patient from "./contracts/Patient.json"
+import ServiceClaim from "./contracts/ServiceClaim.json"
 
 import "./App.css";
 
@@ -146,12 +147,17 @@ export class PatientApp extends Component {
     getUnverifiedClaims = async () => {
         const { patContract } = this.state;
         const unv = await patContract.methods.getUC().call();
-        console.log('unv', unv)
-        for( let v in unv){
-            //need name, address, time provided, and time filed
-            
+        let list = [];
+        for( let i in unv ){
+            console.log(i)
+            const addr = unv[i];
+            const name = await patContract.methods.getServiceClaimName(addr).call();
+            const timeP = await patContract.methods.getServiceClaimTimeProvided(addr).call();
+            const timeF = await patContract.methods.getServiceClaimTimeFiled(addr).call();
+            list.push({name, addr, timeP, timeF})
         }
-        this.setState({ unverifiedClaims: unv })
+        console.log('what is in the list:', list)
+        this.setState({ unverifiedClaims: list })
     }
 
     getUnclaimedServices = async () => {
@@ -183,10 +189,10 @@ export class PatientApp extends Component {
                             this.state.unverifiedClaims.length > 0 ?
                             this.state.unverifiedClaims.map((output, i) => {
                                 return <ServiceCell
-                                    serviceName={output[0]}
-                                    serviceAddr={output[1]}
-                                    timeProvided={output[2]}
-                                    timeFiled={output[3]}
+                                    serviceName={output.name}
+                                    serviceAddr={output.addr}
+                                    timeProvided={output.timeP}
+                                    timeFiled={output.timeF}
                                     verifyClaim={this.verifyClaim}
                                     i={i}
                                     deleteClaimFromList={this.deleteClaimFromList}

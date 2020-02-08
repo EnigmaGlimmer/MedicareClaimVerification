@@ -24,7 +24,7 @@ contract Provider {
     mapping (address=>string) public patientMap; //ID of patient to specific provider -
     event PatientCreated(address addr, string name);
     event SCID(string scName, address addr);
-    event ClaimCreated(address addr, uint256 amount);
+    event ClaimCreated(address addr, uint256 amount, uint256 timeFiled);
     event PatientRetrieval(Patient patient);
     event Claims(address[] unverifiedClaims);
 
@@ -73,9 +73,9 @@ contract Provider {
         return true;
     }
 
-    function provideService(string memory _name, address _patientAddress) public returns(address SCAddress) {
+    function provideService(string memory _name, address _patientAddress, uint256 _timeProvided) public returns(address SCAddress) {
         bytes32 sid = keccak256(abi.encodePacked(_name, id, _patientAddress));
-        ServiceClaim serviceClaim = new ServiceClaim(address(this), _patientAddress, sid, _name);
+        ServiceClaim serviceClaim = new ServiceClaim(address(this), _patientAddress, sid, _name, _timeProvided);
         serviceClaims.push(address(serviceClaim));
         serviceClaimMap[_patientAddress] = address(serviceClaim);
         Patient cP = Patient(_patientAddress);
@@ -86,7 +86,7 @@ contract Provider {
     }
     
     
-    function fileClaim(address _serviceClaimAddr, uint256 _amount, uint256 _timeProvided) public returns(address ClaimAddr) {
+    function fileClaim(address _serviceClaimAddr, uint256 _amount, uint256 _timeFiled) public returns(address ClaimAddr) {
         //Patient storage cPatient = patientMap[_patient];
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddr);
         //uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
@@ -94,10 +94,11 @@ contract Provider {
         //emit SCEvent(newSC);
         
         address patientAddr = myServiceClaim.getPatientAddress();
+        uint256 amount = myServiceClaim.file(_amount, _timeFiled);
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
         cP.fileClaim(address(myServiceClaim));
-        emit ClaimCreated(address(myServiceClaim), _amount);
+        emit ClaimCreated(address(myServiceClaim), amount, _timeFiled);
         return address(myServiceClaim);
     }
     
@@ -105,5 +106,4 @@ contract Provider {
         string memory patient = patientMap[_addr];
         return patient;
     }
-
 }

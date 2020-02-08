@@ -93,4 +93,18 @@ contract Patient {
         return unverifiedClaims[unverifiedClaims.length-1];
     }
 
+    function getServiceClaimName(address _serviceClaimAddress) public view returns(string memory){
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        return myServiceClaim.name();
+    }
+
+    function getServiceClaimTimeProvided(address _serviceClaimAddress) public view returns(uint256){
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        return myServiceClaim.timeProvided();
+    }
+
+    function getServiceClaimTimeFiled(address _serviceClaimAddress) public view returns(uint256){
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        return myServiceClaim.timeFiled();
+    }
 }

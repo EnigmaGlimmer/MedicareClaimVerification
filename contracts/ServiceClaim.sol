@@ -22,16 +22,16 @@ contract ServiceClaim {
     event Instantiated(bool);
 
 
-    event ClaimAdded(uint256 amount, uint256 _timeProvided);
+    event ClaimAdded(uint256 amount, uint256 _timeFiled);
 
 
-    constructor(address _proAddr, address _patAddr, bytes32 _id, string memory _name) public {
+    constructor(address _proAddr, address _patAddr, bytes32 _id, string memory _name, uint256 _timeProvided) public {
         providerAddr = _proAddr;
         patientAddr = _patAddr;
         serviceClaimID = _id;
         name = _name;
         emit Instantiated(true);
-        // timeProvided = _timeProvided;
+        timeProvided = _timeProvided;
     }
 
     // ------------------------------ Functionality of the Network --------------------------- //
