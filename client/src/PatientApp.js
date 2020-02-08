@@ -147,8 +147,11 @@ export class PatientApp extends Component {
         const { patContract } = this.state;
         const unv = await patContract.methods.getUC().call();
         console.log('unv', unv)
+        for( let v in unv){
+            //need name, address, time provided, and time filed
+            
+        }
         this.setState({ unverifiedClaims: unv })
-        // console.log("length of unv", this.state.unverifiedClaims.length)
     }
 
     getUnclaimedServices = async () => {
@@ -156,7 +159,6 @@ export class PatientApp extends Component {
         const unc = await patContract.methods.getUS().call();
         console.log('unc', unc)
         this.setState({ unclaimedServices: unc })
-        // console.log("length of unc", this.state.unclaimedServices.length)
     }
 
     verifyClaim = async (serviceClaimID, confirmed) => {

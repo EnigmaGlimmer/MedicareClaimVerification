@@ -94,15 +94,19 @@ class App extends Component {
             // Get the contract instance.
             const networkId = await this.web3.eth.net.getId();
 
+            console.log('networkId', networkId)
+            console.log('Insurer Networks', Insurer.networks)
+            console.log('Provider Networks', Provider.networks)
+
             const deployedNetworkIns = Insurer.networks[networkId];
-            console.log('what is deployedNetwork', deployedNetworkIns)
+            console.log('what is Insurer.networks[networkId]', deployedNetworkIns)
             const instanceIns = new this.web3.eth.Contract(
                 Insurer.abi,
                 deployedNetworkIns && deployedNetworkIns.address,
             );
 
             const deployedNetworkPro = Provider.networks[networkId];
-            console.log('what is deployedNetwork', deployedNetworkPro)
+            console.log('what is Provider.networks[networkId]', deployedNetworkPro)
             const instancePro = new this.web3.eth.Contract(
                 Provider.abi,
                 deployedNetworkPro && deployedNetworkPro.address,
