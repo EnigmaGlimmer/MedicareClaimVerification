@@ -7,6 +7,10 @@ import ReactDOM from "react-dom"
 import $ from 'jquery'
 import Patient from "./contracts/Patient.json"
 import ServiceClaim from "./contracts/ServiceClaim.json"
+import Header from './components/Header'
+
+import Banner from './components/Banner'
+import profile from './profile.png'
 
 import "./App.css";
 
@@ -21,7 +25,8 @@ export class PatientApp extends Component {
             proContract: this.props.proContract,
             insContract: this.props.insContract,
             unverifiedClaims: [],
-            unclaimedServiecs: []
+            unclaimedServiecs: [],
+            tokens: 0
         };
         this.providerID = null
         this.unverifiedClaims = []
@@ -176,13 +181,14 @@ export class PatientApp extends Component {
     render() {
         // let sd = this.solidityData
         console.log("Rendering PatientApp")
+        console.log('Tokens', this.state.tokens)
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
         return (
             <div>
-                <h1 id='centerText'>Patient Dashboard</h1>
-                <h5>Patient Name: {this.patientname}</h5>
+                <Header/>
+                <Banner tokens={this.state.tokens} name={this.patientname} dashboard={'Patient'}/>
                 <ul id='cells'>
                     {
                         this.state.unverifiedClaims &&
@@ -208,7 +214,7 @@ export class PatientApp extends Component {
                             </CardGroup>
                     }
                 </ul>
-            </div>
+            </div >
         );
     }
 }

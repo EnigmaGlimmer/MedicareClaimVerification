@@ -8,14 +8,17 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: white;
+  border-bottom: 2px solid #327cc9;
+  min-height: 5vh;
+  position: relative;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row;
+  /* font-size: calc(10px + 2vmin); */
+  font-size: 20px;
+  z-index: 2;
 }
 
 .App-link {
@@ -44,4 +47,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+#navItem {
+  cursor: pointer;
+}
+
+#link {
+  cursor: copy;
 }

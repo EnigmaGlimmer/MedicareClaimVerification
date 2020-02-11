@@ -38,6 +38,10 @@ contract Insurer {
     }
 
 
+    function transferTokens(address _to, uint256 _amount) public {
+        token.transfer(_to, _amount);
+    }
+
     function getInfo() public {
         emit InsurerInfo(address(this), name);
     }

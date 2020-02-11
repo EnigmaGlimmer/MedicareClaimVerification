@@ -7,7 +7,7 @@ import "./ToggleSwitch.css"
 class ServiceCell extends Component {
     constructor(props) {
         super(props);
-        this.check = false;
+        this.checked = false;
         this.updateChecked = this.updateChecked.bind(this)
         this.verifyClaim = this.verifyClaim.bind(this)
         this.id = 'togBtn' + this.props.i;
@@ -34,6 +34,7 @@ class ServiceCell extends Component {
     render() {
         console.log(this.timeProvided)
         console.log(this.timeFiled)
+        console.log('switch status', this.checked)
         return (
             <CardGroup style={{ padding: '50px' }}>
                 <Card body outline color="primary">

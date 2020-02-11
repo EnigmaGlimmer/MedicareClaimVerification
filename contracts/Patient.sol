@@ -22,6 +22,9 @@ contract Patient {
     event ClaimLength(uint256 claimLength);
     event ClaimAdded(address addr);
 
+    address providerAddr;
+    address insurerAddr;
+
     constructor(bytes32 _id, string memory _name) public {
         id = _id;
         name = _name;
@@ -41,6 +44,9 @@ contract Patient {
                 break;
             }
         }
+        Insurer i = Insurer(insurerAddr);
+        i.transferTokens(address(this), 10);
+
         //string memory name = myServiceClaim.name();
         //SC memory newSC = SC(name, address(myServiceClaim));
         verifiedClaims.push(address(myServiceClaim));

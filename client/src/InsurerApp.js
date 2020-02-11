@@ -5,7 +5,8 @@ import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, Card
 import classnames from 'classnames';
 import "./App.css";
 import Provider from "./contracts/Provider.json";
-
+import Banner from './components/Banner'
+import Header from './components/Header'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -14,14 +15,14 @@ export class InsurerApp extends Component {
             web3: this.props.web3,
             accounts: this.props.accounts,
             insContract: this.props.insContract,
-            proContract: null,
             activeTab: '1',
-            state: true
+            tokens: 0
         };
         this.unv = []
         this.ver = []
+        this.insurername = this.props.username;
         this.toggle = this.toggle.bind(this);
-        // this.getAllServices = this.getAllServices.bind(this)
+        this.getAllServices = this.getAllServices.bind(this)
         this.copyID = this.copyID.bind(this);
     }
 
@@ -46,7 +47,7 @@ export class InsurerApp extends Component {
             const providerAddrs = await insContract.methods.getProviders().call();
             console.log("Providers: ", providerAddrs);
         }
-        catch(error) {
+        catch (error) {
             alert(
                 `Failed to load web3, accounts, or contract. Check console for details.`,
             );
@@ -55,18 +56,10 @@ export class InsurerApp extends Component {
 
         _.getInsurerInfo();
         _.getAllServices();
-        this.state.insContract.events.allEvents({
-            fromBlock: 'latest',
-        }, function (error, e) {
-            if (error) { alert('Stop') }
-            if (e.event === 'ClaimVerified' || e.event === 'ClaimCreated') {
-                _.getAllServices();
-
-            }
-            // else if (e.event === 'ClaimCreated') {
-            //     _.getAllServices();
-            // }
-        })
+        setInterval(function () {
+            console.log('getting info')
+            _.getAllServices();
+        }, 5000);
     }
 
     // getAllVerifiedServices = async () => {
@@ -118,7 +111,7 @@ export class InsurerApp extends Component {
     getAllServices = async () => {
         //const accounts = await web3.eth.getAccounts();
         const { accounts, insContract } = this.state;
-        const services = await insContract.methods.getAllServices().call({ from: accounts[0] });
+        const services = await insContract.methods.getAllServices().call();
         console.log("Services: ", services);
 
         // console.log('calling getAllServices', services);
@@ -146,7 +139,7 @@ export class InsurerApp extends Component {
         // this.ver = verlist;
         // this.unv = unvlist;
         // console.log('ver', this.ver, 'unv', this.unv)
-    this.setState({ state: this.state });
+        this.setState({ state: this.state });
     }
 
     toggle(tab) {
@@ -158,28 +151,28 @@ export class InsurerApp extends Component {
     }
 
     render() {
+        console.log('Tokens', this.state.tokens)
         return (
             <div>
-                <h1 id='centerText'>Insurer Dashboard</h1>
-                <Nav tabs style={{ justifyContent: 'center' }}>
-                    <NavItem>
+                <Header />
+                <Banner tokens={this.state.tokens} name={this.insurername} dashboard={'Insurer'} />
+                <Nav tabs style={{ justifyContent: 'center', width: '90%', margin: 'auto' }}>
+                    <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '1' })}
-                            onClick={() => { this.toggle('1'); }}
-                        >
+                            onClick={() => { this.toggle('1'); }}>
                             Verified Claims
             </NavLink>
                     </NavItem>
-                    <NavItem>
+                    <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '2' })}
-                            onClick={() => { this.toggle('2'); }}
-                        >
+                            onClick={() => { this.toggle('2'); }}>
                             Unverified Claims
             </NavLink>
                     </NavItem>
                 </Nav>
-                <TabContent style={{ textAlign: 'center' }} activeTab={this.state.activeTab}>
+                <TabContent style={{ textAlign: 'center', padding: '50px' }} activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
                         <Table responsive bordered style={this.props.style}>
                             <thead>
@@ -210,8 +203,8 @@ export class InsurerApp extends Component {
                                                 <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
                                                 <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
-                                                <td>{output.returnValues.confirmed ? <span style={{color: 'green'}}>Confirmed</span> : 
-                                                                                        <span style={{color: 'red'}}>Disputed</span>}</td>
+                                                <td>{output.returnValues.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
+                                                    <span style={{ color: 'red' }}>Disputed</span>}</td>
                                             </tr>
                                         }) : null
                                 }
@@ -236,7 +229,7 @@ export class InsurerApp extends Component {
                                     this.unv.length > 0 ?
                                         this.unv.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
+                                                <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
                                                     {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
                                                 <td>{output.returnValues.patientname}</td>

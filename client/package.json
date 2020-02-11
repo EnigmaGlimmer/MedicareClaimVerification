@@ -12,6 +12,7 @@
     "react-strap": "0.0.1",
     "reactstrap": "^8.4.1",
     "solc": "^0.5.11",
+    "react-odometerjs": "^2.1.1",
     "web3": "^1.0.0-beta.37"
   },
   "scripts": {

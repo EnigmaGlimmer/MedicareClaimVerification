@@ -29,9 +29,7 @@ contract Organizations {
     event ServiceClaimInfo(
         address addr, string patientname, string providername, string claimname, bytes32 id,
         bytes32 provider, bytes32 patient, uint256 amount, bool confirmed, uint256 timeProvided, uint256 timeFiled, uint256 timeVerified);
-    //event patientList(Patient[] patients);
-    //event providerList(Provider[] providers);
-    //event insurerList(Insurer[] insurers);
+
     event idList(bytes32[] ids);
     event serviceList(address[] services);
     event SCName(string name);
@@ -66,6 +64,7 @@ contract Organizations {
         address[] unclaimedServices;
         address[] unverifiedClaims;
         address[] verifiedClaims;
+        uint256 token;
     }
     struct Provider {
         bytes32 id;
@@ -76,6 +75,7 @@ contract Organizations {
         bytes32 id;
         string name;
         bytes32[] providers;
+        uint256 token;
     }
 
 

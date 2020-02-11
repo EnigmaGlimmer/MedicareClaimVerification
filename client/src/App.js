@@ -11,6 +11,7 @@ import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
+import aeec_logo from './aeec.png'
 
 // export const log = {
 //     localPatientContract : null,
@@ -206,6 +207,7 @@ class App extends Component {
                 }
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
+                        username={this.username}
                         sd={this.solidityData}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
@@ -217,6 +219,7 @@ class App extends Component {
                 }
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
+                        username={this.username}
                         sd={this.solidityData}
                         insContract={this.state.contractIns}
                         accounts={this.state.accounts}
@@ -228,19 +231,20 @@ class App extends Component {
                 }
                 {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
-                    <div style={{ textAlign: 'center' }}>
-                        <h1>Medicare Insurance Claim Tracking</h1>
-                        <Card id='login'>
-                            <Form id="form" onSubmit={this.onFormSubmit}>
-                                <h4>Login</h4>
-                                <FormGroup>
-                                    <Input placeholder='Username' onChange={this.updateUsername} />
-                                    <br></br>
-                                    <Input type='password' placeholder='Password' />
-                                </FormGroup>
-                                <Button type="submit" color='success'>Enter</Button>
-                            </Form>
-                        </Card>
+                <div style={{ textAlign: 'center' }}>
+                    <img src={aeec_logo} alt='AEEC' height='100' width='100' />
+                    <h1>Medicare Insurance Claim Tracking</h1>
+                    <Card id='login'>
+                        <Form id="form" onSubmit={this.onFormSubmit}>
+                            <h4>Login</h4>
+                            <FormGroup>
+                                <Input placeholder='Username' onChange={this.updateUsername} />
+                                <br></br>
+                                <Input type='password' placeholder='Password' />
+                            </FormGroup>
+                            <Button type="submit" color='success'>Enter</Button>
+                        </Form>
+                    </Card>
                     </div> : null
                 }
             </div>
