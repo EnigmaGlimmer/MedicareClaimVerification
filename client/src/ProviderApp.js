@@ -192,7 +192,7 @@ export class ProviderApp extends Component {
                 />
               })}
             </ul>
-            <h5 id='centerText'>New patient? Add them here</h5>
+            <h5 id='centerText'>Onboard a New Patient</h5>
             <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
               <InputGroup>
                 <Input placeholder="Name" onChange={this.updatePatientName} />
