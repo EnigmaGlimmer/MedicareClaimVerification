@@ -7,7 +7,9 @@ import { Row, Col, Form, Input, Button, FormGroup, InputGroup, InputGroupAddon }
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 import Footer from './components/Footer'
-import Graph from './components/Graph'
+import LineGraph from './views/Line Chart'
+import PieChart from './views/Pie Chart'
+
 
 import "./App.css";
 
@@ -202,6 +204,8 @@ export class ProviderApp extends Component {
             <div ref="sold" className="expandable" id="nav" style={{textAlign: 'center'}}/>
           </Col>
           <Col md={6}>
+            <PieChart style={{padding: '10%'}} />
+            <LineGraph style={{padding: '10%'}} />
           </Col>
         </Row>
         <Footer />

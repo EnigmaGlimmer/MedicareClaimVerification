@@ -180,9 +180,9 @@ class App extends Component {
                             <Button type="submit" color='success'>Enter</Button>
                         </Form>
                     </Card>
+                    <Footer />
                     </div> : null
                 }
-                <Footer />
             </div>
         );
     }
