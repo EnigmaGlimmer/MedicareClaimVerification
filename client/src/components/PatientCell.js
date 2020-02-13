@@ -89,9 +89,9 @@ class PatientCell extends Component {
 
     render() {
         return (
-            <CardGroup style={{ padding: '10px' }}>
+            <CardGroup style={{ marginTop: '3%', marginBottom: '3%', marginLeft: '5%', marginRight: '5%' }}>
                 <Card body outline color="primary">
-                    <CardBody>
+                    <CardBody style={{padding: '0px'}}>
                         <Row>
                             <Col md={6}>
                                 <CardTitle>{this.props.name}</CardTitle>
@@ -105,7 +105,6 @@ class PatientCell extends Component {
                                     updateServiceClaimName={this.updateServiceClaimName}
                                     updateAmount={this.updateAmount}
                                     provideService={this.provideService} />
-                                <br></br>
                                 <br></br>
                                 {/* <button className="button" id='add_btn' style={{backgroundColor: '#f0c107'}}><span>Add Claim</span></button> */}
                                 {/* <Button color='warning' onClick={this.ac}>Add Claim</Button> */}

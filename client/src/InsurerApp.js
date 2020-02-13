@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import "./App.css";
 import Banner from './components/Banner'
 import Header from './components/Header'
+import Footer from './components/Footer'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -51,44 +52,6 @@ export class InsurerApp extends Component {
         })
     }
 
-    // getAllVerifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllVerifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.ver = list;
-    //     console.log('ver', this.ver)
-    //     this.setState({ state: this.state });
-    // }
-
-    // getAllUnverifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllUnverifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.unv = list;
-    //     console.log('unv', this.unv)
-    //     this.setState({ state: this.state });
-    // }
-
     getAllServices = async () => {
         const { accounts, contract } = this.state;
         const services = await contract.methods.getAllServices().send({ from: accounts[0] });
@@ -133,97 +96,100 @@ export class InsurerApp extends Component {
         console.log('Tokens', this.state.tokens)
         return (
             <div>
-                <Header/>
-                <Banner tokens={this.state.tokens} name={this.insurername} dashboard={'Insurer'}/>
-                <Nav tabs style={{ justifyContent: 'center', width: '90%', margin: 'auto'}}>
-                    <NavItem id='navItem'>
-                        <NavLink
-                            className={classnames({ active: this.state.activeTab === '1' })}
-                            onClick={() => { this.toggle('1'); }}>
-                            Verified Claims
-            </NavLink>
-                    </NavItem>
-                    <NavItem id='navItem'>
-                        <NavLink
-                            className={classnames({ active: this.state.activeTab === '2' })}
-                            onClick={() => { this.toggle('2'); }}>
-                            Unverified Claims
-            </NavLink>
-                    </NavItem>
-                </Nav>
-                <TabContent style={{ textAlign: 'center', padding: '50px' }} activeTab={this.state.activeTab}>
-                    <TabPane tabId="1">
-                        <Table responsive bordered style={this.props.style}>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Patient</th>
-                                    <th>Service</th>
-                                    <th>Provider</th>
-                                    <th>Amount</th>
-                                    <th>Time of Provision</th>
-                                    <th>Time of Filing</th>
-                                    <th>Time of Confirmation</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.ver.length > 0 ?
-                                        this.ver.map((output, i) => {
-                                            return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
-                                                    {output.returnValues.id.substring(0, 8)}...
+                <Header />
+                <div style={{ width: '80%', margin: 'auto' }}>
+                    <Banner tokens={this.state.tokens} name={this.insurername} dashboard={'Insurer'} />
+                    <Nav tabs style={{ justifyContent: 'center', backgroundColor: '#dee2e6' }}>
+                        <NavItem id='navItem'>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '1' })}
+                                onClick={() => { this.toggle('1'); }}>
+                                Verified Claims
+                        </NavLink>
+                        </NavItem>
+                        <NavItem id='navItem'>
+                            <NavLink
+                                className={classnames({ active: this.state.activeTab === '2' })}
+                                onClick={() => { this.toggle('2'); }}>
+                                Unverified Claims
+                        </NavLink>
+                        </NavItem>
+                    </Nav>
+                    <TabContent style={{ textAlign: 'center', padding: '50px', borderLeft: '1px solid #dee2e6', borderRight: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }} activeTab={this.state.activeTab}>
+                        <TabPane tabId="1">
+                            <Table responsive bordered style={this.props.style}>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Patient</th>
+                                        <th>Service</th>
+                                        <th>Provider</th>
+                                        <th>Amount</th>
+                                        <th>Time of Provision</th>
+                                        <th>Time of Filing</th>
+                                        <th>Time of Confirmation</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.ver.length > 0 ?
+                                            this.ver.map((output, i) => {
+                                                return <tr key={i}>
+                                                    <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
+                                                        {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
-                                                <td>{output.returnValues.patientname}</td>
-                                                <td>{output.returnValues.claimname}</td>
-                                                <td>{output.returnValues.providername}</td>
-                                                <td>{output.returnValues.amount}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
-                                                <td>{output.returnValues.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
-                                                    <span style={{ color: 'red' }}>Disputed</span>}</td>
-                                            </tr>
-                                        }) : null
-                                }
-                            </tbody>
-                        </Table>
-                    </TabPane>
-                    <TabPane tabId="2">
-                        <Table responsive bordered style={this.props.style}>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Patient</th>
-                                    <th>Service</th>
-                                    <th>Provider</th>
-                                    <th>Amount</th>
-                                    <th>Time of Provision</th>
-                                    <th>Time of Filing</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.unv.length > 0 ?
-                                        this.unv.map((output, i) => {
-                                            return <tr key={i}>
-                                                <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
-                                                    {output.returnValues.id.substring(0, 8)}...
+                                                    <td>{output.returnValues.patientname}</td>
+                                                    <td>{output.returnValues.claimname}</td>
+                                                    <td>{output.returnValues.providername}</td>
+                                                    <td>{output.returnValues.amount}</td>
+                                                    <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
+                                                    <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
+                                                    <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
+                                                    <td>{output.returnValues.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
+                                                        <span style={{ color: 'red' }}>Disputed</span>}</td>
+                                                </tr>
+                                            }) : null
+                                    }
+                                </tbody>
+                            </Table>
+                        </TabPane>
+                        <TabPane tabId="2">
+                            <Table responsive bordered style={this.props.style}>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Patient</th>
+                                        <th>Service</th>
+                                        <th>Provider</th>
+                                        <th>Amount</th>
+                                        <th>Time of Provision</th>
+                                        <th>Time of Filing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.unv.length > 0 ?
+                                            this.unv.map((output, i) => {
+                                                return <tr key={i}>
+                                                    <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
+                                                        {output.returnValues.id.substring(0, 8)}...
                                                     </button></td>
-                                                <td>{output.returnValues.patientname}</td>
-                                                <td>{output.returnValues.claimname}</td>
-                                                <td>{output.returnValues.providername}</td>
-                                                <td>{output.returnValues.amount}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
-                                            </tr>
-                                        }) : null
-                                }
-                            </tbody>
-                        </Table>
-                    </TabPane>
-                </TabContent>
+                                                    <td>{output.returnValues.patientname}</td>
+                                                    <td>{output.returnValues.claimname}</td>
+                                                    <td>{output.returnValues.providername}</td>
+                                                    <td>{'$' + parseFloat(output.returnValues.amount).toFixed(2)}</td>
+                                                    <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
+                                                    <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
+                                                </tr>
+                                            }) : null
+                                    }
+                                </tbody>
+                            </Table>
+                        </TabPane>
+                    </TabContent>
+                </div>
+                <Footer />
             </div>
         );
     }

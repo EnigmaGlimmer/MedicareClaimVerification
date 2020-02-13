@@ -6,7 +6,7 @@ import { Card, CardBody, CardGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 import Header from './components/Header'
-
+import Footer from './components/Footer'
 import Banner from './components/Banner'
 import profile from './profile.png'
 
@@ -144,7 +144,8 @@ export class PatientApp extends Component {
                     list.push([unv.events.ServiceClaimInfo.returnValues.claimname,
                     unv.events.ServiceClaimInfo.returnValues.addr,
                     unv.events.ServiceClaimInfo.returnValues.timeProvided,
-                    unv.events.ServiceClaimInfo.returnValues.timeFiled])
+                    unv.events.ServiceClaimInfo.returnValues.timeFiled,
+                    unv.events.ServiceClaimInfo.returnValues.id])
                 }
             } else {
                 for (let i = 0; i < unv.events.ServiceClaimInfo.length; i++) {
@@ -152,7 +153,9 @@ export class PatientApp extends Component {
                         list.push([unv.events.ServiceClaimInfo[i].returnValues.claimname,
                         unv.events.ServiceClaimInfo[i].returnValues.addr,
                         unv.events.ServiceClaimInfo[i].returnValues.timeProvided,
-                        unv.events.ServiceClaimInfo[i].returnValues.timeFiled])
+                        unv.events.ServiceClaimInfo[i].returnValues.timeFiled,
+                        unv.events.ServiceClaimInfo[i].returnValues.id,
+                        ])
                     }
                 }
             }
@@ -196,35 +199,39 @@ export class PatientApp extends Component {
         }
         return (
             <div>
-                <Header/>
-                <Banner tokens={this.state.tokens} name={this.patientname} dashboard={'Patient'}/>
-                <ul id='cells'>
-                    {
-                        this.state.unverifiedClaims &&
-                            this.state.unverifiedClaims.length > 0 ?
-                            this.state.unverifiedClaims.map((output, i) => {
-                                return <ServiceCell
-                                    contract={this.state.contract}
-                                    accounts={this.state.accounts}
-                                    serviceName={output[0]}
-                                    serviceAddr={output[1]}
-                                    timeProvided={output[2]}
-                                    timeFiled={output[3]}
-                                    verifyClaim={this.verifyClaim}
-                                    i={i}
-                                    deleteClaimFromList={this.deleteClaimFromList}
-                                    arrLength={this.state.unverifiedClaims.length}
-                                />
-                            }) :
-                            <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
-                                <Card body outline color="primary" >
-                                    <CardBody>
-                                        You do not have any unverified claims yet.
+                <Header />
+                <div style={{marginLeft: '10%', marginRight: '10%'}}>
+                    <Banner tokens={this.state.tokens} name={this.patientname} dashboard={'Patient'} />
+                    <ul id='cells'>
+                        {
+                            this.state.unverifiedClaims &&
+                                this.state.unverifiedClaims.length > 0 ?
+                                this.state.unverifiedClaims.map((output, i) => {
+                                    return <ServiceCell
+                                        contract={this.state.contract}
+                                        accounts={this.state.accounts}
+                                        serviceName={output[0]}
+                                        serviceAddr={output[1]}
+                                        timeProvided={output[2]}
+                                        timeFiled={output[3]}
+                                        serviceclaimid={output[4]}
+                                        verifyClaim={this.verifyClaim}
+                                        i={i}
+                                        deleteClaimFromList={this.deleteClaimFromList}
+                                        arrLength={this.state.unverifiedClaims.length}
+                                    />
+                                }) :
+                                <CardGroup style={{ textAlign: 'center', padding: '50px' }}>
+                                    <Card body outline color="primary" >
+                                        <CardBody>
+                                            You do not have any unverified claims yet.
                                 </CardBody>
-                                </Card>
-                            </CardGroup>
-                    }
-                </ul>
+                                    </Card>
+                                </CardGroup>
+                        }
+                    </ul>
+                </div>
+                <Footer />
             </div >
         );
     }

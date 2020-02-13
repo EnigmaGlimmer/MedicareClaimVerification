@@ -31,13 +31,17 @@
 
 #form {
   padding: 10px;
+  justify-content: center;
 }
 
 #cells{
   overflow:hidden; 
   overflow-y:scroll; 
-  height:600px;
+  height: 460px;
   padding-left: 0px;
+  border: 2px solid #327cc9;
+  border-radius: 4px;
+  background-color: #fcfcfc;
 }
 
 @keyframes App-logo-spin {

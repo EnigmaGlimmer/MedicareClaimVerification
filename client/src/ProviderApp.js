@@ -3,9 +3,11 @@ import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import PatientCell from './components/PatientCell'
 import Header from './components/Header'
-import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
+import { Row, Col, Form, Input, Button, FormGroup, InputGroup, InputGroupAddon } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
+import Footer from './components/Footer'
+import Graph from './components/Graph'
 
 import "./App.css";
 
@@ -27,7 +29,7 @@ export class ProviderApp extends Component {
     this.fileClaim = this.fileClaim.bind(this);
   }
 
-  notification_patientCellCreated(patientname){
+  notification_patientCellCreated(patientname) {
     $.ajax({
       url: 'http://localhost:4000/patientCellCreated',
       type: 'POST',
@@ -49,7 +51,7 @@ export class ProviderApp extends Component {
     });
   }
 
-  notification_claimAdded(patientname, serviceID, service, amount){
+  notification_claimAdded(patientname, serviceID, service, amount) {
     $.ajax({
       url: 'http://localhost:4000/claimAdded',
       type: 'POST',
@@ -74,7 +76,7 @@ export class ProviderApp extends Component {
     });
   }
 
-  notification_serviceClaimCreated(patientname, serviceID, service){
+  notification_serviceClaimCreated(patientname, serviceID, service) {
     $.ajax({
       url: 'http://localhost:4000/serviceClaimCreated',
       type: 'POST',
@@ -116,16 +118,16 @@ export class ProviderApp extends Component {
     // console.log("please work", info)
   };
 
-  provideService = async(serviceName, providerID, patientID) => {
+  provideService = async (serviceName, providerID, patientID) => {
     const { accounts, contract } = this.state;
     const info = await contract.methods.provideService(serviceName, providerID, patientID, Date.now()).send({ from: accounts[0] });
     this.serviceClaimID = info.events.SCID.returnValues.ID;
-    console.log('provided service ID ',this.serviceClaimID)
+    console.log('provided service ID ', this.serviceClaimID)
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
     return info;
   }
 
-  fileClaim = async(serviceClaimID, amount) => {
+  fileClaim = async (serviceClaimID, amount) => {
     const { accounts, contract } = this.state;
     const info = await contract.methods.fileClaim(serviceClaimID, amount, Date.now()).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
@@ -133,16 +135,16 @@ export class ProviderApp extends Component {
     return info;
   }
 
-  onFormSubmit = async(e) => {
+  onFormSubmit = async (e) => {
     e.preventDefault()
     const { accounts, contract } = this.state;
     const info = await contract.methods.addPatient(this.patientname, this.solidityData.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
-    console.log("Added patient",info)
+    console.log("Added patient", info)
     let patientList = this.state.patients;
     const newPatient = [info.events.PatientCreated.returnValues.name, info.events.PatientCreated.returnValues.id];
     patientList.push(newPatient);
     console.log(patientList)
-    this.setState({patients: patientList})
+    this.setState({ patients: patientList })
     ReactDOM.findDOMNode(this.refs.sold).innerHTML = "<p>Added new patient! Check your list!</p>";
     ReactDOM.findDOMNode(this.refs.sold).style.color = "#acd854";
     // this.notification_patientCellCreated(this.patientname);
@@ -170,40 +172,39 @@ export class ProviderApp extends Component {
     }
     return (
       <div>
-        <Header/>
-        <Row style={{marginTop: '1.2rem'}}>
+        <Header />
+        <Row style={{ marginTop: '1.2rem', marginLeft: '10%', marginRight: '10%' }}>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
             <ul id='cells'>
               {this.state.patients.map((o, i) => {
-                return <PatientCell name={o[0]} 
-                                    key={i}
-                                    patientID={o[1]}
-                                    providerID={this.providerID}
-                                    sd={sd}
-                                    provideService={this.provideService}
-                                    fileClaim={this.fileClaim}
-                                    web3={this.state.web3}
-                                    accounts={this.state.accounts}
-                                    contract={this.state.contract}
-                                    notification_claimAdded={this.notification_claimAdded}
-                                    />
+                return <PatientCell name={o[0]}
+                  key={i}
+                  patientID={o[1]}
+                  providerID={this.providerID}
+                  sd={sd}
+                  provideService={this.provideService}
+                  fileClaim={this.fileClaim}
+                  web3={this.state.web3}
+                  accounts={this.state.accounts}
+                  contract={this.state.contract}
+                  notification_claimAdded={this.notification_claimAdded}
+                />
               })}
             </ul>
+            <h5 id='centerText'>New patient? Add them here</h5>
+            <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
+              <InputGroup>
+                <Input placeholder="Name" onChange={this.updatePatientName} />
+                <InputGroupAddon addonType="append"><Button type="submit" color='success'>Add</Button></InputGroupAddon>
+              </InputGroup>
+            </Form>
+            <div ref="sold" className="expandable" id="nav" style={{textAlign: 'center'}}/>
           </Col>
           <Col md={6}>
-            <h2 id='centerText'>Add Patient</h2>
-            <Form id="form" onSubmit={this.onFormSubmit}>
-              <FormGroup>
-                <Input onChange={this.updatePatientName} placeholder="Name" />
-              </FormGroup>
-              <div className="text-right">
-                <Button type="submit" color='success'>Enter</Button>
-              </div>
-              <div ref="sold" className="expandable" id="nav"/>
-            </Form>
           </Col>
         </Row>
+        <Footer />
       </div>
     );
   }

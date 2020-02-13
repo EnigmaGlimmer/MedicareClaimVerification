@@ -13,6 +13,7 @@ import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
 import aeec_logo from './aeec.png'
+import Footer from './components/Footer'
 
 class App extends Component {
     constructor(props) {
@@ -181,6 +182,7 @@ class App extends Component {
                     </Card>
                     </div> : null
                 }
+                <Footer />
             </div>
         );
     }

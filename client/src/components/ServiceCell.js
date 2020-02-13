@@ -10,9 +10,20 @@ class ServiceCell extends Component {
         this.checked = false;
         this.updateChecked = this.updateChecked.bind(this)
         this.verifyClaim = this.verifyClaim.bind(this)
+        this.copyID = this.copyID.bind(this);
         this.id = 'togBtn' + this.props.i;
         this.timeFiled = new Date(parseInt(this.props.timeFiled, 10)).toString().split('-')[0]
         this.timeProvided = new Date(parseInt(this.props.timeProvided, 10)).toString().split('-')[0]
+    }
+
+    copyID(val) {
+        var copyhelper = document.createElement("input");
+        copyhelper.className = 'copyhelper'
+        document.body.appendChild(copyhelper);
+        copyhelper.value = val;
+        copyhelper.select();
+        document.execCommand("copy");
+        document.body.removeChild(copyhelper);
     }
 
     updateChecked() {
@@ -44,7 +55,9 @@ class ServiceCell extends Component {
                             <Col md={8} style={{ maxWidth: '50%' }}>
                                 <CardTitle>Service Provided Date: {this.timeProvided}</CardTitle>
                                 <CardTitle>Service Filing Date: {this.timeFiled}</CardTitle>
-                                <CardSubtitle>Explanation of service</CardSubtitle>
+                                <CardTitle>Service Claim ID: <button id='link' className='link' title='Copy ID' onClick={() => this.copyID(this.props.serviceclaimid)}>
+                                                        {this.props.serviceclaimid.substring(0, 8)}...
+                                                    </button></CardTitle>
                             </Col>
                             <Col md={8} style={{ textAlign: 'right', maxWidth: '50%' }}>
                                 <CardText>Confirm claim</CardText>
