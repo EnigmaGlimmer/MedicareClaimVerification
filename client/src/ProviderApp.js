@@ -194,18 +194,17 @@ export class ProviderApp extends Component {
                 />
               })}
             </ul>
-            <h5 id='centerText'>Onboard a New Patient</h5>
-            <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
+          </Col>
+          <Col md={6}>
+          <h5 id='centerText'>Onboard a New Patient</h5>
+          <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
               <InputGroup>
                 <Input placeholder="Name" onChange={this.updatePatientName} />
                 <InputGroupAddon addonType="append"><Button type="submit" color='success'>Add</Button></InputGroupAddon>
               </InputGroup>
             </Form>
             <div ref="sold" className="expandable" id="nav" style={{textAlign: 'center'}}/>
-          </Col>
-          <Col md={6}>
             <PieChart style={{padding: '10%'}} />
-            <LineGraph style={{padding: '10%'}} />
           </Col>
         </Row>
         <Footer />
