@@ -71,18 +71,6 @@ contract Patient {
         return unverifiedClaims;
     }
 
-     // for(uint i = 0; i < cP.unclaimedServices.length; i++){
-        //     if(cP.unclaimedServices[i] == address(myServiceClaim)){
-        //         delete(cP.unclaimedServices[i]);
-        //         break;
-        //     }
-        // }
-        // // string memory name = myServiceClaim.name();
-        // //SC memory newSC = SC(name, address(myServiceClaim));
-        // cP.unverifiedClaims.push(address(myServiceClaim));
-
-
-    
     function getUS() public view returns (address[] memory) {
         return unclaimedServices;
     }

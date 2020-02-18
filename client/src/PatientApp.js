@@ -8,7 +8,6 @@ import $ from 'jquery'
 import Patient from "./contracts/Patient.json"
 import ServiceClaim from "./contracts/ServiceClaim.json"
 import Header from './components/Header'
-
 import Banner from './components/Banner'
 import profile from './profile.png'
 

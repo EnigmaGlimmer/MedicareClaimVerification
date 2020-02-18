@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
-// import ClaimVerification from "./contracts/Organizations.json"; 
 import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
 import Patient from "./contracts/Patient.json"
@@ -12,18 +11,6 @@ import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
 import aeec_logo from './aeec.png'
-
-// export const log = {
-//     localPatientContract : null,
-//     setLocalPatientContract(contract){
-//         this.localPatientContract = contract;
-//         localStorage.setItem('localPatientContract', contract);
-//       },
-//     clearLocalPatientContract(){
-//         this.localPatientContract = null;
-//         localStorage.setItem('localPatientContract', null);
-//       }
-// }
 
 class App extends Component {
     constructor(props) {
@@ -113,15 +100,7 @@ class App extends Component {
                 deployedNetworkPro && deployedNetworkPro.address,
             );
 
-            // const deployedNetworkPat = Patient.networks[networkId];
-            // console.log('what is deployedNetwork', deployedNetworkPat)
-            // const instancePat = new web3.eth.Contract(
-            //     Patient.abi,
-            //     deployedNetworkPat && deployedNetworkPat.address,
-            // );
-
             this.addProContract('UCSD Medical', instancePro)
-            // this.addPatContract('Ken', instancePat)
 
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
@@ -138,17 +117,6 @@ class App extends Component {
     onFormSubmit = async (e) => {
         e.preventDefault()
         this.ajax_login()
-        // const { accounts, contract } = this.state;
-        // const i1 = await contract.methods.getPatient(this.id).send({ from: accounts[0] })
-        // const i2 = await contract.methods.getProvider(this.id).send({ from: accounts[0] })
-        // if (i1.events.PatientRetrieval.returnValues[0][0] === this.id) {
-        //     log.loggedIn = true;
-        //     this.setState({ patientLoginSuccess: true })
-        // }
-        // else if (i2.events.ProviderRetrieval.returnValues[0][0] === this.id) {
-        //     log.loggedIn = true;
-        //     this.setState({ providerLoginSuccess: true })
-        // }
     }
 
     ajax_login() {

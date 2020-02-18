@@ -13,6 +13,7 @@ contract Provider {
 
     bytes32 id;
     string name;
+    address insurerAddr;
     address[] patients;
     address[] serviceClaims;
 
@@ -34,6 +35,7 @@ contract Provider {
         //token._mint(address(this),1000000);
         id = _id;
         name = _name;
+        insurerAddr = msg.sender;
     }
 
     //addPatient
@@ -79,6 +81,8 @@ contract Provider {
         serviceClaims.push(address(serviceClaim));
         serviceClaimMap[_patientAddress] = address(serviceClaim);
         Patient cP = Patient(_patientAddress);
+        Insurer cI = Insurer(insurerAddr);
+        cI.addServiceClaim(address(serviceClaim));
         cP.recordService(address(serviceClaim));
         SCMap[address(serviceClaim)] = _name;
         emit SCID(_name, address(serviceClaim));

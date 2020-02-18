@@ -4,7 +4,9 @@ import getWeb3 from "./utils/getWeb3";
 import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
+import ServiceClaim from "./contracts/ServiceClaim.json";
 import Provider from "./contracts/Provider.json";
+import Patient from "./contracts/Patient.json";
 import Banner from './components/Banner'
 import Header from './components/Header'
 
@@ -15,6 +17,7 @@ export class InsurerApp extends Component {
             web3: this.props.web3,
             accounts: this.props.accounts,
             insContract: this.props.insContract,
+            serContract: this.props.serContract,
             activeTab: '1',
             tokens: 0
         };
@@ -22,6 +25,7 @@ export class InsurerApp extends Component {
         this.ver = []
         this.insurername = this.props.username;
         this.toggle = this.toggle.bind(this);
+        this.getServiceClaims = this.getServiceClaims.bind(this)
         this.getAllServices = this.getAllServices.bind(this)
         this.copyID = this.copyID.bind(this);
     }
@@ -38,10 +42,7 @@ export class InsurerApp extends Component {
 
     componentDidMount = async () => {
         console.log('rendering')
-        // this.getAllVerifiedServices();
-        // this.getAllUnverifiedServices();
         var _ = this;
-
         const { insContract } = _.state;
         try {
             const providerAddrs = await insContract.methods.getProviders().call();
@@ -55,51 +56,13 @@ export class InsurerApp extends Component {
         }
 
         _.getInsurerInfo();
+        _.getServiceClaims();
         _.getAllServices();
         setInterval(function () {
             console.log('getting info')
             _.getAllServices();
         }, 5000);
     }
-
-    // getAllVerifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllVerifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.ver = list;
-    //     console.log('ver', this.ver)
-    //     this.setState({ state: this.state });
-    // }
-
-    // getAllUnverifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllUnverifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.unv = list;
-    //     console.log('unv', this.unv)
-    //     this.setState({ state: this.state });
-    // }
-
 
     getInsurerInfo = async () => {
         const { accounts, insContract } = this.state;
@@ -108,37 +71,61 @@ export class InsurerApp extends Component {
         // info.events.InsurerInfo.returnValues
     }
 
+    getServiceClaims = async () => {
+        const { insContract } = this.state;
+        let ver = []
+        let unv = []
+        const serviceClaims = await insContract.methods.getServiceClaims().call();
+        for(let serviceClaimAddr in serviceClaims){
+            const instanceSer = new this.web3.eth.Contract(
+                ServiceClaim.abi,
+                serviceClaimAddr,
+            );
+            const confirmStatus = await instanceSer.methods.isVerified().call();
+            let claimname = await instanceSer.name;
+            let timeP = await instanceSer.timeProvided;
+            let timeF = await instanceSer.timeFiled;
+            let amount = await instanceSer.amount;
+            let id = await instanceSer.serviceClaimID;
+            let patientAddr = await instanceSer.patientAddr;
+            let providerAddr = await instanceSer.providerAddr;
+            let patientname = await Provider.methods.getPatientName(patientAddr);
+            let providername = await insContract.method.getProvider(providerAddr);
+            let timeV = await instanceSer.timeVerified;
+            console.log('timeV', timeV)
+            if(timeV != null){
+                ver.push({
+                    id: id,
+                    patientname: patientname,
+                    claimname: claimname,
+                    providername: providername,
+                    amount: amount,
+                    timeProvided: timeP,
+                    timeFiled: timeF,
+                    timeVerified: timeV,
+                    confirmed: confirmStatus
+                })
+            }
+            else{
+                unv.push({
+                    id: id,
+                    patientname: patientname,
+                    claimname: claimname,
+                    providername: providername,
+                    amount: amount,
+                    timeProvided: timeP,
+                    timeFiled: timeF
+                })
+            }
+        }
+        console.log('these are the service claims from insurer', serviceClaims);
+    }
+
     getAllServices = async () => {
         //const accounts = await web3.eth.getAccounts();
-        const { accounts, insContract } = this.state;
+        const { insContract } = this.state;
         const services = await insContract.methods.getAllServices().call();
         console.log("Services: ", services);
-
-        // console.log('calling getAllServices', services);
-        // let verlist = []
-        // let unvlist = []
-        // if (services.events.ServiceClaimInfo) {
-        //     if (!services.events.ServiceClaimInfo.length) {
-        //         if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
-        //             verlist.push(services.events.ServiceClaimInfo)
-        //         }
-        //         else {
-        //             unvlist.push(services.events.ServiceClaimInfo)
-        //         }
-        //     } else {
-        //         for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-        //             if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
-        //                 verlist.push(services.events.ServiceClaimInfo[i])
-        //             }
-        //             else {
-        //                 unvlist.push(services.events.ServiceClaimInfo[i])
-        //             }
-        //         }
-        //     }
-        // }
-        // this.ver = verlist;
-        // this.unv = unvlist;
-        // console.log('ver', this.ver, 'unv', this.unv)
         this.setState({ state: this.state });
     }
 
@@ -151,7 +138,6 @@ export class InsurerApp extends Component {
     }
 
     render() {
-        console.log('Tokens', this.state.tokens)
         return (
             <div>
                 <Header />

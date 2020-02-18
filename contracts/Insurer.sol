@@ -6,7 +6,7 @@ import "./ServiceClaim.sol";
 import "./AEECToken.sol";
 import "./Organizations.sol";
 import "./Provider.sol";
-import "./Patient.sol"; 
+import "./Patient.sol";
 
 
 contract Insurer {
@@ -16,14 +16,16 @@ contract Insurer {
     address[] providers;
 
     mapping (address=>string) public providerMap;
+    mapping (address=>string) public patientMap;
 
     AEECToken public token;
 
     event ProviderCreated(address addr, string name);
     event ProviderRetrieval(Provider provider);
     event InsurerInfo(address addr, string name);
+    event ClaimAddrAdded(address serviceClaimAddr);
 
-
+    address[] serviceClaims;
     address[] unverifiedClaims;
     address[] verifiedClaims;
 
@@ -37,7 +39,6 @@ contract Insurer {
         emit InsurerInfo(address(this), _name);
     }
 
-
     function transferTokens(address _to, uint256 _amount) public {
         token.transfer(_to, _amount);
     }
@@ -46,6 +47,10 @@ contract Insurer {
         emit InsurerInfo(address(this), name);
     }
 
+    function addServiceClaim(address _serviceClaimAddr) public{
+        serviceClaims.push(_serviceClaimAddr);
+        emit ClaimAddrAdded(_serviceClaimAddr);
+    }
 
     function preloadInfo() public {
         // Insurer is already added
@@ -102,5 +107,7 @@ contract Insurer {
         return verifiedClaims;
     }
 
-
+    function getServiceClaims() public view returns (address[] memory){
+        return serviceClaims;
+    }
 }
