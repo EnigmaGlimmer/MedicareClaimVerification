@@ -118,7 +118,7 @@ export class InsurerApp extends Component {
                 })
             }
         }
-        console.log('these are the service claims from insurer', serviceClaims);
+        this.setState({ ver, unv });
     }
 
     getAllServices = async () => {

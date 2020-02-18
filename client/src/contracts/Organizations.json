@@ -563,7 +563,7 @@
         "id": 937,
         "nodeType": "ImportDirective",
         "scope": 1153,
-        "sourceUnit": 2075,
+        "sourceUnit": 2083,
         "src": "59:24:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -574,7 +574,7 @@
         "id": 938,
         "nodeType": "ImportDirective",
         "scope": 1153,
-        "sourceUnit": 2216,
+        "sourceUnit": 2224,
         "src": "84:28:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3010,7 +3010,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2250,
+                            "referencedDeclaration": 2258,
                             "src": "2676:4:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_Organizations_$1152",
@@ -3225,7 +3225,7 @@
         "id": 937,
         "nodeType": "ImportDirective",
         "scope": 1153,
-        "sourceUnit": 2075,
+        "sourceUnit": 2083,
         "src": "59:24:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3236,7 +3236,7 @@
         "id": 938,
         "nodeType": "ImportDirective",
         "scope": 1153,
-        "sourceUnit": 2216,
+        "sourceUnit": 2224,
         "src": "84:28:5",
         "symbolAliases": [],
         "unitAlias": ""
@@ -5672,7 +5672,7 @@
                             "name": "this",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2250,
+                            "referencedDeclaration": 2258,
                             "src": "2676:4:5",
                             "typeDescriptions": {
                               "typeIdentifier": "t_contract$_Organizations_$1152",
@@ -5857,8 +5857,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.22",
-  "updatedAt": "2020-02-18T02:34:50.978Z",
-  "networkType": "ethereum",
+  "updatedAt": "2020-02-18T03:06:42.261Z",
   "devdoc": {
     "methods": {}
   },

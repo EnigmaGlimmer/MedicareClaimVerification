@@ -28,6 +28,7 @@ contract Provider {
     event ClaimCreated(address addr, uint256 amount, uint256 timeFiled);
     event PatientRetrieval(Patient patient);
     event Claims(address[] unverifiedClaims);
+    event InsurerAddr(address insurerAddr);
 
     constructor(string memory _name, bytes32 _id) public {
         // preLoadInfo();
@@ -76,6 +77,7 @@ contract Provider {
     }
 
     function provideService(string memory _name, address _patientAddress, uint256 _timeProvided) public returns(address SCAddress) {
+        emit InsurerAddr(insurerAddr);
         bytes32 sid = keccak256(abi.encodePacked(_name, id, _patientAddress));
         ServiceClaim serviceClaim = new ServiceClaim(address(this), _patientAddress, sid, _name, _timeProvided);
         serviceClaims.push(address(serviceClaim));
