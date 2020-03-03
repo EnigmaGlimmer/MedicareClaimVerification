@@ -26,6 +26,7 @@ contract Insurer {
 
     address[] unverifiedClaims;
     address[] verifiedClaims;
+    address[] serviceClaims;
 
     constructor(address _tokenAddr, string memory _name) public {
         // preLoadInfo();
@@ -63,7 +64,7 @@ contract Insurer {
     function addProvider(string memory _name) public returns(address pAddr) {
         bytes32 idp = keccak256(abi.encodePacked(_name));
         //bytes32[] memory emptyList;
-        Provider newProvider = new Provider(_name, idp);
+        Provider newProvider = new Provider(_name, idp, address(this));
         //bytes32 providerHash = keccak256(abi.encodePacked(newProvider));
         providers.push(address(newProvider));
         providerMap[address(newProvider)] = _name;
@@ -81,6 +82,10 @@ contract Insurer {
         Provider provider = Provider(_addr);
         emit ProviderRetrieval(provider);
         return providerMap[_addr];
+    }
+
+    function addSC(address scAddr) public {
+        serviceClaims.push(scAddr);
     }
 
     // payProviders
@@ -102,5 +107,7 @@ contract Insurer {
         return verifiedClaims;
     }
 
-
+    function getServiceClaims() public view returns (address[] memory){
+        return serviceClaims;
+    }
 }

@@ -61,46 +61,6 @@ export class InsurerApp extends Component {
             _.getAllServices();
         }, 5000);
     }
-
-    // getAllVerifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllVerifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.ver = list;
-    //     console.log('ver', this.ver)
-    //     this.setState({ state: this.state });
-    // }
-
-    // getAllUnverifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllUnverifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.unv = list;
-    //     console.log('unv', this.unv)
-    //     this.setState({ state: this.state });
-    // }
-
-
     getInsurerInfo = async () => {
         const { accounts, insContract } = this.state;
         const info = await insContract.methods.getInfo().send({ from: accounts[0] });
