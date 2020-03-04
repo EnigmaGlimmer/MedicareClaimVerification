@@ -80,6 +80,8 @@ contract Provider {
         serviceClaims.push(address(serviceClaim));
         serviceClaimMap[_patientAddress] = address(serviceClaim);
         Patient cP = Patient(_patientAddress);
+        Insurer cI = Insurer(insAddr);
+        cI.addSC(address(serviceClaim));
         cP.recordService(address(serviceClaim));
         SCMap[address(serviceClaim)] = _name;
         emit SCID(_name, address(serviceClaim));
@@ -93,18 +95,23 @@ contract Provider {
         //uint256 newClaimID = myServiceClaim.fileClaim(_amount, _timeProvided);
         //serviceClaims.push(address(myServiceClaim));
         //emit SCEvent(newSC);
-        
         address patientAddr = myServiceClaim.getPatientAddress();
         uint256 amount = myServiceClaim.file(_amount, _timeFiled);
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
         cP.fileClaim(address(myServiceClaim));
         emit ClaimCreated(address(myServiceClaim), amount, _timeFiled);
+        Insurer cI = Insurer(insAddr);
+        cI.file(address(myServiceClaim));
         return address(myServiceClaim);
     }
     
     function getPatientName(address _addr) public view returns (string memory) {
         string memory patient = patientMap[_addr];
         return patient;
+    }
+
+    function getInsAddr() public view returns (address){
+        return insAddr;
     }
 }

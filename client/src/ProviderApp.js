@@ -109,24 +109,26 @@ export class ProviderApp extends Component {
     const contract = new this.state.web3.eth.Contract(Provider.abi, this.state.proContractAddress);
     console.log('localProviderContract', contract)
     this.setState({ proContract: contract })
-    console.log(this.state.proContract)
+    // console.log('provider contract', this.state.proContract)
+    var p = await contract.methods.getInsAddr().call()
+    console.log('insAddr', p);
     try {
-      var patientAddrs = await proContract.methods.getPatients().call();
+      var patientAddrs = await contract.methods.getPatients().call();
       if (patientAddrs.length === 0) {
         console.log('adding initial patient');
-        const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0] });
-        const newPatientAddress = await proContract.methods.getNewPatient('Ken').call();
+        const addedPatient = await contract.methods.addPatient('Ken').send({ from: accounts[0] });
+        const newPatientAddress = await contract.methods.getNewPatient('Ken').call();
         console.log('New Patient Contract Address added', newPatientAddress)
         // Send "Ken and newAddress back to App.js"
         this.props.addPatContractAddress(newPatientAddress)
       }
-      patientAddrs = await proContract.methods.getPatients().call();
+      patientAddrs = await contract.methods.getPatients().call();
 
       console.log("Patients: ", patientAddrs);
       var list = [];
       for (var i = 0; i < patientAddrs.length; i++) {
         var addr = patientAddrs[i];
-        var name = await proContract.methods.getPatientName(addr).call();
+        var name = await contract.methods.getPatientName(addr).call();
         list.push({ name, addr })
       }
       this.setState({ patients: list })

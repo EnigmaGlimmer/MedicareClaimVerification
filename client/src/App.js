@@ -100,8 +100,8 @@ class App extends Component {
                 deployedNetworkIns && deployedNetworkIns.address,
             );
 
-            const deployedNetworkPro = Provider.networks[networkId];
-            console.log('what is Provider.networks[networkId]', deployedNetworkPro)
+            // const deployedNetworkPro = Provider.networks[networkId];
+            // console.log('what is Provider.networks[networkId]', deployedNetworkPro)
             // const instancePro = new this.web3.eth.Contract(
             //     Provider.abi,
             //     deployedNetworkPro && deployedNetworkPro.address,
@@ -208,7 +208,7 @@ class App extends Component {
                         web3={this.state.web3}
                         id={this.id}
                         proContract={this.state.providerContracts[this.username]}
-                        addPatContractAddress={this.addPatContractAddress}
+                        addProContractAddress={this.addProContractAddress}
                     /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}

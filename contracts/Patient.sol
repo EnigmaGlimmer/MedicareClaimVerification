@@ -28,7 +28,14 @@ contract Patient {
     constructor(bytes32 _id, string memory _name) public {
         id = _id;
         name = _name;
+        providerAddr = msg.sender;
+        Provider cP = Provider(providerAddr);
+        insurerAddr = cP.getInsAddr();
     }
+    // use provider to get insurer address
+    // pass insurere address into constructor params 
+
+
 
     // verifyClaim
     function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
@@ -39,18 +46,21 @@ contract Patient {
         //bytes32 patID = myServiceClaim.patientID();
         //Patient storage cP = patientMap[patID];
         for(uint i = 0; i < unverifiedClaims.length; i++){
-            if(unverifiedClaims[i] == address(myServiceClaim)){
+            if(unverifiedClaims[i] == _serviceClaimAddress){
                 delete(unverifiedClaims[i]);
                 break;
             }
         }
-        Insurer i = Insurer(insurerAddr);
-        i.transferTokens(address(this), 10);
+
 
         //string memory name = myServiceClaim.name();
         //SC memory newSC = SC(name, address(myServiceClaim));
-        verifiedClaims.push(address(myServiceClaim));
+        verifiedClaims.push(_serviceClaimAddress);
         emit ClaimVerified(_serviceClaimAddress, _confirmed);
+
+        // Insurer cI = Insurer(insurerAddr);
+        // //cI.transferTokens(address(this), 10);
+        // cI.verifyClaim(address(myServiceClaim));
     }
 
     function recordService(address _addr) public returns (address[] memory) {
@@ -59,7 +69,7 @@ contract Patient {
     }
 
     function fileClaim(address _serviceClaimAddress) public returns (address[] memory){
-        for (uint i = 0; i < unverifiedClaims.length; i++) {
+        for (uint i = 0; i < unclaimedServices.length; i++) {
             if(unclaimedServices[i] == _serviceClaimAddress){
                 delete(unclaimedServices[i]);
                 break;

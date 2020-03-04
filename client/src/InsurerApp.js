@@ -44,12 +44,16 @@ export class InsurerApp extends Component {
             if(providerAddrs.length === 0){
                 console.log('adding initial provider')
                 const addedProvider = await insContract.methods.addProvider('UCSD Medical').send({ from: accounts[0]});
-                const newProviderAddress = await insContract.methods.getNewPatient('Ken').call();
+                const newProviderAddress = await insContract.methods.getNewProvider('UCSD Medical').call();
                 console.log('New Provider Contract Address added', newProviderAddress)
                 // Send "UCSD Medical and newAddress back to App.js"
-                this.props.addPatContractAddress(newProviderAddress)
+                _.props.addProContractAddress(newProviderAddress)
             }
-            providerAddrs = await insContract.methods.getProviders().call();
+            else {
+                providerAddrs = await insContract.methods.getProviders().call();
+                _.props.addProContractAddress(providerAddrs[0]);
+            }
+
             console.log("Providers: ", providerAddrs);
         }
         catch (error) {
@@ -66,45 +70,6 @@ export class InsurerApp extends Component {
             _.getAllServices();
         }, 5000);
     }
-
-    // getAllVerifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllVerifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllVerifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.ver = list;
-    //     console.log('ver', this.ver)
-    //     this.setState({ state: this.state });
-    // }
-
-    // getAllUnverifiedServices = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const services = await contract.methods.getAllUnverifiedServices().send({ from: accounts[0] });
-    //     console.log('calling getAllUnverifiedServices', services);
-    //     let list = []
-    //     if (services.events.ServiceClaimInfo) {
-    //         if (!services.events.ServiceClaimInfo.length) {
-    //             list.push(services.events.ServiceClaimInfo)
-    //         } else {
-    //             for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-    //                 list.push(services.events.ServiceClaimInfo[i])
-    //             }
-    //         }
-    //     }
-    //     this.unv = list;
-    //     console.log('unv', this.unv)
-    //     this.setState({ state: this.state });
-    // }
-
     getInsurerInfo = async () => {
         const { accounts, insContract } = this.state;
         const info = await insContract.methods.getInfo().send({ from: accounts[0] });
@@ -115,34 +80,20 @@ export class InsurerApp extends Component {
     getAllServices = async () => {
         //const accounts = await web3.eth.getAccounts();
         const { accounts, insContract } = this.state;
-        const services = await insContract.methods.getAllServices().call();
-        console.log("Services: ", services);
-
-        // console.log('calling getAllServices', services);
-        // let verlist = []
-        // let unvlist = []
-        // if (services.events.ServiceClaimInfo) {
-        //     if (!services.events.ServiceClaimInfo.length) {
-        //         if (services.events.ServiceClaimInfo.returnValues.timeVerified > 0) {
-        //             verlist.push(services.events.ServiceClaimInfo)
-        //         }
-        //         else {
-        //             unvlist.push(services.events.ServiceClaimInfo)
-        //         }
-        //     } else {
-        //         for (let i = 0; i < services.events.ServiceClaimInfo.length; i++) {
-        //             if (services.events.ServiceClaimInfo[i].returnValues.timeVerified > 0) {
-        //                 verlist.push(services.events.ServiceClaimInfo[i])
-        //             }
-        //             else {
-        //                 unvlist.push(services.events.ServiceClaimInfo[i])
-        //             }
-        //         }
-        //     }
-        // }
-        // this.ver = verlist;
-        // this.unv = unvlist;
-        // console.log('ver', this.ver, 'unv', this.unv)
+        const ver = await insContract.methods.getAllVerifiedClaims().call();
+        const unv = await insContract.methods.getAllUnverifiedClaims().call();
+        let verlist = []
+        let unvlist = []
+        for(let i = 0; i < ver.length; i++){
+            verlist.push(ver[i])
+        }
+        for(let i = 0; i < unv.length; i++){
+            unvlist.push(unv[i])
+        }
+        this.ver = verlist
+        this.unv = unvlist;
+        console.log('what is ver ', this.ver)
+        console.log('what is unv ', this.unv)
         this.setState({ state: this.state });
     }
 
