@@ -179,4 +179,14 @@ contract Insurer {
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
         return myServiceClaim.amount();
     }
+
+    function getServiceClaimPatientAddr(address _serviceClaimAddress) public view returns (address){
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        return myServiceClaim.patientAddr();
+    }
+
+    function getServiceClaimProviderAddr(address _serviceClaimAddress) public view returns (address){
+        ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
+        return myServiceClaim.providerAddr();
+    }
 }

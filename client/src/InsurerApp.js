@@ -85,10 +85,32 @@ export class InsurerApp extends Component {
         let verlist = []
         let unvlist = []
         for(let i = 0; i < ver.length; i++){
-            verlist.push(ver[i])
+            let addr = ver[i]
+            const claimname = await insContract.methods.getServiceClaimName(addr).call();
+            const amount = await insContract.methods.getServiceClaimAmount(addr).call();
+            const id = await insContract.methods.getServiceClaimId(addr).call();
+            // const patientAddr = await insContract.methods.getServiceClaimPatientAddr(addr).call();
+            // const patientname = await Provider.methods.getPatientName(patientAddr);
+            // const providerAddr = await insContract.methods.getServiceClaimProviderAddr(addr).call();
+            // const providername = await insContract.method.getProvider(providerAddr).call();
+            const timeP = await insContract.methods.getServiceClaimTimeProvided(addr).call();
+            const timeF = await insContract.methods.getServiceClaimTimeFiled(addr).call();
+            const timeV = await insContract.methods.getServiceClaimTimeVerified(addr).call();
+            const confirmed = await insContract.methods.getServiceClaimConfirmed(addr).call();
+            verlist.push({claimname, amount, id, timeP, timeF, timeV, confirmed})
         }
         for(let i = 0; i < unv.length; i++){
-            unvlist.push(unv[i])
+            let addr = unv[i]
+            const claimname = await insContract.methods.getServiceClaimName(addr).call();
+            const amount = await insContract.methods.getServiceClaimAmount(addr).call();
+            const id = await insContract.methods.getServiceClaimId(addr).call();
+            // const patientAddr = await insContract.methods.getServiceClaimPatientAddr(addr).call();
+            // const patientname = await Provider.methods.getPatientName(patientAddr);
+            // const providerAddr = await insContract.methods.getServiceClaimProviderAddr(addr).call();
+            // const providername = await insContract.method.getProvider(providerAddr).call();
+            const timeP = await insContract.methods.getServiceClaimTimeProvided(addr).call();
+            const timeF = await insContract.methods.getServiceClaimTimeFiled(addr).call();
+            unvlist.push({claimname, amount, id, timeP, timeF})
         }
         this.ver = verlist
         this.unv = unvlist;
@@ -148,17 +170,17 @@ export class InsurerApp extends Component {
                                     this.ver.length > 0 ?
                                         this.ver.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
-                                                    {output.returnValues.id.substring(0, 8)}...
+                                                <td><button className='link' title='Copy ID' onClick={() => this.copyID(output.id)}>
+                                                    {output.id.substring(0, 8)}...
                                                     </button></td>
-                                                <td>{output.returnValues.patientname}</td>
-                                                <td>{output.returnValues.claimname}</td>
-                                                <td>{output.returnValues.providername}</td>
-                                                <td>{output.returnValues.amount}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeVerified, 10)).toString().split('-')[0]}</td>
-                                                <td>{output.returnValues.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
+                                                {/* <td>{output.patientname}</td>
+                                                <td>{output.claimname}</td>
+                                                <td>{output.providername}</td> */}
+                                                <td>{output.amount}</td>
+                                                <td>{new Date(parseInt(output.timeP, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.timeF, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.timeV, 10)).toString().split('-')[0]}</td>
+                                                <td>{output.confirmed ? <span style={{ color: 'green' }}>Confirmed</span> :
                                                     <span style={{ color: 'red' }}>Disputed</span>}</td>
                                             </tr>
                                         }) : null
@@ -184,15 +206,15 @@ export class InsurerApp extends Component {
                                     this.unv.length > 0 ?
                                         this.unv.map((output, i) => {
                                             return <tr key={i}>
-                                                <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.returnValues.id)}>
-                                                    {output.returnValues.id.substring(0, 8)}...
+                                                <td><button id='link' className='link' title='Copy ID' onClick={() => this.copyID(output.id)}>
+                                                    {output.id.substring(0, 8)}...
                                                     </button></td>
-                                                <td>{output.returnValues.patientname}</td>
-                                                <td>{output.returnValues.claimname}</td>
-                                                <td>{output.returnValues.providername}</td>
-                                                <td>{output.returnValues.amount}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeProvided, 10)).toString().split('-')[0]}</td>
-                                                <td>{new Date(parseInt(output.returnValues.timeFiled, 10)).toString().split('-')[0]}</td>
+                                                {/* <td>{output.patientname}</td>
+                                                <td>{output.claimname}</td>
+                                                <td>{output.providername}</td> */}
+                                                <td>{output.amount}</td>
+                                                <td>{new Date(parseInt(output.timeP, 10)).toString().split('-')[0]}</td>
+                                                <td>{new Date(parseInt(output.timeF, 10)).toString().split('-')[0]}</td>
                                             </tr>
                                         }) : null
                                 }
