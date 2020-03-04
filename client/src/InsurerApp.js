@@ -37,14 +37,19 @@ export class InsurerApp extends Component {
     }
 
     componentDidMount = async () => {
-        console.log('rendering')
-        // this.getAllVerifiedServices();
-        // this.getAllUnverifiedServices();
         var _ = this;
-
-        const { insContract } = _.state;
+        const { accounts, insContract } = _.state;
         try {
-            const providerAddrs = await insContract.methods.getProviders().call();
+            var providerAddrs = await insContract.methods.getProviders().call();
+            if(providerAddrs.length === 0){
+                console.log('adding initial provider')
+                const addedProvider = await insContract.methods.addProvider('UCSD Medical').send({ from: accounts[0]});
+                const newProviderAddress = await insContract.methods.getNewPatient('Ken').call();
+                console.log('New Provider Contract Address added', newProviderAddress)
+                // Send "UCSD Medical and newAddress back to App.js"
+                this.props.addPatContractAddress(newProviderAddress)
+            }
+            providerAddrs = await insContract.methods.getProviders().call();
             console.log("Providers: ", providerAddrs);
         }
         catch (error) {
@@ -99,7 +104,6 @@ export class InsurerApp extends Component {
     //     console.log('unv', this.unv)
     //     this.setState({ state: this.state });
     // }
-
 
     getInsurerInfo = async () => {
         const { accounts, insContract } = this.state;

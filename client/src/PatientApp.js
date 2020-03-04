@@ -25,7 +25,7 @@ export class PatientApp extends Component {
             proContract: this.props.proContract,
             insContract: this.props.insContract,
             unverifiedClaims: [],
-            unclaimedServiecs: [],
+            unclaimedServices: [],
             tokens: 0
         };
         this.providerID = null

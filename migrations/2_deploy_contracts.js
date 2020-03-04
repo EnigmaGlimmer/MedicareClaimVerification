@@ -14,8 +14,8 @@ module.exports = function(deployer) {
   deployer.deploy(AEECToken).then(function(){
     //deployer.deploy(Organizations, AEECToken.address);
     deployer.deploy(Insurer, AEECToken.address, "CMS");
-    return deployer.deploy(Provider, "UCSD Medical", web3.utils.sha3(web3.utils.fromAscii("UCSD Medical")));
     //return deployer.deploy(Patient, web3.utils.sha3(web3.utils.fromAscii("Ken")), "Ken");
   });
+  // return deployer.deploy(Provider, "UCSD Medical", web3.utils.sha3(web3.utils.fromAscii("UCSD Medical")));
   //deployer.deploy(ServiceClaim);
 };

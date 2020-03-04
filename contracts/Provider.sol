@@ -15,6 +15,7 @@ contract Provider {
     string name;
     address[] patients;
     address[] serviceClaims;
+    address insAddr;
 
     mapping(address=>address) serviceClaimMap; //mapping from patient address to serviceClaim address
     mapping (address=>string) SCMap;
@@ -28,13 +29,14 @@ contract Provider {
     event PatientRetrieval(Patient patient);
     event Claims(address[] unverifiedClaims);
 
-    constructor(string memory _name, bytes32 _id) public {
+    constructor(string memory _name, bytes32 _id, address _insAddr) public {
         // preLoadInfo();
         //token = AEECToken(_tokenAddr);
         //token._mint(address(this),1000000);
         id = _id;
         name = _name;
-    }
+        insAddr = _insAddr;
+        }
 
     //addPatient
     //getPatints
@@ -60,7 +62,6 @@ contract Provider {
     function getNewPatient(string memory _name) public view returns(address newAddr) {
         return newP[_name];
     }
-
 
     function getPatients() public view returns(address[] memory _patients) {
         return patients;

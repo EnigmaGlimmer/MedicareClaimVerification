@@ -6,7 +6,7 @@ import Header from './components/Header'
 import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
-import Patient from "./contracts/Patient.json";
+import Provider from "./contracts/Provider.json";
 
 import "./App.css";
 
@@ -16,7 +16,8 @@ export class ProviderApp extends Component {
     this.state = {
       web3: this.props.web3,
       accounts: this.props.accounts,
-      proContract: this.props.proContract,
+      proContractAddress: this.props.proContractAddress, //this stores the address that will be used to create a contract
+      proContract: null,
       patients: [],
     };
     this.providerID = null
@@ -105,24 +106,28 @@ export class ProviderApp extends Component {
 
   componentDidMount = async () => {
     const { accounts, proContract } = this.state;
+    const contract = new this.state.web3.eth.Contract(Provider.abi, this.state.proContractAddress);
+    console.log('localProviderContract', contract)
+    this.setState({ proContract: contract })
+    console.log(this.state.proContract)
     try {
       var patientAddrs = await proContract.methods.getPatients().call();
-      if(patientAddrs.length === 0){
+      if (patientAddrs.length === 0) {
         console.log('adding initial patient');
-        const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0]});
+        const addedPatient = await proContract.methods.addPatient('Ken').send({ from: accounts[0] });
         const newPatientAddress = await proContract.methods.getNewPatient('Ken').call();
         console.log('New Patient Contract Address added', newPatientAddress)
         // Send "Ken and newAddress back to App.js"
-        this.props.addPatContractAddress('Ken', newPatientAddress)
+        this.props.addPatContractAddress(newPatientAddress)
       }
       patientAddrs = await proContract.methods.getPatients().call();
-  
+
       console.log("Patients: ", patientAddrs);
       var list = [];
-      for(var i = 0; i < patientAddrs.length; i++){
+      for (var i = 0; i < patientAddrs.length; i++) {
         var addr = patientAddrs[i];
         var name = await proContract.methods.getPatientName(addr).call();
-        list.push({name, addr})
+        list.push({ name, addr })
       }
       this.setState({ patients: list })
       console.log(this.state.patients)
@@ -175,8 +180,8 @@ export class ProviderApp extends Component {
     }
     return (
       <div>
-        <Header/>
-        <Row style={{marginTop: '1.2rem'}}>
+        <Header />
+        <Row style={{ marginTop: '1.2rem' }}>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
             <ul id='cells'>

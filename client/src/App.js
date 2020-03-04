@@ -43,27 +43,20 @@ class App extends Component {
         this.username = null;
         this.id = null;
         this.updateUsername = this.updateUsername.bind(this)
-        this.addProContract = this.addProContract.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
+        this.addProContractAddress = this.addProContractAddress.bind(this)
     }
 
-    addPatContractAddress = async(name, patContractAddress) => {
+    addPatContractAddress = async(patContractAddress) => {
         console.log('New Patient Contract found')
-        // var contracts = this.state.providerContracts;
-        // const contract = new this.web3.eth.Contract(Patient.abi, patContractAddress);
-        // contracts[name] = contract;
-        // console.log('patientContracts', contracts)
         window.localStorage.setItem('patContractAddress', patContractAddress);
         console.log('added localPatientContract address:', window.localStorage.getItem('patContractAddress'))
-        // this.setState({ patientContracts: contracts })
     }
 
-    addProContract(n, c) {
+    addProContractAddress = async(proContractAddress) => {
         console.log('New Provider Contract found')
-        var contracts = this.state.providerContracts;
-        contracts[n] = c;
-        this.setState({ providerContracts: contracts });
-        console.log(this.state.providerContracts)
+        window.localStorage.setItem('proContractAddress', proContractAddress);
+        console.log('added localProviderContract address:', window.localStorage.getItem('proContractAddress'))
     }
 
     updateUsername({ target }) {
@@ -76,16 +69,17 @@ class App extends Component {
         }
     }
 
-    fetchData = async () => {
-        const { accounts, contract } = this.state;
-        const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
-        this.solidityData = info;
-        console.log('Solidity Information preloaded')
-    };
+    // fetchData = async () => {
+    //     const { accounts, contract } = this.state;
+    //     const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
+    //     this.solidityData = info;
+    //     console.log('Solidity Information preloaded')
+    // };
 
     componentDidMount = async () => {
         try {
             console.log('localPatientContract', window.localStorage.getItem('patContractAddress'))
+            console.log('localProviderContract', window.localStorage.getItem('proContractAddress'))
             // Get network provider and web3 instance.
             this.web3 = await getWeb3();
 
@@ -108,10 +102,10 @@ class App extends Component {
 
             const deployedNetworkPro = Provider.networks[networkId];
             console.log('what is Provider.networks[networkId]', deployedNetworkPro)
-            const instancePro = new this.web3.eth.Contract(
-                Provider.abi,
-                deployedNetworkPro && deployedNetworkPro.address,
-            );
+            // const instancePro = new this.web3.eth.Contract(
+            //     Provider.abi,
+            //     deployedNetworkPro && deployedNetworkPro.address,
+            // );
 
             // const deployedNetworkPat = Patient.networks[networkId];
             // console.log('what is deployedNetwork', deployedNetworkPat)
@@ -120,7 +114,7 @@ class App extends Component {
             //     deployedNetworkPat && deployedNetworkPat.address,
             // );
 
-            this.addProContract('UCSD Medical', instancePro)
+            // this.addProContract('UCSD Medical', instancePro)
             // this.addPatContract('Ken', instancePat)
 
             // Set web3, accounts, and contract to the state, and then proceed with an
@@ -138,17 +132,6 @@ class App extends Component {
     onFormSubmit = async (e) => {
         e.preventDefault()
         this.ajax_login()
-        // const { accounts, contract } = this.state;
-        // const i1 = await contract.methods.getPatient(this.id).send({ from: accounts[0] })
-        // const i2 = await contract.methods.getProvider(this.id).send({ from: accounts[0] })
-        // if (i1.events.PatientRetrieval.returnValues[0][0] === this.id) {
-        //     log.loggedIn = true;
-        //     this.setState({ patientLoginSuccess: true })
-        // }
-        // else if (i2.events.ProviderRetrieval.returnValues[0][0] === this.id) {
-        //     log.loggedIn = true;
-        //     this.setState({ providerLoginSuccess: true })
-        // }
     }
 
     ajax_login() {
@@ -199,7 +182,6 @@ class App extends Component {
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
-                        // patContract={this.state.patientContracts['Ken']}
                         patContractAddress={window.localStorage.getItem('patContractAddress')}
                         proContract={this.state.providerContracts['UCSD Medical']}
                         insContract={this.state.contractIns}
@@ -212,7 +194,7 @@ class App extends Component {
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
-                        proContract={this.state.providerContracts[this.username]}
+                        proContractAddress={window.localStorage.getItem('proContractAddress')}
                         insContract={this.state.contractIns}
                         addPatContractAddress={this.addPatContractAddress}
                     /> : null
@@ -226,7 +208,7 @@ class App extends Component {
                         web3={this.state.web3}
                         id={this.id}
                         proContract={this.state.providerContracts[this.username]}
-                        addProContract={this.addProContract}
+                        addPatContractAddress={this.addPatContractAddress}
                     /> : null
                 }
                 {/* {this.redirectAfterLogin()} */}
