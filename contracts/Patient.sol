@@ -9,7 +9,8 @@ import "./Provider.sol";
 import "./Insurer.sol";
 
 contract Patient {
-
+    
+    AEECToken public token;
 
     bytes32 id;
     string name;
@@ -79,6 +80,10 @@ contract Patient {
     function recordService(address _addr) public returns (address[] memory) {
         unclaimedServices.push(_addr);
         emit ClaimAdded(_addr);
+    }
+
+    function getBalance() public view returns(uint256) {
+        return token.balanceOf(address(this));
     }
 
     function fileClaim(address _serviceClaimAddress) public returns (address[] memory){

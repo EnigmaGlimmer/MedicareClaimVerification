@@ -8,7 +8,7 @@ import $ from 'jquery'
 import Patient from "./contracts/Patient.json"
 import ServiceClaim from "./contracts/ServiceClaim.json"
 import Header from './components/Header'
-
+import Footer from './components/Footer'
 import Banner from './components/Banner'
 import profile from './profile.png'
 
@@ -38,6 +38,7 @@ export class PatientApp extends Component {
         this.getUnverifiedClaims = this.getUnverifiedClaims.bind(this)
         this.getUnclaimedServices = this.getUnclaimedServices.bind(this)
         this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
+        this.updateTokens = this.updateTokens.bind(this)
     }
 
     notification_patientCellCreated(patientname) {
@@ -126,11 +127,13 @@ export class PatientApp extends Component {
         // console.log('patient contract: ', _.state.patContract)
         if(_.state.patContract){
             _.getUnverifiedClaims();
+            _.updateTokens();
             // _.getUnclaimedServices();
         }
         setInterval(function(){
             if(_.state.patContract){
                 _.getUnverifiedClaims();
+                _.updateTokens();
                 // _.getUnclaimedServices();
             }
         }, 5000);
@@ -140,6 +143,12 @@ export class PatientApp extends Component {
         //         console.log(result);
         // });
     };
+
+    updateTokens = async () => {
+        const { accounts, patContract } = this.state;
+        const balance = await patContract.methods.getBalance().call();
+        this.setState({tokens: balance})
+    }
 
     deleteClaimFromList(i) {
         console.log('Deleting Claim')
@@ -190,6 +199,7 @@ export class PatientApp extends Component {
         return (
             <div>
                 <Header/>
+                <div style={{marginLeft: '10%', marginRight: '10%'}}>
                 <Banner tokens={this.state.tokens} name={this.patientname} dashboard={'Patient'}/>
                 <ul id='cells'>
                     {
@@ -216,6 +226,8 @@ export class PatientApp extends Component {
                             </CardGroup>
                     }
                 </ul>
+                </div>
+                <Footer />
             </div >
         );
     }

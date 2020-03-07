@@ -7,6 +7,7 @@ import "./App.css";
 import Provider from "./contracts/Provider.json";
 import Banner from './components/Banner'
 import Header from './components/Header'
+import Footer from './components/Footer'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -142,8 +143,9 @@ export class InsurerApp extends Component {
         return (
             <div>
                 <Header />
+                <div style={{ width: '80%', margin: 'auto' }}>
                 <Banner tokens={this.state.tokens} name={this.insurername} dashboard={'Insurer'} />
-                <Nav tabs style={{ justifyContent: 'center', width: '90%', margin: 'auto' }}>
+                <Nav tabs style={{ justifyContent: 'center', backgroundColor: '#dee2e6' }}>
                     <NavItem id='navItem'>
                         <NavLink
                             className={classnames({ active: this.state.activeTab === '1' })}
@@ -159,7 +161,7 @@ export class InsurerApp extends Component {
             </NavLink>
                     </NavItem>
                 </Nav>
-                <TabContent style={{ textAlign: 'center', padding: '50px' }} activeTab={this.state.activeTab}>
+                <TabContent style={{ textAlign: 'center', padding: '50px', borderLeft: '1px solid #dee2e6', borderRight: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }} activeTab={this.state.activeTab}>
                     <TabPane tabId="1">
                         <Table responsive bordered style={this.props.style}>
                             <thead>
@@ -232,6 +234,8 @@ export class InsurerApp extends Component {
                         </Table>
                     </TabPane>
                 </TabContent>
+            </div>
+            <Footer />
             </div>
         );
     }

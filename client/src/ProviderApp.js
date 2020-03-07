@@ -3,10 +3,13 @@ import ClaimVerification from "./contracts/Organizations.json"
 import getWeb3 from "./utils/getWeb3";
 import PatientCell from './components/PatientCell'
 import Header from './components/Header'
-import { Row, Col, Form, Input, Button, FormGroup } from 'reactstrap';
+import { Row, Col, Form, Input, Button, FormGroup, InputGroup, InputGroupAddon } from 'reactstrap';
 import ReactDOM from "react-dom"
 import $ from 'jquery'
 import Provider from "./contracts/Provider.json";
+import Footer from './components/Footer'
+import LineGraph from './views/Line Chart'
+import PieChart from './views/Pie Chart'
 
 import "./App.css";
 
@@ -183,7 +186,7 @@ export class ProviderApp extends Component {
     return (
       <div>
         <Header />
-        <Row style={{ marginTop: '1.2rem' }}>
+        <Row style={{ marginTop: '1.2rem', marginLeft: '10%', marginRight: '10%' }}>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
             <ul id='cells'>
@@ -204,18 +207,22 @@ export class ProviderApp extends Component {
             </ul>
           </Col>
           <Col md={6}>
-            <h2 id='centerText'>Add Patient</h2>
-            <Form id="form" onSubmit={this.onFormSubmit}>
-              <FormGroup>
-                <Input onChange={this.updatePatientName} placeholder="Name" />
-              </FormGroup>
-              <div className="text-right">
-                <Button type="submit" color='success'>Enter</Button>
-              </div>
-              <div ref="sold" className="expandable" id="nav" />
-            </Form>
+            <div style={{ border: '2px solid #327cc9', padding: '3%', marginBottom: '1rem', backgroundColor: '#fafafa' }}>
+              <h5 id='centerText'>Onboard a New Patient</h5>
+              <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
+                <InputGroup>
+                  <Input placeholder="Name" onChange={this.updatePatientName} />
+                  <InputGroupAddon addonType="append"><Button type="submit" color='success'>Add</Button></InputGroupAddon>
+                </InputGroup>
+              </Form>
+            </div>
+            <div ref="sold" className="expandable" id="nav" style={{ textAlign: 'center' }} />
+            <div style={{ border: '2px solid #327cc9', padding: '3%' }}>
+              <PieChart />
+            </div>
           </Col>
         </Row>
+        <Footer />
       </div>
     );
   }

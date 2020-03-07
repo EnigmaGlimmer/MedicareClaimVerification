@@ -12,6 +12,7 @@ import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
 import './Login.css'
 import aeec_logo from './aeec.png'
+import Footer from './components/Footer'
 
 // export const log = {
 //     localPatientContract : null,
@@ -227,6 +228,7 @@ class App extends Component {
                             <Button type="submit" color='success'>Enter</Button>
                         </Form>
                     </Card>
+                    <Footer />
                     </div> : null
                 }
             </div>
