@@ -20,20 +20,19 @@ class ServiceCell extends Component {
     }
 
     verifyClaim() {
+        console.log('on verifyClaim, this.checked is', this.checked)
         this.props.verifyClaim(this.props.serviceAddr, this.checked)
         this.checked = false;
         document.getElementById(this.id).checked = false;
-        // for(let index = this.props.i; index < this.props.arrLength - 1; index++){
-        //     document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
-        //     this.checked = document.getElementById("togBtn"+index).checked
-        //     console.log(index, this.checked)
-        // }
+        for(let index = this.props.i; index < this.props.arrLength - 1; index++){
+            document.getElementById('togBtn'+index).checked = document.getElementById("togBtn"+(index+1)).checked;
+            this.checked = document.getElementById("togBtn"+index).checked
+            console.log(index, this.checked)
+        }
         this.props.deleteClaimFromList(this.props.i)
     }
 
     render() {
-        console.log(this.timeProvided)
-        console.log(this.timeFiled)
         console.log('switch status', this.checked)
         return (
             <CardGroup style={{ padding: '50px' }}>

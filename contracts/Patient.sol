@@ -21,6 +21,7 @@ contract Patient {
     event Claims(address[] claims);
     event ClaimLength(uint256 claimLength);
     event ClaimAdded(address addr);
+    event Check(address addr);
 
     address providerAddr;
     address insurerAddr;
@@ -33,9 +34,17 @@ contract Patient {
         insurerAddr = cP.getInsAddr();
     }
     // use provider to get insurer address
-    // pass insurere address into constructor params 
+    // pass insurer address into constructor params 
 
 
+    function removeUnverified(uint index) public {
+        if (index >= unverifiedClaims.length) return;
+
+        for (uint i = index; i<unverifiedClaims.length-1; i++){
+            unverifiedClaims[i] = unverifiedClaims[i+1];
+        }
+        unverifiedClaims.length--;
+    }
 
     // verifyClaim
     function verifyClaim(address _serviceClaimAddress, uint256 _timeVerified, bool _confirmed) public {
@@ -45,9 +54,12 @@ contract Patient {
         // Delete the claim address from unverified list
         //bytes32 patID = myServiceClaim.patientID();
         //Patient storage cP = patientMap[patID];
+        emit ClaimLength(unverifiedClaims.length);
         for(uint i = 0; i < unverifiedClaims.length; i++){
+            emit Check(unverifiedClaims[i]);
             if(unverifiedClaims[i] == _serviceClaimAddress){
-                delete(unverifiedClaims[i]);
+                removeUnverified(i);
+                emit ClaimLength(unverifiedClaims.length);
                 break;
             }
         }
@@ -57,9 +69,10 @@ contract Patient {
         //SC memory newSC = SC(name, address(myServiceClaim));
         verifiedClaims.push(_serviceClaimAddress);
         emit ClaimVerified(_serviceClaimAddress, _confirmed);
-
+        Insurer cI = Insurer(insurerAddr);
+        cI.verifyClaim(_serviceClaimAddress);
         // Insurer cI = Insurer(insurerAddr);
-        // //cI.transferTokens(address(this), 10);
+        cI.transferTokens(address(this), 10);
         // cI.verifyClaim(address(myServiceClaim));
     }
 
@@ -122,5 +135,9 @@ contract Patient {
     function getServiceClaimTimeFiled(address _serviceClaimAddress) public view returns(uint256){
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
         return myServiceClaim.timeFiled();
+    }
+
+    function getName() public view returns(string memory){
+        return name;
     }
 }

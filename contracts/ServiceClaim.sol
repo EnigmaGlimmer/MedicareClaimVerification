@@ -1,6 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./SafeMath.sol";
+import "./Patient.sol";
 
 contract ServiceClaim {
 
@@ -25,7 +26,8 @@ contract ServiceClaim {
     event ClaimAdded(uint256 amount, uint256 _timeFiled);
 
 
-    constructor(address _proAddr, address _patAddr, bytes32 _id, string memory _name, uint256 _timeProvided) public {
+    constructor(address _insAddr, address _proAddr, address _patAddr, bytes32 _id, string memory _name, uint256 _timeProvided) public {
+        insurerAddr = _insAddr;
         providerAddr = _proAddr;
         patientAddr = _patAddr;
         serviceClaimID = _id;
@@ -66,6 +68,26 @@ contract ServiceClaim {
 
     function getPatientAddress() public view returns (address) {
         return patientAddr;
+    }
+
+    function getProv() public view returns (address){
+        return providerAddr;
+    }
+
+    function getPat() public view returns (address){
+        return patientAddr;
+    }
+    function getIns() public view returns (address){
+        return insurerAddr;
+    }
+    function getName() public view returns (string memory){
+        return name;
+    }
+
+    function getPatName() public view returns(string memory) {
+        Patient p = Patient(patientAddr);
+        string memory n = p.getName();
+        return n;
     }
 
     // function isVerified() public view returns (bool){

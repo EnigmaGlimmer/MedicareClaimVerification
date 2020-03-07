@@ -24,13 +24,21 @@ contract Insurer {
     event ProviderRetrieval(Provider provider);
     event InsurerInfo(address addr, string name);
     event Length(uint256 l);
-
+    event DeletedClaim(address scAddr);
 
     address[] unverifiedClaims;
     address[] verifiedClaims;
     address[] serviceClaims;
 
     event Claims(address[] addrList);
+
+    struct SC {
+        address insAddr;
+        address provAddr;
+        address patAddr;
+        string name;
+        string patName;
+    }
 
     constructor(address _tokenAddr, string memory _name) public {
         // preLoadInfo();
@@ -42,6 +50,9 @@ contract Insurer {
         emit InsurerInfo(address(this), _name);
     }
 
+    function getBalance() public view returns(uint256) {
+        return token.balanceOf(address(this));
+    }
 
     function transferTokens(address _to, uint256 _amount) public {
         token.transfer(_to, _amount);
@@ -109,12 +120,21 @@ contract Insurer {
         emit Claims(unverifiedClaims);
     }
 
+    function removeUnverified(uint index) public {
+        if (index >= unverifiedClaims.length) return;
 
+        for (uint i = index; i<unverifiedClaims.length-1; i++){
+            unverifiedClaims[i] = unverifiedClaims[i+1];
+        }
+        unverifiedClaims.length--;
+    }
+    
     function verifyClaim(address _scAddr) public {
         ServiceClaim myServiceClaim = ServiceClaim(_scAddr);
         for (uint i = 0; i < unverifiedClaims.length; i++) {
             if(unverifiedClaims[i] == address(myServiceClaim)){
-                delete(unverifiedClaims[i]);
+                emit DeletedClaim(_scAddr);
+                removeUnverified(i);
                 break;
             }
         }
@@ -175,6 +195,18 @@ contract Insurer {
         return myServiceClaim.confirmed();
     }
 
+    function getServiceClaimInfo(address _serviceClaimAddress) public view returns (SC memory){
+        ServiceClaim sc = ServiceClaim(_serviceClaimAddress);
+        address ins = sc.getIns();
+        address prov = sc.getProv();
+        address pat = sc.getPat();
+        string memory n = sc.getName();
+        string memory patn = sc.getPatName();
+        SC memory info = SC(ins, prov, pat, n, patn);
+        //return myServiceClaim.confirmed();
+        return info;
+    }
+
     function getServiceClaimAmount(address _serviceClaimAddress) public view returns (uint256){
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
         return myServiceClaim.amount();
@@ -182,11 +214,13 @@ contract Insurer {
 
     function getServiceClaimPatientAddr(address _serviceClaimAddress) public view returns (address){
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
-        return myServiceClaim.patientAddr();
+        address addr = myServiceClaim.patientAddr();
+        return addr;
     }
 
     function getServiceClaimProviderAddr(address _serviceClaimAddress) public view returns (address){
         ServiceClaim myServiceClaim = ServiceClaim(_serviceClaimAddress);
-        return myServiceClaim.providerAddr();
+        address addr = myServiceClaim.providerAddr();
+        return addr;
     }
 }

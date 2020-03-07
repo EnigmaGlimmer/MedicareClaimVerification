@@ -76,7 +76,7 @@ contract Provider {
 
     function provideService(string memory _name, address _patientAddress, uint256 _timeProvided) public returns(address SCAddress) {
         bytes32 sid = keccak256(abi.encodePacked(_name, id, _patientAddress));
-        ServiceClaim serviceClaim = new ServiceClaim(address(this), _patientAddress, sid, _name, _timeProvided);
+        ServiceClaim serviceClaim = new ServiceClaim(insAddr, address(this), _patientAddress, sid, _name, _timeProvided);
         serviceClaims.push(address(serviceClaim));
         serviceClaimMap[_patientAddress] = address(serviceClaim);
         Patient cP = Patient(_patientAddress);

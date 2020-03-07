@@ -126,13 +126,12 @@ export class PatientApp extends Component {
         // console.log('patient contract: ', _.state.patContract)
         if(_.state.patContract){
             _.getUnverifiedClaims();
-            _.getUnclaimedServices();
+            // _.getUnclaimedServices();
         }
         setInterval(function(){
-            console.log('getting info')
             if(_.state.patContract){
                 _.getUnverifiedClaims();
-                _.getUnclaimedServices();
+                // _.getUnclaimedServices();
             }
         }, 5000);
         // event.watch(function(error, result){
@@ -150,22 +149,24 @@ export class PatientApp extends Component {
     }
 
     getUnverifiedClaims = async () => {
+        // console.log('method getUnverifiedClaims');
         const { patContract } = this.state;
         const unv = await patContract.methods.getUC().call();
         let list = [];
         for( let i in unv ){
-            console.log(i)
+            // console.log(i)
             const addr = unv[i];
             const name = await patContract.methods.getServiceClaimName(addr).call();
             const timeP = await patContract.methods.getServiceClaimTimeProvided(addr).call();
             const timeF = await patContract.methods.getServiceClaimTimeFiled(addr).call();
             list.push({name, addr, timeP, timeF})
         }
-        console.log('what is in the list:', list)
+        // console.log('what is in the list:', list)
         this.setState({ unverifiedClaims: list })
     }
 
     getUnclaimedServices = async () => {
+        // console.log('method getUnclaimedServices');
         const { patContract } = this.state;
         const unc = await patContract.methods.getUS().call();
         console.log('unc', unc)
@@ -173,6 +174,7 @@ export class PatientApp extends Component {
     }
 
     verifyClaim = async (serviceClaimID, confirmed) => {
+        console.log('PatientApp verifyClaim confirm status, ', confirmed)
         const { accounts, patContract } = this.state;
         const info = await patContract.methods.verifyClaim(serviceClaimID, Date.now(), confirmed).send({ from: accounts[0] });
         console.log('confirmation', info)
@@ -181,7 +183,7 @@ export class PatientApp extends Component {
     render() {
         // let sd = this.solidityData
         console.log("Rendering PatientApp")
-        console.log('Tokens', this.state.tokens)
+        // console.log('Tokens', this.state.tokens)
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
