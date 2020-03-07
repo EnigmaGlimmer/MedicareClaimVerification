@@ -139,7 +139,6 @@ export class InsurerApp extends Component {
     }
 
     render() {
-        console.log('Tokens', this.state.tokens)
         return (
             <div>
                 <Header />

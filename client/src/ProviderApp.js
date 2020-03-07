@@ -164,12 +164,13 @@ export class ProviderApp extends Component {
 
   onFormSubmit = async (e) => {
     e.preventDefault()
-    const { accounts, contract } = this.state;
-    const info = await contract.methods.addPatient(this.patientname, this.solidityData.events.ProviderCreated.returnValues.id).send({ from: accounts[0] });
+    const { accounts, proContract } = this.state;
+    const info = await proContract.methods.addPatient(this.patientname).send({ from: accounts[0] });
     console.log("Added patient", info)
+    let name = info.events.PatientCreated.returnValues.name;
+    let addr = info.events.PatientCreated.returnValues.addr;
     let patientList = this.state.patients;
-    const newPatient = [info.events.PatientCreated.returnValues.name, info.events.PatientCreated.returnValues.id];
-    patientList.push(newPatient);
+    patientList.push({name, addr});
     console.log(patientList)
     this.setState({ patients: patientList })
     ReactDOM.findDOMNode(this.refs.sold).innerHTML = "<p>Added new patient! Check your list!</p>";

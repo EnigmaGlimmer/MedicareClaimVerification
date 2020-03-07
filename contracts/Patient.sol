@@ -10,8 +10,6 @@ import "./Insurer.sol";
 
 contract Patient {
     
-    AEECToken public token;
-
     bytes32 id;
     string name;
     //mapping (address=>string) SCMap;
@@ -83,6 +81,9 @@ contract Patient {
     }
 
     function getBalance() public view returns(uint256) {
+        Insurer cI = Insurer(insurerAddr);
+        address tokenAddr = cI.getTokenAddr();
+        AEECToken token = AEECToken(tokenAddr);
         return token.balanceOf(address(this));
     }
 

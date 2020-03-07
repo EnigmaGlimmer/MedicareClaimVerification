@@ -54,6 +54,10 @@ contract Insurer {
         return token.balanceOf(address(this));
     }
 
+    function getTokenAddr() public view returns (address){
+        return address(token);
+    }
+
     function transferTokens(address _to, uint256 _amount) public {
         token.transfer(_to, _amount);
     }
@@ -62,15 +66,15 @@ contract Insurer {
         emit InsurerInfo(address(this), name);
     }
 
-    function preloadInfo() public {
-        // Insurer is already added
-        address pAddr = addProvider("UCSD Medical");
-        Provider provider = Provider(pAddr);
-        address kenAddr = provider.addPatient("Ken");
-        Patient patient = Patient(kenAddr);
-        //address dannyAddr = provider.addPatient("Danny");
-        //address antAddr = provider.addPatient("Antonio");
-    }
+    // function preloadInfo() public {
+    //     // Insurer is already added
+    //     address pAddr = addProvider("UCSD Medical");
+    //     Provider provider = Provider(pAddr);
+    //     address kenAddr = provider.addPatient("Ken");
+    //     Patient patient = Patient(kenAddr);
+    //     //address dannyAddr = provider.addPatient("Danny");
+    //     //address antAddr = provider.addPatient("Antonio");
+    // }
     /** @dev add a provider to the network
     @param _name name of the provider
     @return the pID of the health provider -
