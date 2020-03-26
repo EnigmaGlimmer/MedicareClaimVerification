@@ -10,7 +10,7 @@ import Provider from "./contracts/Provider.json";
 import Footer from './components/Footer'
 import LineGraph from './views/Line Chart'
 import PieChart from './views/Pie Chart'
-
+import { store } from 'react-notifications-component';
 import "./App.css";
 
 export class ProviderApp extends Component {
@@ -151,6 +151,19 @@ export class ProviderApp extends Component {
     this.serviceClaimAddr = info.events.SCID.returnValues.addr;
     console.log('provided service Addr ', this.serviceClaimAddr)
     // this.notification_serviceClaimCreated(this.patientname, this.serviceClaimID, serviceName);
+    store.addNotification({
+      title: "Service Provided",
+      message: "You may now file a claim for that service to the patient.",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "zoomIn"],
+      animationOut: ["animated", "zoomOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
     return info;
   }
 
@@ -159,6 +172,19 @@ export class ProviderApp extends Component {
     const info = await proContract.methods.fileClaim(serviceClaimAddr, amount, Date.now()).send({ from: accounts[0] });
     // this.notification_claimAdded(this.patientname, serviceClaimID, serviceName, amount);
     console.log('Adding Claim', info.events)
+    store.addNotification({
+      title: "Claim Filed",
+      message: "Patient and Insurer are notified about the claim.",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "zoomIn"],
+      animationOut: ["animated", "zoomOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
     return info;
   }
 
@@ -173,8 +199,19 @@ export class ProviderApp extends Component {
     patientList.push({name, addr});
     console.log(patientList)
     this.setState({ patients: patientList })
-    ReactDOM.findDOMNode(this.refs.sold).innerHTML = "<p>Added new patient! Check your list!</p>";
-    ReactDOM.findDOMNode(this.refs.sold).style.color = "#acd854";
+    store.addNotification({
+      title: "Patient Added",
+      message: "Check your list to view them now.",
+      type: "success",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animated", "fadeIn"],
+      animationOut: ["animated", "fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
     // this.notification_patientCellCreated(this.patientname);
   }
 
@@ -217,7 +254,6 @@ export class ProviderApp extends Component {
                 </InputGroup>
               </Form>
             </div>
-            <div ref="sold" className="expandable" id="nav" style={{ textAlign: 'center' }} />
             <div style={{ border: '2px solid #327cc9', padding: '3%' }}>
               <PieChart />
             </div>

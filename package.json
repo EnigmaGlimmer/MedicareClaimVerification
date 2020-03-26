@@ -21,11 +21,14 @@
   },
   "homepage": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification#readme",
   "dependencies": {
-    "babel-eslint": "^10.0.1",
+    "animate.css": "^3.7.2",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "concurrently": "^5.0.2",
+    "create-react-app": "^3.4.1",
     "dotenv": "^8.0.0",
     "ethereumjs-tx": "^2.1.2",
     "ethers": "^4.0.43",
@@ -36,9 +39,10 @@
     "nodemailer": "^6.4.2",
     "path": "^0.12.7",
     "react": "^16.12.0",
+    "react-notifications-component": "^2.4.0",
     "react-odometerjs": "^2.1.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^3.4.1",
     "solc": "^0.6.1",
     "web3": "^1.2.5-rc.0"
   }

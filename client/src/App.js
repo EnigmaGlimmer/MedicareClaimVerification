@@ -13,6 +13,9 @@ import InsurerApp from './InsurerApp'
 import './Login.css'
 import aeec_logo from './aeec.png'
 import Footer from './components/Footer'
+import ReactNotification from 'react-notifications-component'
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css'
 
 // export const log = {
 //     localPatientContract : null,
@@ -176,6 +179,7 @@ class App extends Component {
         }
         return (
             <div>
+                <ReactNotification />
                 {
                     this.state.patientLoginSuccess ? <PatientApp
                         username={this.username}
@@ -212,7 +216,6 @@ class App extends Component {
                         addProContractAddress={this.addProContractAddress}
                     /> : null
                 }
-                {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                 <div style={{ textAlign: 'center' }}>
                     <img src={aeec_logo} alt='AEEC' height='100' width='100' />

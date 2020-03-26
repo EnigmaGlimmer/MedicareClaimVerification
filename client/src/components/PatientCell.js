@@ -62,7 +62,7 @@ class PatientCell extends Component {
     }
 
     provideService() {
-        if(this.amount === null || this.amount < 0){
+        if (this.amount === null || this.amount < 0) {
             this.amount = 0;
         }
         this.toggle();
@@ -77,9 +77,9 @@ class PatientCell extends Component {
     fileClaim(serviceClaimAddr, amount) {
         this.props.fileClaim(serviceClaimAddr, amount).then((info) => {
             let list = this.state.serviceList;
-            for(let i = 0; i < list.length; i++){
-                if(list[i].serviceClaimAddr === serviceClaimAddr){
-                    list.splice(i, 1); 
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].serviceClaimAddr === serviceClaimAddr) {
+                    list.splice(i, 1);
                 }
             }
             this.amount = 0;
@@ -91,7 +91,7 @@ class PatientCell extends Component {
         return (
             <CardGroup style={{ marginTop: '3%', marginBottom: '3%', marginLeft: '5%', marginRight: '5%' }}>
                 <Card body outline color="primary">
-                    <CardBody style={{padding: '0px'}}>
+                    <CardBody style={{ padding: '0px' }}>
                         <Row>
                             <Col md={6}>
                                 <CardTitle>{this.props.name}</CardTitle>
@@ -106,23 +106,24 @@ class PatientCell extends Component {
                                     updateAmount={this.updateAmount}
                                     provideService={this.provideService} />
                                 <br></br>
-                                {/* <button className="button" id='add_btn' style={{backgroundColor: '#f0c107'}}><span>Add Claim</span></button> */}
-                                {/* <Button color='warning' onClick={this.ac}>Add Claim</Button> */}
                                 <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropDown}>
-                                    <DropdownToggle caret color="warning">
-                                        File Claim
+                                    {this.state.serviceList.length === 0 ? (
+                                        <DropdownToggle caret>
+                                            No Services
+                                        </DropdownToggle>) : (
+                                            <div>
+                                                <DropdownToggle caret color="warning">
+                                                    File Claim
                                     </DropdownToggle>
-                                    <DropdownMenu>
-                                        {this.state.serviceList.length === 0 ? (
-                                            <DropdownItem header>No Services for this patient</DropdownItem>) : (
-                                                <div>
-                                                    <DropdownItem header>Select Service</DropdownItem>
-                                                    <DropdownItem divider />
-                                                </div>
-                                            )}
-
-                                        {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimAddr, item.amount)}> {item.serviceName} </DropdownItem> })}
-                                    </DropdownMenu>
+                                                <DropdownMenu>
+                                                    <div>
+                                                        <DropdownItem header>Select Service</DropdownItem>
+                                                        <DropdownItem divider />
+                                                    </div>
+                                                    {this.state.serviceList.map((item, i) => { return <DropdownItem key={i} onClick={() => this.fileClaim(item.serviceClaimAddr, item.amount)}> {item.serviceName} </DropdownItem> })}
+                                                </DropdownMenu>
+                                            </div>
+                                        )}
                                 </ButtonDropdown>
                             </Col>
                         </Row>
