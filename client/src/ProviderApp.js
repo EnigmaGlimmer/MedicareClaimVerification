@@ -154,7 +154,7 @@ export class ProviderApp extends Component {
     store.addNotification({
       title: "Service Provided",
       message: "You may now file a claim for that service to the patient.",
-      type: "success",
+      type: "default",
       insert: "top",
       container: "top-right",
       animationIn: ["animated", "zoomIn"],
@@ -202,16 +202,17 @@ export class ProviderApp extends Component {
     store.addNotification({
       title: "Patient Added",
       message: "Check your list to view them now.",
-      type: "success",
+      type: "info",
       insert: "top",
       container: "top-right",
-      animationIn: ["animated", "fadeIn"],
-      animationOut: ["animated", "fadeOut"],
+      animationIn: ["animated", "zoomIn"],
+      animationOut: ["animated", "zoomOut"],
       dismiss: {
         duration: 5000,
         onScreen: true
       }
     });
+    document.getElementById('onboard').value = ''
     // this.notification_patientCellCreated(this.patientname);
   }
 
@@ -249,7 +250,7 @@ export class ProviderApp extends Component {
               <h5 id='centerText'>Onboard a New Patient</h5>
               <Form id="form" onSubmit={this.onFormSubmit} inline style={{ padding: 0 }}>
                 <InputGroup>
-                  <Input placeholder="Name" onChange={this.updatePatientName} />
+                  <Input id='onboard' placeholder="Name" onChange={this.updatePatientName}/>
                   <InputGroupAddon addonType="append"><Button type="submit" color='success'>Add</Button></InputGroupAddon>
                 </InputGroup>
               </Form>
