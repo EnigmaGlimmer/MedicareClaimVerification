@@ -190,9 +190,7 @@ export class PatientApp extends Component {
     }
 
     render() {
-        // let sd = this.solidityData
         console.log("Rendering PatientApp")
-        // console.log('Tokens', this.state.tokens)
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
@@ -227,7 +225,6 @@ export class PatientApp extends Component {
                     }
                 </ul>
                 </div>
-                <Footer />
             </div >
         );
     }

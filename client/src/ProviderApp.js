@@ -24,7 +24,6 @@ export class ProviderApp extends Component {
       patients: [],
     };
     this.providerID = null
-    this.solidityData = this.props.sd;
     this.patientname = null;
     this.serviceClaimID = null;
     this.updatePatientName = this.updatePatientName.bind(this);
@@ -217,7 +216,6 @@ export class ProviderApp extends Component {
   }
 
   render() {
-    let sd = this.solidityData
     console.log('Rendering ProviderApp')
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
@@ -234,7 +232,6 @@ export class ProviderApp extends Component {
                   key={i}
                   patientAddr={o.addr}
                   providerID={this.providerID}
-                  sd={sd}
                   provideService={this.provideService}
                   fileClaim={this.fileClaim}
                   web3={this.state.web3}
@@ -260,7 +257,6 @@ export class ProviderApp extends Component {
             </div>
           </Col>
         </Row>
-        <Footer />
       </div>
     );
   }

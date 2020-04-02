@@ -7,7 +7,6 @@ import "./App.css";
 import Provider from "./contracts/Provider.json";
 import Banner from './components/Banner'
 import Header from './components/Header'
-import Footer from './components/Footer'
 
 export class InsurerApp extends Component {
     constructor(props) {
@@ -234,7 +233,6 @@ export class InsurerApp extends Component {
                     </TabPane>
                 </TabContent>
             </div>
-            <Footer />
             </div>
         );
     }
