@@ -10,6 +10,7 @@ import Provider from "./contracts/Provider.json";
 import Footer from './components/Footer'
 import LineGraph from './views/Line Chart'
 import PieChart from './views/Pie Chart'
+import "./components/Sidebar.css"
 
 import "./App.css";
 
@@ -30,6 +31,19 @@ export class ProviderApp extends Component {
     this.updatePatientName = this.updatePatientName.bind(this);
     this.provideService = this.provideService.bind(this);
     this.fileClaim = this.fileClaim.bind(this);
+    this.nav = this.nav.bind(this);
+  }
+
+  nav() {
+      if(!this.sidebarOpen){
+          document.getElementById("mySidebar").style.width = "250px";
+          document.getElementById("main").style.marginLeft = "250px";
+      }
+      else{
+          document.getElementById("mySidebar").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+      }
+      this.sidebarOpen = !this.sidebarOpen
   }
 
   notification_patientCellCreated(patientname) {
@@ -186,7 +200,16 @@ export class ProviderApp extends Component {
     }
     return (
       <div>
+        <div id="mySidebar" class="sidebar">
+                    <a href="javascript:void(0)" class="closebtn" onClick={() => this.nav()}>×</a>
+                    <a href="#">About</a>
+                    <a href="#">Services</a>
+                    <a href="#">Clients</a>
+                    <a href="#">Contact</a>
+                </div>
+        <div id = "main">
         <Header />
+        <button class="openbtn" onClick={() => this.nav()}>☰ Toggle Sidebar</button>  
         <Row style={{ marginTop: '1.2rem', marginLeft: '10%', marginRight: '10%' }}>
           <Col md={6}>
             <h2 id='centerText'>Patient List</h2>
@@ -223,6 +246,7 @@ export class ProviderApp extends Component {
             </div>
           </Col>
         </Row>
+        </div>
         <Footer />
       </div>
     );
