@@ -25,7 +25,7 @@ contract Provider {
     mapping (address=>string) public patientMap; //ID of patient to specific provider -
     event PatientCreated(address addr, string name);
     event SCID(string scName, address addr);
-    event ClaimCreated(address addr, uint256 amount, uint256 timeFiled);
+    event ClaimCreated(address addr, uint256 amount, uint256 timeFiled, string name);
     event PatientRetrieval(Patient patient);
     event Claims(address[] unverifiedClaims);
 
@@ -100,7 +100,7 @@ contract Provider {
         Patient cP = Patient(patientAddr);
         emit PatientRetrieval(cP);
         cP.fileClaim(address(myServiceClaim));
-        emit ClaimCreated(address(myServiceClaim), amount, _timeFiled);
+        emit ClaimCreated(address(myServiceClaim), amount, _timeFiled, patientMap[patientAddr]);
         Insurer cI = Insurer(insAddr);
         cI.file(address(myServiceClaim));
         return address(myServiceClaim);

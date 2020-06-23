@@ -13,18 +13,9 @@ import InsurerApp from './InsurerApp'
 import './Login.css'
 import aeec_logo from './aeec.png'
 import Footer from './components/Footer'
-
-// export const log = {
-//     localPatientContract : null,
-//     setLocalPatientContract(contract){
-//         this.localPatientContract = contract;
-//         localStorage.setItem('localPatientContract', contract);
-//       },
-//     clearLocalPatientContract(){
-//         this.localPatientContract = null;
-//         localStorage.setItem('localPatientContract', null);
-//       }
-// }
+import ReactNotification from 'react-notifications-component'
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css'
 
 class App extends Component {
     constructor(props) {
@@ -69,13 +60,6 @@ class App extends Component {
             this.onFormSubmit(event);
         }
     }
-
-    // fetchData = async () => {
-    //     const { accounts, contract } = this.state;
-    //     const info = await contract.methods.preLoadInfo().send({ from: accounts[0] });
-    //     this.solidityData = info;
-    //     console.log('Solidity Information preloaded')
-    // };
 
     componentDidMount = async () => {
         try {
@@ -176,10 +160,10 @@ class App extends Component {
         }
         return (
             <div>
+                <ReactNotification />
                 {
                     this.state.patientLoginSuccess ? <PatientApp
                         username={this.username}
-                        sd={this.solidityData}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
@@ -191,7 +175,6 @@ class App extends Component {
                 {
                     this.state.providerLoginSuccess ? <ProviderApp
                         username={this.username}
-                        sd={this.solidityData}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
@@ -203,7 +186,6 @@ class App extends Component {
                 {
                     this.state.insurerLoginSuccess ? <InsurerApp
                         username={this.username}
-                        sd={this.solidityData}
                         insContract={this.state.contractIns}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
@@ -212,7 +194,6 @@ class App extends Component {
                         addProContractAddress={this.addProContractAddress}
                     /> : null
                 }
-                {/* {this.redirectAfterLogin()} */}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                 <div style={{ textAlign: 'center' }}>
                     <img src={aeec_logo} alt='AEEC' height='100' width='100' />
@@ -228,9 +209,9 @@ class App extends Component {
                             <Button type="submit" color='success'>Enter</Button>
                         </Form>
                     </Card>
-                    <Footer />
                     </div> : null
                 }
+                <Footer />
             </div>
         );
     }

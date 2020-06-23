@@ -33,8 +33,7 @@ contract Patient {
         insurerAddr = cP.getInsAddr();
     }
     // use provider to get insurer address
-    // pass insurer address into constructor params 
-
+    // pass insurer address into constructor params
 
     function removeUnverified(uint index) public {
         if (index >= unverifiedClaims.length) return;
@@ -110,8 +109,6 @@ contract Patient {
         // //SC memory newSC = SC(name, address(myServiceClaim));
         // cP.unverifiedClaims.push(address(myServiceClaim));
 
-
-    
     function getUS() public view returns (address[] memory) {
         return unclaimedServices;
     }
