@@ -42,6 +42,10 @@ class App extends Component {
     addPatContractAddress = async(patContractAddress) => {
         console.log('New Patient Contract found')
         window.localStorage.setItem('patContractAddress', patContractAddress);
+
+        /*TODO- Window Storage is storing only one patient address, 
+        meaning multiple different patient accounts will share the same personal 
+        information from the same patient contract, need to fix */
         console.log('added localPatientContract address:', window.localStorage.getItem('patContractAddress'))
     }
 

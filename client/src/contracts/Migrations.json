@@ -1375,12 +1375,12 @@
     "1592870939041": {
       "events": {},
       "links": {},
-      "address": "0x03E5Fb1A59A5687302dA303444A0d24399278A68",
-      "transactionHash": "0x99bedf9218bc856abc1fc7ef960c794a9ef08cce22f40555f01fecb9765e6a79"
+      "address": "0x19C58F7b95807B9D9f9CBBab944b6ddBD2fA58a3",
+      "transactionHash": "0x9eaeb1acecfa169a6de224e9cd11d2b9f95f1eb2dc0e01c3a039cf50e34af9d4"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-06-23T01:23:33.540Z",
+  "updatedAt": "2020-06-23T02:58:22.105Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

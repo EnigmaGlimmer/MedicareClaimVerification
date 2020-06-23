@@ -119,11 +119,12 @@ export class PatientApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         // var event = _.state.patContract.Claims();
+        console.log('patient contract address: ', this.state.patContractAddress)
         const contract = new this.state.web3.eth.Contract(Patient.abi, this.state.patContractAddress);
         console.log('localPatientContract', contract)
         this.setState({patContract: contract})
         console.log('patientId', _.patientId)
-        console.log('provider contract: ', _.state.proContract)
+        // console.log('provider contract: ', _.state.proContract)
         // console.log('patient contract: ', _.state.patContract)
         if(_.state.patContract){
             _.getUnverifiedClaims();

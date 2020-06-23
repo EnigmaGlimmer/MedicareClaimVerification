@@ -13,7 +13,7 @@ contract Patient {
     bytes32 id;
     string name;
     //mapping (address=>string) SCMap;
-    address[] public unclaimedServices;
+    address[] unclaimedServices;
     address[] public unverifiedClaims;
     address[] public verifiedClaims;
     event ClaimVerified(address addr, bool confirm);
