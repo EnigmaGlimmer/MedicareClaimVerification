@@ -102,4 +102,12 @@ app.use('/login', function(req, res){
   }
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+const userRouter = require('.routes/userAccountRoutes.js')();
+
+app.use('/profile, userAccountRouter');
+
+app.get('/', (req, res) => {
+  res.send('Test');
+})
+
+app.listen(port, () => console.log(`App listening on port ${port}!`))

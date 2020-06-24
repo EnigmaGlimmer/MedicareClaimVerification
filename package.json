@@ -29,6 +29,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.0.2",
     "create-react-app": "^3.4.1",
+    "debug": "^4.1.1",
     "dotenv": "^8.0.0",
     "ethereumjs-tx": "^2.1.2",
     "ethers": "^4.0.43",
@@ -36,7 +37,10 @@
     "fs": "0.0.1-security",
     "jquery": "file:jquery",
     "md5-file": "^4.0.0",
+    "mysql": "^2.18.1",
     "nodemailer": "^6.4.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "react": "^16.12.0",
     "react-notifications-component": "^2.4.0",
@@ -44,6 +48,6 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.1",
     "solc": "^0.6.1",
-    "web3": "^1.2.5-rc.0"
+    "web3": "^1.2.9"
   }
 }

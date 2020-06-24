@@ -22,7 +22,7 @@ export class PatientApp extends Component {
             accounts: this.props.accounts,
             patContractAddress: this.props.patContractAddress, //this stores the address that will be used to create a contract
             patContract: null,
-            proContract: this.props.proContract,
+            proContractAddress: this.props.proContractAddress,
             insContract: this.props.insContract,
             unverifiedClaims: [],
             unclaimedServices: [],
@@ -31,7 +31,6 @@ export class PatientApp extends Component {
         this.providerID = null
         this.unverifiedClaims = []
         this.verifiedClaims = []
-        this.patientId = this.props.id
         this.patientname = this.props.username;
         this.serviceClaimID = null;
         this.updatePatientName = this.updatePatientName.bind(this);
@@ -124,7 +123,7 @@ export class PatientApp extends Component {
         console.log('localPatientContract', contract)
         this.setState({patContract: contract})
         console.log('patientId', _.patientId)
-        // console.log('provider contract: ', _.state.proContract)
+        console.log('provider contract: ', _.state.proContractAddress)
         // console.log('patient contract: ', _.state.patContract)
         if(_.state.patContract){
             _.getUnverifiedClaims();
@@ -138,11 +137,13 @@ export class PatientApp extends Component {
                 // _.getUnclaimedServices();
             }
         }, 5000);
-        // event.watch(function(error, result){
-        //     console.log('detected event Claims!')
-        //     if (!error)
-        //         console.log(result);
-        // });
+        this.state.proContract.events.ClaimCreated((error, event) => {
+            console.log('event')
+            console.log('error')
+            console.log('claim creation detected')
+            _.getUnverifiedClaims();
+            _.updateTokens();
+        });
     };
 
     updateTokens = async () => {

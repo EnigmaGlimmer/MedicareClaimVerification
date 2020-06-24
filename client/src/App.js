@@ -172,7 +172,8 @@ class App extends Component {
                         web3={this.state.web3}
                         id={this.id}
                         patContractAddress={window.localStorage.getItem('patContractAddress')}
-                        proContract={this.state.providerContracts['UCSD Medical']}
+                        proContractAddress={window.localStorage.getItem('proContractAddress')}
+                        // proContract={this.state.providerContracts['UCSD Medical']}
                         insContract={this.state.contractIns}
                     /> : null
                 }
@@ -194,7 +195,7 @@ class App extends Component {
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         id={this.id}
-                        proContract={this.state.providerContracts[this.username]}
+                        // proContract={this.state.providerContracts[this.username]}
                         addProContractAddress={this.addProContractAddress}
                     /> : null
                 }
