@@ -5,6 +5,8 @@ const app = express()
 const port = 4000
 const bodyParser = require("body-parser");
 
+require('./authentication/passport.js')(app);
+
 const idMapping = {
   'UCSD Medical': {id: '0xb12d1ac9dbfc9766d319f7dddcced62a4a5b042bbcfd3c15eda087af861488f4', role: 'Provider'},
   'Ken': {id: '0x208432b29a1d0dc0bafe10c0bf4ae03bdc4f3ca37894c85e7c3cadbf65719b39', role: 'Patient'},
@@ -102,9 +104,11 @@ app.use('/login', function(req, res){
   }
 })
 
-const userRouter = require('.routes/userAccountRoutes.js')();
+const userAccountsRouter = require('./routes/userAccountsRoutes.js')();
+const modifyUserRouter = require('./routes/modifyUserRoutes.js')();
 
-app.use('/profile, userAccountRouter');
+app.use('/profile', userAccountsRouter);
+app.use('/modify', modifyUserRouter);
 
 app.get('/', (req, res) => {
   res.send('Test');

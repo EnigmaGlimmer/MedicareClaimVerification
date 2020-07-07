@@ -16,6 +16,7 @@ import Footer from './components/Footer'
 import ReactNotification from 'react-notifications-component'
 import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
+import { log } from './App-unused.js';
 
 class App extends Component {
     constructor(props) {
@@ -24,22 +25,29 @@ class App extends Component {
             patientLoginSuccess: false,
             providerLoginSuccess: false,
             insurerLoginSuccess: false,
+            loginSuccess: false,
             insurerContract: null,
             providerContracts: {},
             patientContracts: {},
             accounts: null,
             web3: null,
+            redirectRef: false
         };
         this.web3 = null;
         this.role = 'Patient';
+        this.sql_role = null;
         this.username = null;
+        this.sql_name = null;
         this.id = null;
+        this.password = null;
         this.updateUsername = this.updateUsername.bind(this)
+        this.updatePassword = this.updatePassword.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
         this.addProContractAddress = this.addProContractAddress.bind(this)
+        this.redirect = this.redirect.bind(this)
     }
 
-    addPatContractAddress = async(patContractAddress) => {
+    addPatContractAddress = async (patContractAddress) => {
         console.log('New Patient Contract found')
         window.localStorage.setItem('patContractAddress', patContractAddress);
 
@@ -49,14 +57,19 @@ class App extends Component {
         console.log('added localPatientContract address:', window.localStorage.getItem('patContractAddress'))
     }
 
-    addProContractAddress = async(proContractAddress) => {
+    addProContractAddress = async (proContractAddress) => {
         console.log('New Provider Contract found')
         window.localStorage.setItem('proContractAddress', proContractAddress);
         console.log('added localProviderContract address:', window.localStorage.getItem('proContractAddress'))
     }
 
+    updatePassword({ target }){
+        this.password = target.value;
+    }
+
     updateUsername({ target }) {
         this.username = target.value;
+        this.id = target.value;
     }
 
     handleKeyPress = (event) => {
@@ -109,6 +122,23 @@ class App extends Component {
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
             this.setState({ web3: this.web3, accounts, contractIns: instanceIns });
+            $.ajax({
+                url:'http://localhost:4000/profile/loggedin',
+                type:'GET',
+                contentType: "application/json; charset=utf-8",
+                crossDomain: true,
+                dataType: 'json',
+                xhrFields: { withCredentials: true },
+                success: (data) => {
+                    if (data.message === 'OK'){
+                        this.sql_id = data.result.id
+                        this.sql_role = data.result.role
+                        this.setState({redirectRef: true});
+                    } else {
+                        this.setState({redirectRef: false});
+                    }
+                }
+            });
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -120,7 +150,35 @@ class App extends Component {
 
     onFormSubmit = async (e) => {
         e.preventDefault()
-        this.ajax_login()
+        this.ajax_sql_login()
+    }
+
+    ajax_sql_login() {
+        console.log(this.id)
+        console.log(this.password)
+        $.ajax({
+            url: 'http://localhost:4000/profile/login',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            crossDomain: true,
+            dataType: 'json',
+            xhrFields: { withCredentials: true },
+            data: {
+                id: this.id,
+                password: this.password
+            },
+            success: async (data) => {
+                    console.log('Success logging in', data)
+                    this.sql_name = data.user.name
+                    this.sql_role = data.user.role
+                    console.log(this.sql_name, this.sql_role)
+                    this.setState({ loginSuccess: true });
+                    log.authenticate();
+                },
+            error: async (data) => {
+                alert('invalid credentials')
+            }
+        });
     }
 
     ajax_login() {
@@ -137,7 +195,7 @@ class App extends Component {
             success: async (data) => {
                 if (data.message === 'OK') {
                     console.log('Success logging in', data.result)
-                    this.id = data.result.id;
+                    // this.id = data.result.id;
                     // log.loggedIn = true;
                     if (data.result.role === 'Patient') {
                         this.setState({ patientLoginSuccess: true })
@@ -158,14 +216,52 @@ class App extends Component {
         });
     }
 
+    redirect(){
+        if(this.state.loginSuccess){
+            if(this.sql_role === 'Patient'){
+                return(
+                    <Redirect to='/Patient' />
+                );
+            }
+            if(this.sql_role === 'Provider'){
+                return(
+                    <Redirect to='/Provider' />
+                );
+            }
+            if(this.sql_role === 'Insurer'){
+                return(
+                    <Redirect to='/Insurer' />
+                );
+            }
+        }
+    }
+
     render() {
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
+        if(this.state.redirectRef){
+            if(this.role === 'patient'){
+                return(
+                    <Redirect to='/Patient' />
+                );
+            }
+            if(this.role === 'provider'){
+                return(
+                    <Redirect to='/Provider' />
+                );
+            }
+            if(this.role === 'insurer'){
+                return(
+                    <Redirect to='/Insurer' />
+                );
+            }      
+        }
         return (
             <div>
+                {this.redirect()}
                 <ReactNotification />
-                {
+                {/* {
                     this.state.patientLoginSuccess ? <PatientApp
                         username={this.username}
                         accounts={this.state.accounts}
@@ -198,24 +294,24 @@ class App extends Component {
                         // proContract={this.state.providerContracts[this.username]}
                         addProContractAddress={this.addProContractAddress}
                     /> : null
-                }
-                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
-                <div style={{ textAlign: 'center' }}>
-                    <img src={aeec_logo} alt='AEEC' height='100' width='100' />
-                    <h1>Medicare Insurance Claim Tracking</h1>
-                    <Card id='login'>
-                        <Form id="form" onSubmit={this.onFormSubmit}>
-                            <h4>Login</h4>
-                            <FormGroup>
-                                <Input placeholder='Username' onChange={this.updateUsername} />
-                                <br></br>
-                                <Input type='password' placeholder='Password' />
-                            </FormGroup>
-                            <Button type="submit" color='success'>Enter</Button>
-                        </Form>
-                    </Card>
-                    </div> : null
-                }
+                } */}
+                {/* {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ? */}
+                    <div style={{ textAlign: 'center' }}>
+                        <img src={aeec_logo} alt='AEEC' height='100' width='100' />
+                        <h1>Medicare Insurance Claim Tracking</h1>
+                        <Card id='login'>
+                            <Form id="form" onSubmit={this.onFormSubmit}>
+                                <h4>Login</h4>
+                                <FormGroup>
+                                    <Input placeholder='Username' onChange={this.updateUsername} />
+                                    <br></br>
+                                    <Input type='password' placeholder='Password' onChange={this.updatePassword} />
+                                </FormGroup>
+                                <Button type="submit" color='success'>Enter</Button>
+                            </Form>
+                        </Card>
+                    </div> 
+                    {/* : null } */}
                 <Footer />
             </div>
         );

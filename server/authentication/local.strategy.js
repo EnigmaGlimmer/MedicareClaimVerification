@@ -8,7 +8,7 @@ module.exports = function localStrategy(passport) {
       usernameField: 'id',
       passwordField: 'password',
     }, (id, password, done) => {
-      db.query('SELECT * FROM medicare.user where id=? and password=?', [id, password],
+      db.query('SELECT * FROM user where id=? and password=?', [id, password],
         (err, results, fields) => {
           if (err) debug(err);
           if (results.length !== 0) {

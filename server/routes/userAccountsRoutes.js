@@ -51,14 +51,15 @@ module.exports = function router() {
   
     userAccountRouter.route('/login')
       .post((req, res, next) => {
+        console.log(req.body)
         if (req.user) res.status(200).json({ message: 'User already logged in' });
         else {
           passport.authenticate('local', (err, user) => {
-            if (err) return res.status(500).json({ message: 'Server error' });
+            if (err) return res.status(500).json({ message: 'Server error', err });
             if (!user) return res.status(401).json({ message: 'Invalid credentials' });
             req.login(user, (err2) => {
-              if (err2) return res.status(500).json({ message: 'Server error' });
-              return res.status(200).json({ message: 'user authenticated' });
+              if (err2) return res.status(500).json({ message: 'Server error', err });
+              return res.status(200).json({ message: 'user authenticated', user: user });
             });
           })(req, res, next);
         }
