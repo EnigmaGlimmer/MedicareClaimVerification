@@ -6,6 +6,24 @@ const db = require('./db');
 const modifyUserRouter = express.Router();
 
 module.exports = function router() {
+    modifyUserRouter.route('/testOnly-updateUserContractAddressAfterRedeployment')
+      .post((req, res) => {
+        const {
+          name, address
+        } = req.body;
+        db.query('update user set address=? where name=?'), [address, name], (err, results) => {
+          if (err) {
+            debug(err);
+            res.status(500).json({ message: 'Server error' });
+          }
+        }
+        db.query('select name from user where address=?'), [address], (err, results) => {
+          if(results !== 0){
+          res.status(201).json({ message: 'Change successful', name: name, address: address });
+          }
+          res.status(401).json({ message: 'Name not found' });
+        }
+      });
 
     modifyUserRouter.route('/addPatientToProvider')
       .post((req, res) => {

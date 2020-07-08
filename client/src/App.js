@@ -44,7 +44,7 @@ class App extends Component {
         this.updatePassword = this.updatePassword.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
         this.addProContractAddress = this.addProContractAddress.bind(this)
-        this.redirect = this.redirect.bind(this)
+        // this.redirect = this.redirect.bind(this)
     }
 
     addPatContractAddress = async (patContractAddress) => {
@@ -172,8 +172,19 @@ class App extends Component {
                     this.sql_name = data.user.name
                     this.sql_role = data.user.role
                     console.log(this.sql_name, this.sql_role)
-                    this.setState({ loginSuccess: true });
-                    log.authenticate();
+                    if (data.user.role === 'Patient') {
+                        this.setState({ patientLoginSuccess: true })
+                    }
+                    else if (data.user.role === 'Provider') {
+                        // this.fetchData().then(()=> {
+                        this.setState({ providerLoginSuccess: true })
+                        // })
+                    }
+                    else {
+                        this.setState({ insurerLoginSuccess: true })
+                    }
+                    // this.setState({ loginSuccess: true });
+                    // log.authenticate();
                 },
             error: async (data) => {
                 alert('invalid credentials')
@@ -216,57 +227,56 @@ class App extends Component {
         });
     }
 
-    redirect(){
-        if(this.state.loginSuccess){
-            if(this.sql_role === 'Patient'){
-                return(
-                    <Redirect to='/Patient' />
-                );
-            }
-            if(this.sql_role === 'Provider'){
-                return(
-                    <Redirect to='/Provider' />
-                );
-            }
-            if(this.sql_role === 'Insurer'){
-                return(
-                    <Redirect to='/Insurer' />
-                );
-            }
-        }
-    }
+    // redirect(){
+    //     if(this.state.loginSuccess){
+    //         if(this.sql_role === 'Patient'){
+    //             return(
+    //                 <Redirect to='/Patient' />
+    //             );
+    //         }
+    //         if(this.sql_role === 'Provider'){
+    //             return(
+    //                 <Redirect to='/Provider' />
+    //             );
+    //         }
+    //         if(this.sql_role === 'Insurer'){
+    //             return(
+    //                 <Redirect to='/Insurer' />
+    //             );
+    //         }
+    //     }
+    // }
 
     render() {
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
-        if(this.state.redirectRef){
-            if(this.role === 'patient'){
-                return(
-                    <Redirect to='/Patient' />
-                );
-            }
-            if(this.role === 'provider'){
-                return(
-                    <Redirect to='/Provider' />
-                );
-            }
-            if(this.role === 'insurer'){
-                return(
-                    <Redirect to='/Insurer' />
-                );
-            }      
-        }
+        // if(this.state.redirectRef){
+        //     if(this.role === 'patient'){
+        //         return(
+        //             <Redirect to='/Patient' />
+        //         );
+        //     }
+        //     if(this.role === 'provider'){
+        //         return(
+        //             <Redirect to='/Provider' />
+        //         );
+        //     }
+        //     if(this.role === 'insurer'){
+        //         return(
+        //             <Redirect to='/Insurer' />
+        //         );
+        //     }      
+        // }
         return (
             <div>
-                {this.redirect()}
+                {/* {this.redirect()} */}
                 <ReactNotification />
-                {/* {
+                {
                     this.state.patientLoginSuccess ? <PatientApp
                         username={this.username}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id}
                         patContractAddress={window.localStorage.getItem('patContractAddress')}
                         proContractAddress={window.localStorage.getItem('proContractAddress')}
                         // proContract={this.state.providerContracts['UCSD Medical']}
@@ -278,7 +288,6 @@ class App extends Component {
                         username={this.username}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id}
                         proContractAddress={window.localStorage.getItem('proContractAddress')}
                         insContract={this.state.contractIns}
                         addPatContractAddress={this.addPatContractAddress}
@@ -290,12 +299,11 @@ class App extends Component {
                         insContract={this.state.contractIns}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
-                        id={this.id}
                         // proContract={this.state.providerContracts[this.username]}
                         addProContractAddress={this.addProContractAddress}
                     /> : null
                 } */}
-                {/* {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ? */}
+                {/* {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                     <div style={{ textAlign: 'center' }}>
                         <img src={aeec_logo} alt='AEEC' height='100' width='100' />
                         <h1>Medicare Insurance Claim Tracking</h1>

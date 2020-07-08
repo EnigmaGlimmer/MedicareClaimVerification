@@ -7,14 +7,6 @@ const bodyParser = require("body-parser");
 
 require('./authentication/passport.js')(app);
 
-const idMapping = {
-  'UCSD Medical': {id: '0xb12d1ac9dbfc9766d319f7dddcced62a4a5b042bbcfd3c15eda087af861488f4', role: 'Provider'},
-  'Ken': {id: '0x208432b29a1d0dc0bafe10c0bf4ae03bdc4f3ca37894c85e7c3cadbf65719b39', role: 'Patient'},
-  'Danny': {id: '0x22299a2d4f3047b228c319c2a0569bcf4e9a117d8488cb391600a84c19145290', role: 'Patient'},
-  'Antonio': {id: '0x55f5cf1d81bd8db77408ca0c82606729cc9cd581b02513f6281ddca07e686418', role: 'Patient'},
-  'CMS': {id: "0xd6fac875a4e1507f805c73b36425605dbc5f0a8f2cc2bcf50b469c8085341b56", role: 'Insurer'}
-}
-
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
