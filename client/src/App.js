@@ -230,40 +230,44 @@ class App extends Component {
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
-        return (
-            <div>
-                <ReactNotification />
-                {
-                    this.state.patientLoginSuccess ? <PatientApp
-                        username={this.username}
-                        accounts={this.state.accounts}
-                        web3={this.state.web3}
-                        patContractAddress={window.localStorage.getItem('patContractAddress')}
-                        proContractAddress={window.localStorage.getItem('proContractAddress')}
-                        // proContract={this.state.providerContracts['UCSD Medical']}
-                        insContract={this.state.contractIns}
-                    /> : null
-                }
-                {
-                    this.state.providerLoginSuccess ? <ProviderApp
+        let mainComponent = ''
+        switch(this.props.location){
+            case 'Patient':
+                mainComponent = <PatientApp
+                username={this.username}
+                accounts={this.state.accounts}
+                web3={this.state.web3}
+                patContractAddress={window.localStorage.getItem('patContractAddress')}
+                proContractAddress={window.localStorage.getItem('proContractAddress')}
+                // proContract={this.state.providerContracts['UCSD Medical']}
+                insContract={this.state.contractIns}
+            />
+            break;
+            case 'Provider':
+                mainComponent = <ProviderApp
                         username={this.username}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         proContractAddress={window.localStorage.getItem('proContractAddress')}
                         insContract={this.state.contractIns}
                         addPatContractAddress={this.addPatContractAddress}
-                    /> : null
-                }
-                {
-                    this.state.insurerLoginSuccess ? <InsurerApp
+                    />
+                    break;
+            case 'Insurer':
+                mainComponent = <InsurerApp
                         username={this.username}
                         insContract={this.state.contractIns}
                         accounts={this.state.accounts}
                         web3={this.state.web3}
                         // proContract={this.state.providerContracts[this.username]}
                         addProContractAddress={this.addProContractAddress}
-                    /> : null
-                }
+                    />
+                    break;
+        }
+        return (
+            <div>
+                <ReactNotification />
+                {mainComponent}
                 {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                     <div style={{ textAlign: 'center' }}>
                         <img src={aeec_logo} alt='AEEC' height='100' width='100' />
