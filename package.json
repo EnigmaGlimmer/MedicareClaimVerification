@@ -22,6 +22,7 @@
   "homepage": "https://github.com/sdsc-blocklab/Medicare-Claim-Verification#readme",
   "dependencies": {
     "animate.css": "^3.7.2",
+    "auth0-js": "^9.13.4",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
