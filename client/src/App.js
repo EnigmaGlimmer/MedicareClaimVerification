@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Redirect } from "react-router-dom";
-import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
 // import ClaimVerification from "./contracts/Organizations.json"; 
 import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
@@ -10,13 +9,11 @@ import $ from 'jquery'
 import PatientApp from './PatientApp'
 import ProviderApp from './ProviderApp'
 import InsurerApp from './InsurerApp'
-import './Login.css'
-import aeec_logo from './aeec.png'
-import Footer from './components/Footer'
+import RegisterForm from './components/RegisterForm'
+import Login from './components/Login'
+import './Register.css'
 import ReactNotification from 'react-notifications-component'
-import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
-import { log } from './App-unused.js';
 
 class App extends Component {
     constructor(props) {
@@ -31,7 +28,8 @@ class App extends Component {
             patientContracts: {},
             accounts: null,
             web3: null,
-            redirectRef: false
+            redirectRef: false,
+            signedInrole: ''
         };
         this.web3 = null;
         this.role = 'Patient';
@@ -40,6 +38,7 @@ class App extends Component {
         this.sql_name = null;
         this.id = null;
         this.password = null;
+        this.registration = this.registration.bind(this)
         this.updateUsername = this.updateUsername.bind(this)
         this.updatePassword = this.updatePassword.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
@@ -62,7 +61,7 @@ class App extends Component {
         console.log('added localProviderContract address:', window.localStorage.getItem('proContractAddress'))
     }
 
-    updatePassword({ target }){
+    updatePassword({ target }) {
         this.password = target.value;
     }
 
@@ -71,14 +70,21 @@ class App extends Component {
         this.id = target.value;
     }
 
-    handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            this.onFormSubmit(event);
-        }
+    goTo(route) {
+        this.props.history.replace(`/${route}`)
+    }
+
+    logout() {
+        this.props.auth.logout();
     }
 
     componentDidMount = async () => {
         try {
+            const { renewSession } = this.props.auth;
+
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                renewSession();
+            }
             console.log('localPatientContract', window.localStorage.getItem('patContractAddress'))
             console.log('localProviderContract', window.localStorage.getItem('proContractAddress'))
             // Get network provider and web3 instance.
@@ -147,16 +153,14 @@ class App extends Component {
         }
     };
 
-    onFormSubmit = async (e) => {
-        e.preventDefault()
-        // this.ajax_sql_login()
+    registration() {
+        //todo write to the database a new user, including email, username, and role
     }
 
     ajax_sql_login() {
         console.log(this.id)
-        console.log(this.password)
         $.ajax({
-            url: 'http://localhost:4000/profile/login',
+            url: 'http://localhost:4000/profile/loginIDOnly',
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             crossDomain: true,
@@ -164,27 +168,26 @@ class App extends Component {
             xhrFields: { withCredentials: true },
             data: {
                 id: this.id,
-                password: this.password
             },
             success: async (data) => {
-                    console.log('Success logging in', data)
-                    this.sql_name = data.user.name
-                    this.sql_role = data.user.role
-                    console.log(this.sql_name, this.sql_role)
-                    if (data.user.role === 'Patient') {
-                        this.setState({ patientLoginSuccess: true })
-                    }
-                    else if (data.user.role === 'Provider') {
-                        // this.fetchData().then(()=> {
-                        this.setState({ providerLoginSuccess: true })
-                        // })
-                    }
-                    else {
-                        this.setState({ insurerLoginSuccess: true })
-                    }
-                    // this.setState({ loginSuccess: true });
-                    // log.authenticate();
-                },
+                console.log('Success logging in', data)
+                this.sql_name = data.user.name
+                this.sql_role = data.user.role
+                console.log(this.sql_name, this.sql_role)
+                if (data.user.role === 'Patient') {
+                    this.setState({ patientLoginSuccess: true })
+                }
+                else if (data.user.role === 'Provider') {
+                    // this.fetchData().then(()=> {
+                    this.setState({ providerLoginSuccess: true })
+                    // })
+                }
+                else {
+                    this.setState({ insurerLoginSuccess: true })
+                }
+                // this.setState({ loginSuccess: true });
+                // log.authenticate();
+            },
             error: async (data) => {
                 alert('invalid credentials')
             }
@@ -227,67 +230,97 @@ class App extends Component {
     }
 
     render() {
-        if (!this.state.web3) {
-            return <div>Loading Web3, accounts, and contract...</div>;
-        }
-        let mainComponent = ''
-        switch(this.props.location){
-            case 'Patient':
-                mainComponent = <PatientApp
+        const { isAuthenticated } = this.props.auth;
+        let portal = ''
+        switch (this.state.signedInrole) {
+            case 'Patient': portal = <PatientApp
                 username={this.username}
                 accounts={this.state.accounts}
                 web3={this.state.web3}
                 patContractAddress={window.localStorage.getItem('patContractAddress')}
                 proContractAddress={window.localStorage.getItem('proContractAddress')}
-                // proContract={this.state.providerContracts['UCSD Medical']}
+                proContract={this.state.providerContracts['UCSD Medical']}
+                insContract={this.state.contractIns} />
+                break;
+            case 'Provider': portal = <ProviderApp
+                username={this.username}
+                accounts={this.state.accounts}
+                web3={this.state.web3}
+                proContractAddress={window.localStorage.getItem('proContractAddress')}
                 insContract={this.state.contractIns}
-            />
-            break;
-            case 'Provider':
-                mainComponent = <ProviderApp
-                        username={this.username}
-                        accounts={this.state.accounts}
-                        web3={this.state.web3}
-                        proContractAddress={window.localStorage.getItem('proContractAddress')}
-                        insContract={this.state.contractIns}
-                        addPatContractAddress={this.addPatContractAddress}
-                    />
-                    break;
-            case 'Insurer':
-                mainComponent = <InsurerApp
-                        username={this.username}
-                        insContract={this.state.contractIns}
-                        accounts={this.state.accounts}
-                        web3={this.state.web3}
-                        // proContract={this.state.providerContracts[this.username]}
-                        addProContractAddress={this.addProContractAddress}
-                    />
-                    break;
+                addPatContractAddress={this.addPatContractAddress} />
+                break;
+            case 'Insurer': portal = <InsurerApp
+                username={this.username}
+                insContract={this.state.contractIns}
+                accounts={this.state.accounts}
+                web3={this.state.web3}
+                // proContract={this.state.providerContracts[this.username]}
+                addProContractAddress={this.addProContractAddress} />
+                break;
+            case '': portal = <RegisterForm />
+                break;
+            default: portal = <RegisterForm />
+        }
+        if (!this.state.web3) {
+            return <div>Loading Web3, accounts, and contract...</div>;
         }
         return (
             <div>
-                <ReactNotification />
-                {mainComponent}
-                {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
-                    <div style={{ textAlign: 'center' }}>
-                        <img src={aeec_logo} alt='AEEC' height='100' width='100' />
-                        <h1>Medicare Insurance Claim Tracking</h1>
-                        <button onClick={this.props.auth.login}>Login</button>
-                        {/* <Card id='login'>
-                            <Form id="form" onSubmit={this.onFormSubmit}>
-                                <h4>Login</h4>
-                                <FormGroup>
-                                    <Input placeholder='Username' onChange={this.updateUsername} />
-                                    <br></br>
-                                    <Input type='password' placeholder='Password' onChange={this.updatePassword} />
-                                </FormGroup>
-                                <Button type="submit" color='success'>Enter</Button>
-                            </Form>
-                        </Card> */}
-                    </div> 
-                    : null }
-                <Footer />
+                {
+                    isAuthenticated() && (
+                        <div>
+                            <ReactNotification />
+                            {portal}
+                        </div>
+                    )
+                }
+                {
+                    !isAuthenticated() && (
+                        <Login auth={this.props.auth} />
+                    )
+                }
+                {/* {this.state.insurerLoginSuccess ? <InsurerApp
+                    username={this.username}
+                    insContract={this.state.contractIns}
+                    accounts={this.state.accounts}
+                    web3={this.state.web3}
+                    // proContract={this.state.providerContracts[this.username]}
+                    addProContractAddress={this.addProContractAddress}
+                /> : null}
+                {this.state.providerLoginSuccess ? <ProviderApp
+                    username={this.username}
+                    accounts={this.state.accounts}
+                    web3={this.state.web3}
+                    proContractAddress={window.localStorage.getItem('proContractAddress')}
+                    insContract={this.state.contractIns}
+                    addPatContractAddress={this.addPatContractAddress}
+                /> : null}
+                {this.state.patientLoginSuccess ? <PatientApp
+                    username={this.username}
+                    accounts={this.state.accounts}
+                    web3={this.state.web3}
+                    patContractAddress={window.localStorage.getItem('patContractAddress')}
+                    proContractAddress={window.localStorage.getItem('proContractAddress')}
+                    proContract={this.state.providerContracts['UCSD Medical']}
+                    insContract={this.state.contractIns}
+                /> : null} */}
+                {/* {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
+                    <RegisterForm registration={this.registration} />
+                    : null} */}
+                {/* <Footer /> */}
             </div>
+            /* 
+            home page with login button
+            user goes through auth0:
+                    if passed auth0:
+                        if registered:
+                            redirect user to appropriate portal based on role from database
+                        else:
+                            register user and new information into database and redirect user
+                    else:
+                        stay in home page
+            */
         );
     }
 }

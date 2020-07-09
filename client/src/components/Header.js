@@ -1,4 +1,4 @@
-import aeec_logo from '../aeec.png'
+import aeec_logo from '../static/aeec.png'
 import React from 'react'
 import '../App.css'
 

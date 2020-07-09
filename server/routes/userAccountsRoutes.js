@@ -49,20 +49,40 @@ module.exports = function router() {
     //     }
     //   });
   
-    userAccountRouter.route('/login')
+    // userAccountRouter.route('/login')
+    //   .post((req, res, next) => {
+    //     console.log(req.body)
+    //     if (req.user) res.status(200).json({ message: 'User already logged in' });
+    //     else {
+    //       passport.authenticate('local', (err, user) => {
+    //         if (err) return res.status(500).json({ message: 'Server error', err });
+    //         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    //         req.login(user, (err2) => {
+    //           if (err2) return res.status(500).json({ message: 'Server error', err });
+    //           return res.status(200).json({ message: 'user authenticated', user: user });
+    //         });
+    //       })(req, res, next);
+    //     }
+    //   });
+
+    userAccountRouter.route('/loginIDOnly')
       .post((req, res, next) => {
         console.log(req.body)
-        if (req.user) res.status(200).json({ message: 'User already logged in' });
-        else {
-          passport.authenticate('local', (err, user) => {
-            if (err) return res.status(500).json({ message: 'Server error', err });
-            if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-            req.login(user, (err2) => {
-              if (err2) return res.status(500).json({ message: 'Server error', err });
-              return res.status(200).json({ message: 'user authenticated', user: user });
-            });
-          })(req, res, next);
-        }
+        const { id } = req.body
+        db.query('select * from user where id=?', [id], (err, results) => {
+          debug(results)
+          if(results.length !== 0){
+            const userJSON = JSON.parse(JSON.stringify(results[0]));
+            const { name, role } = userJSON;
+                const user = {
+                  name: name,
+                  role: role
+                };
+            res.status(200).json({ message: 'User found', user: user })
+          } else {
+            res.status(401).json({ message: 'User not found' });
+          }
+        })
       });
   
     userAccountRouter.route('/logout')

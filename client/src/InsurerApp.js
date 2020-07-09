@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import $ from 'jquery'
-import getWeb3 from "./utils/getWeb3";
 import { Table, TabContent, TabPane, Nav, NavItem, NavLink, Card, CardBody, CardGroup, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
 import "./App.css";
@@ -15,7 +14,6 @@ export class InsurerApp extends Component {
         super(props);
         this.sidebarOpen = false
         this.state = {
-            web3: this.props.web3,
             accounts: this.props.accounts,
             insContract: this.props.insContract,
             activeTab: '1',
@@ -75,7 +73,7 @@ export class InsurerApp extends Component {
         }
         catch (error) {
             alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`,
+                `Failed.`,
             );
             console.error(error);
         }
@@ -104,7 +102,6 @@ export class InsurerApp extends Component {
     }
 
     getAllServices = async () => {
-        //const accounts = await web3.eth.getAccounts();
         const { accounts, insContract } = this.state;
         const ver = await insContract.methods.getAllVerifiedClaims().call();
         const unv = await insContract.methods.getAllUnverifiedClaims().call();

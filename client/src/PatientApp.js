@@ -128,22 +128,22 @@ export class PatientApp extends Component {
         if(_.state.patContract){
             _.getUnverifiedClaims();
             _.updateTokens();
-            // _.getUnclaimedServices();
+            _.getUnclaimedServices();
         }
         setInterval(function(){
             if(_.state.patContract){
                 _.getUnverifiedClaims();
                 _.updateTokens();
-                // _.getUnclaimedServices();
+                _.getUnclaimedServices();
             }
         }, 5000);
-        this.state.proContract.events.ClaimCreated((error, event) => {
-            console.log('event')
-            console.log('error')
-            console.log('claim creation detected')
-            _.getUnverifiedClaims();
-            _.updateTokens();
-        });
+        // this.state.proContract.events.ClaimCreated((error, event) => {
+        //     console.log('event')
+        //     console.log('error')
+        //     console.log('claim creation detected')
+        //     _.getUnverifiedClaims();
+        //     _.updateTokens();
+        // });
     };
 
     updateTokens = async () => {
