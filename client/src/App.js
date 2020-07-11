@@ -13,6 +13,8 @@ import RegisterForm from './components/RegisterForm'
 import Login from './components/Login'
 import './Register.css'
 import ReactNotification from 'react-notifications-component'
+import Footer from './components/Footer'
+import Portal from './Portal'
 import 'react-notifications-component/dist/theme.css'
 
 class App extends Component {
@@ -231,37 +233,37 @@ class App extends Component {
 
     render() {
         const { isAuthenticated } = this.props.auth;
-        let portal = ''
-        switch (this.state.signedInrole) {
-            case 'Patient': portal = <PatientApp
-                username={this.username}
-                accounts={this.state.accounts}
-                web3={this.state.web3}
-                patContractAddress={window.localStorage.getItem('patContractAddress')}
-                proContractAddress={window.localStorage.getItem('proContractAddress')}
-                proContract={this.state.providerContracts['UCSD Medical']}
-                insContract={this.state.contractIns} />
-                break;
-            case 'Provider': portal = <ProviderApp
-                username={this.username}
-                accounts={this.state.accounts}
-                web3={this.state.web3}
-                proContractAddress={window.localStorage.getItem('proContractAddress')}
-                insContract={this.state.contractIns}
-                addPatContractAddress={this.addPatContractAddress} />
-                break;
-            case 'Insurer': portal = <InsurerApp
-                username={this.username}
-                insContract={this.state.contractIns}
-                accounts={this.state.accounts}
-                web3={this.state.web3}
-                // proContract={this.state.providerContracts[this.username]}
-                addProContractAddress={this.addProContractAddress} />
-                break;
-            case '': portal = <RegisterForm />
-                break;
-            default: portal = <RegisterForm />
-        }
+        // let portal = ''
+        // switch (this.state.signedInrole) {
+        //     case 'Patient': portal = <PatientApp
+        //         username={this.username}
+        //         accounts={this.state.accounts}
+        //         web3={this.state.web3}
+        //         patContractAddress={window.localStorage.getItem('patContractAddress')}
+        //         proContractAddress={window.localStorage.getItem('proContractAddress')}
+        //         proContract={this.state.providerContracts['UCSD Medical']}
+        //         insContract={this.state.contractIns} />
+        //         break;
+        //     case 'Provider': portal = <ProviderApp
+        //         username={this.username}
+        //         accounts={this.state.accounts}
+        //         web3={this.state.web3}
+        //         proContractAddress={window.localStorage.getItem('proContractAddress')}
+        //         insContract={this.state.contractIns}
+        //         addPatContractAddress={this.addPatContractAddress} />
+        //         break;
+        //     case 'Insurer': portal = <InsurerApp
+        //         username={this.username}
+        //         insContract={this.state.contractIns}
+        //         accounts={this.state.accounts}
+        //         web3={this.state.web3}
+        //         // proContract={this.state.providerContracts[this.username]}
+        //         addProContractAddress={this.addProContractAddress} />
+        //         break;
+        //     case '': portal = <RegisterForm />
+        //         break;
+        //     default: portal = <RegisterForm />
+        // }
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
@@ -271,7 +273,10 @@ class App extends Component {
                     isAuthenticated() && (
                         <div>
                             <ReactNotification />
-                            {portal}
+                            <Portal
+                                web3 = {this.state.web3}
+                                accounts = {this.state.accounts}
+                            />
                         </div>
                     )
                 }
@@ -308,7 +313,7 @@ class App extends Component {
                 {/* {!this.state.patientLoginSuccess && !this.state.providerLoginSuccess && !this.state.insurerLoginSuccess ?
                     <RegisterForm registration={this.registration} />
                     : null} */}
-                {/* <Footer /> */}
+                <Footer />
             </div>
             /* 
             home page with login button

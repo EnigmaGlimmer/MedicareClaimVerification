@@ -18,13 +18,12 @@ const handleAuthentication = ({ location }) => {
   }
 }
 
-export default class Routes extends React.Component {
-  render() {
+export const makeRoutes = () => {
     return (
       <Router history={history}>
         <div>
           <Route path="/" render={(props) => <App auth={auth} {...props} />} />
-          <Route path="/Footer" render={() => <Footer />} />
+          {/* <Route path="/footer" render={(props) => <Footer {...props} />} /> */}
           <Route path="/callback" render={(props) => {
             handleAuthentication(props);
             return <Callback {...props} />
@@ -32,10 +31,7 @@ export default class Routes extends React.Component {
         </div>
       </Router>
     );
-  }
 }
-
-ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
