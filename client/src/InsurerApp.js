@@ -54,8 +54,11 @@ export class InsurerApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         const { accounts, insContract } = _.state;
+        console.log('what is insContract in InsurerApp.js', insContract)
+        console.log('accounts in InsurerApp.js', accounts)
         try {
             var providerAddrs = await insContract.methods.getProviders().call();
+            console.log('insContract', insContract)
             if (providerAddrs.length === 0) {
                 console.log('adding initial provider')
                 const addedProvider = await insContract.methods.addProvider('UCSD Medical').send({ from: accounts[0] });
@@ -72,10 +75,7 @@ export class InsurerApp extends Component {
             console.log("Providers: ", providerAddrs);
         }
         catch (error) {
-            alert(
-                `Failed.`,
-            );
-            console.error(error);
+            console.log(`contract call failed.`, error);
         }
 
         _.getInsurerInfo();

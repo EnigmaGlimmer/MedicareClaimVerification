@@ -12,6 +12,7 @@ class Register extends React.Component {
         this.username = ''
         this.handleChange = this.handleChange.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
+        this.setSession = this.setSession.bind(this);
     }
 
     handleChange(event) {
@@ -24,14 +25,27 @@ class Register extends React.Component {
         }
     }
 
-    updateUsername({ target }){
+    updateUsername({ target }) {
         this.username = target.value
+    }
+
+    setSession(loginStatus, role, username){
+        this.props.modifierFunc(loginStatus, role, username);
     }
 
     onFormSubmit = async (e) => {
         e.preventDefault()
-        if(this.username !== ''){
-            this.props.registration();
+        if (this.username !== '') {
+            console.log(this.props.profile)
+            let _ = this
+            this.props.registration(this.username, this.state.roleChoice, this.props.profile.name, function (returned) {
+                if (returned) {
+                    _.setSession(true, _.state.roleChoice, _.username)
+                }
+                else {
+                    alert('Registration seems to have failed')
+                }
+            });
         }
     }
 
@@ -48,7 +62,7 @@ class Register extends React.Component {
                             <br></br>
                             <label>
                                 Select your role:
-                                        <select value={this.state.roleChoice} onChange={this.handleChange}>
+                                    <select value={this.state.roleChoice} onChange={this.handleChange}>
                                     <option value="Patient">Patient</option>
                                     <option value="Provider">Provider</option>
                                     <option value="Insurer">Insurer</option>

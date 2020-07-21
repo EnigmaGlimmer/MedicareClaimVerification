@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router-dom";
-// import ClaimVerification from "./contracts/Organizations.json"; 
 import Insurer from "./contracts/Insurer.json";
 import Provider from "./contracts/Provider.json";
 import Patient from "./contracts/Patient.json"
 import getWeb3 from "./utils/getWeb3";
 import $ from 'jquery'
-import PatientApp from './PatientApp'
-import ProviderApp from './ProviderApp'
-import InsurerApp from './InsurerApp'
-import RegisterForm from './components/RegisterForm'
 import Login from './components/Login'
 import './Register.css'
 import ReactNotification from 'react-notifications-component'
@@ -45,6 +39,7 @@ class App extends Component {
         this.updatePassword = this.updatePassword.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
         this.addProContractAddress = this.addProContractAddress.bind(this)
+        this.checkIfUserExists = this.checkIfUserExists.bind(this)
     }
 
     addPatContractAddress = async (patContractAddress) => {
@@ -155,45 +150,65 @@ class App extends Component {
         }
     };
 
-    registration() {
+    registration(username, role, email, callback) {
+        console.log('registering', username, role, email)
         //todo write to the database a new user, including email, username, and role
-    }
-
-    ajax_sql_login() {
-        console.log(this.id)
         $.ajax({
-            url: 'http://localhost:4000/profile/loginIDOnly',
+            url: 'http://localhost:4000/profile/register',
             type: 'POST',
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             crossDomain: true,
             dataType: 'json',
             xhrFields: { withCredentials: true },
             data: {
-                id: this.id,
+                username: username,
+                role: role,
+                email: email
             },
             success: async (data) => {
+                //registered
+                console.log('sucess ajax:', data)
+                callback(true)
+            },
+            error: async (data) => {
+                callback(false)
+            }
+        })
+    }
+
+    checkIfUserExists(em){
+        let r = this.ajax_sql_login(em)
+        console.log('mid function check', r)
+        return r
+    }
+
+    ajax_sql_login(em) {
+        console.log('ajax_sql_login', em)
+        let res = null
+        $.ajax({
+            url: 'http://localhost:4000/profile/loginIDOnly',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            crossDomain: true,
+            async: false,
+            dataType: 'json',
+            xhrFields: { withCredentials: true },
+            data: {
+                email: em
+            },
+            success: (data) => {
                 console.log('Success logging in', data)
                 this.sql_name = data.user.name
                 this.sql_role = data.user.role
                 console.log(this.sql_name, this.sql_role)
-                if (data.user.role === 'Patient') {
-                    this.setState({ patientLoginSuccess: true })
-                }
-                else if (data.user.role === 'Provider') {
-                    // this.fetchData().then(()=> {
-                    this.setState({ providerLoginSuccess: true })
-                    // })
-                }
-                else {
-                    this.setState({ insurerLoginSuccess: true })
-                }
-                // this.setState({ loginSuccess: true });
-                // log.authenticate();
+                res = { status: 'ok', role: data.user.role, name: data.user.name }
             },
-            error: async (data) => {
-                alert('invalid credentials')
+            error: (data) => {
+                console.log('failed login')
+                res = { status: 'nok' }
             }
-        });
+        })
+        return res
     }
 
     ajax_login() {
@@ -274,8 +289,12 @@ class App extends Component {
                         <div>
                             <ReactNotification />
                             <Portal
-                                web3 = {this.state.web3}
-                                accounts = {this.state.accounts}
+                                web3={this.state.web3}
+                                accounts={this.state.accounts}
+                                insContract={this.state.contractIns}
+                                checkIfUserExists={this.checkIfUserExists}
+                                registration={this.registration}
+                                auth={this.props.auth}
                             />
                         </div>
                     )

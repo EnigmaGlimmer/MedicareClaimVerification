@@ -125,18 +125,19 @@ export class PatientApp extends Component {
         console.log('patientId', _.patientId)
         console.log('provider contract: ', _.state.proContractAddress)
         // console.log('patient contract: ', _.state.patContract)
-        if(_.state.patContract){
-            _.getUnverifiedClaims();
-            _.updateTokens();
-            _.getUnclaimedServices();
-        }
-        setInterval(function(){
-            if(_.state.patContract){
-                _.getUnverifiedClaims();
-                _.updateTokens();
-                _.getUnclaimedServices();
-            }
-        }, 5000);
+        // if(_.state.patContract){
+        //     _.getUnverifiedClaims();
+        //     _.updateTokens();
+        //     _.getUnclaimedServices();
+        // }
+        // setInterval(function(){
+        //     if(_.state.patContract){
+        //         _.getUnverifiedClaims();
+        //         _.updateTokens();
+        //         _.getUnclaimedServices();
+        //     }
+        // }, 5000);
+        
         // this.state.proContract.events.ClaimCreated((error, event) => {
         //     console.log('event')
         //     console.log('error')

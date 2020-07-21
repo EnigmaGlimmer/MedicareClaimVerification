@@ -86,16 +86,6 @@ app.use('/serviceClaimCreated', function (req, res) {
     });
 });
 
-app.use('/login', function(req, res){
-  var username = req.body.username;
-  if(!idMapping[username]){
-    res.status(200).json({ message: 'NOK' })
-  }
-  else {
-    res.status(200).json({ message: 'OK', result: idMapping[username] })
-  }
-})
-
 const userAccountsRouter = require('./routes/userAccountsRoutes.js')();
 const modifyUserRouter = require('./routes/modifyUserRoutes.js')();
 

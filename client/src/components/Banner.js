@@ -10,8 +10,8 @@ class TokenCounter extends Component {
 
     render() {
         return (
-            <div class="card" style={{ backgroundColor: '#fcfeff', marginBottom: '2vh' }}>
-                <div class="card-body" style={{ fontSize: '200%' }}>
+            <div className="card" style={{ backgroundColor: '#fcfeff', marginBottom: '2vh' }}>
+                <div className="card-body" style={{ fontSize: '200%' }}>
                     <span style={{ color: '#1974bf' }}>
                         {this.props.name}
                     </span>
