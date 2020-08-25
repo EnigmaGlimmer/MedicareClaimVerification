@@ -20,7 +20,7 @@ export class ProviderApp extends Component {
     this.state = {
       web3: this.props.web3,
       accounts: this.props.accounts,
-      proContractAddress: this.props.proContractAddress, //this stores the address that will be used to create a contract
+      // proContractAddress: this.props.proContractAddress,
       proContract: null,
       patients: [],
     };
@@ -31,7 +31,72 @@ export class ProviderApp extends Component {
     this.provideService = this.provideService.bind(this);
     this.fileClaim = this.fileClaim.bind(this);
     this.nav = this.nav.bind(this);
+    this.setAddrInDB = this.setAddrInDB.bind(this)
+    this.getAddrInDB = this.getAddrInDB.bind(this)
   }
+
+  createPatientInDB(id, addr, callback){
+    $.ajax({
+      url: 'http://localhost:4000/modify/createPatient',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      crossDomain: true,
+      dataType: 'json',
+      xhrFields: { withCredentials: true },
+      data: {
+          id, addr
+      },
+      success: (data) => {
+          console.log(data)
+          callback(data)
+      },
+      error: (data) => {
+          console.log(data)
+      }
+  });
+  }
+
+  getAddrInDB(callback){
+    $.ajax({
+      url: 'http://localhost:4000/profile/getAddr',
+      type: 'POST',
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      crossDomain: true,
+      dataType: 'json',
+      xhrFields: { withCredentials: true },
+      data: {
+          id: this.props.username
+      },
+      success: (data) => {
+          console.log(data)
+          callback(data)
+      },
+      error: (data) => {
+          console.log(data)
+      }
+  });
+  }
+
+  setAddrInDB(id, addr, callback) {
+    $.ajax({
+        url: 'http://localhost:4000/modify/testOnly-updateUserContractAddressAfterRedeployment',
+        type: 'POST',
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        crossDomain: true,
+        dataType: 'json',
+        xhrFields: { withCredentials: true },
+        data: {
+            id, addr
+        },
+        success: (data) => {
+            console.log(data)
+            callback(data)
+        },
+        error: (data) => {
+            console.log(data.address)
+        }
+    });
+}
 
   nav() {
       if(!this.sidebarOpen){
@@ -121,41 +186,45 @@ export class ProviderApp extends Component {
   }
 
   componentDidMount = async () => {
-    const { accounts, proContract } = this.state;
-    const contract = new this.state.web3.eth.Contract(Provider.abi, this.state.proContractAddress);
-    console.log('localProviderContract', contract)
-    this.setState({ proContract: contract })
-    // console.log('provider contract', this.state.proContract)
-    var p = await contract.methods.getInsAddr().call()
-    console.log('insAddr', p);
-    try {
-      var patientAddrs = await contract.methods.getPatients().call();
-      if (patientAddrs.length === 0) {
-        console.log('adding initial patient');
-        const addedPatient = await contract.methods.addPatient('Ken').send({ from: accounts[0] });
-        const newPatientAddress = await contract.methods.getNewPatient('Ken').call();
-        console.log('New Patient Contract Address added', newPatientAddress)
-        // Send "Ken and newAddress back to App.js"
-        this.props.addPatContractAddress(newPatientAddress)
+    const { accounts } = this.state;
+    this.getAddrInDB(async function(proContractAddress){
+      const contract = new this.state.web3.eth.Contract(Provider.abi, proContractAddress);
+      console.log('localProviderContract', contract)
+      this.setState({ proContract: contract })
+      // console.log('provider contract', this.state.proContract)
+      var p = await contract.methods.getInsAddr().call()
+      console.log('insAddr', p);
+      try {
+        var patientAddrs = await contract.methods.getPatients().call();
+        if (patientAddrs.length === 0) {
+          console.log('adding initial patient');
+          const addedPatient = await contract.methods.addPatient('Ken').send({ from: accounts[0] });
+          const newPatientAddress = await contract.methods.getNewPatient('Ken').call();
+          this.setAddrInDB('UCSD Medical', newPatientAddress, async function (data) {
+            patientAddrs = await contract.methods.getPatients().call();
+  
+            console.log("Patients: ", patientAddrs);
+            var list = [];
+            for (var i = 0; i < patientAddrs.length; i++) {
+              var addr = patientAddrs[i];
+              var name = await contract.methods.getPatientName(addr).call();
+              list.push({ name, addr })
+            }
+            this.setState({ patients: list })
+            console.log(this.state.patients)
+        })
+          // console.log('New Patient Contract Address added', newPatientAddress)
+          // Send "Ken and newAddress back to App.js"
+          // this.props.addPatContractAddress(newPatientAddress)
+        }
       }
-      patientAddrs = await contract.methods.getPatients().call();
-
-      console.log("Patients: ", patientAddrs);
-      var list = [];
-      for (var i = 0; i < patientAddrs.length; i++) {
-        var addr = patientAddrs[i];
-        var name = await contract.methods.getPatientName(addr).call();
-        list.push({ name, addr })
+      catch (error) {
+        alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+        );
+        console.error(error);
       }
-      this.setState({ patients: list })
-      console.log(this.state.patients)
-    }
-    catch (error) {
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
+    })
   };
 
   provideService = async (serviceName, patientAddr) => {
@@ -208,6 +277,7 @@ export class ProviderApp extends Component {
     console.log("Added patient", info)
     let name = info.events.PatientCreated.returnValues.name;
     let addr = info.events.PatientCreated.returnValues.addr;
+    this.createPatientInDB(name, addr);
     let patientList = this.state.patients;
     patientList.push({name, addr});
     console.log(patientList)

@@ -93,7 +93,7 @@ class Portal extends Component {
             }
         }
         else if (this.state.loaded){
-            ui = <RegisterForm registration={this.props.registration} modifierFunc={this.modifierFunc} profile={this.state.profile} />
+            ui = <RegisterForm modifierFunc={this.modifierFunc} profile={this.state.profile} />
         }
         return (
             ui

@@ -1,6 +1,7 @@
 import React from 'react'
 import aeec_logo from '../static/aeec.png'
 import '../App.css'
+import $ from 'jquery'
 import { Input, Form, Button, FormGroup, Card } from 'reactstrap';
 
 class Register extends React.Component {
@@ -13,6 +14,33 @@ class Register extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.updateUsername = this.updateUsername.bind(this);
         this.setSession = this.setSession.bind(this);
+        this.registration = this.registration.bind(this)
+    }
+
+    registration(username, role, email, callback) {
+        console.log('registering', username, role, email)
+        //todo write to the database a new user, including email, username, and role
+        $.ajax({
+            url: 'http://localhost:4000/profile/register',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            crossDomain: true,
+            dataType: 'json',
+            xhrFields: { withCredentials: true },
+            data: {
+                username: username,
+                role: role,
+                email: email
+            },
+            success: async (data) => {
+                //registered
+                console.log('success ajax:', data)
+                callback(true)
+            },
+            error: async (data) => {
+                callback(false)
+            }
+        })
     }
 
     handleChange(event) {
@@ -38,7 +66,8 @@ class Register extends React.Component {
         if (this.username !== '') {
             console.log(this.props.profile)
             let _ = this
-            this.props.registration(this.username, this.state.roleChoice, this.props.profile.name, function (returned) {
+            this.registration(this.username, this.state.roleChoice, this.props.profile.name, function (returned) {
+                console.log('returned: ', returned)
                 if (returned) {
                     _.setSession(true, _.state.roleChoice, _.username)
                 }

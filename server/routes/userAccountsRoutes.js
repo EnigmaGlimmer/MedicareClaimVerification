@@ -6,65 +6,6 @@ const db = require('./db');
 const userAccountRouter = express.Router();
 
 module.exports = function router() {
-    // userAccountRouter.route('/')
-    //   .get((req, res) => {
-    //     res.send('Accounts');
-    //     db.query('SELECT * FROM user_table where ut_user_id = "Test2" ', (err, results) => {
-    //       if (err) res.send(err);
-    //       debug(results.length);
-    //     });
-    //   });
-  
-    // userAccountRouter.route('/register')
-    //   .post((req, res) => {
-    //     const {
-    //       username, firstName, lastName, emailID, password, confirmPassword,
-    //     } = req.body;
-    //     if (password === '') {
-    //       res.status(401).json({ message: 'No password entered' });
-    //     } else if (password !== confirmPassword) {
-    //       res.status(401).json({ message: 'Passwords do not match' });
-    //     } else if (!validateEmail(emailID)) {
-    //       res.status(401).json({ message: 'Invalid email' });
-    //     } else {
-    //       db.query('SELECT ut_user_id FROM user_table WHERE ut_email=? OR ut_user_id=?', [emailID, username], (err, results) => {
-    //         if (err) {
-    //           debug(err);
-    //           res.status(500).json({ message: 'Server error' });
-    //         }
-    //         if (results.length === 0) {
-    //           db.query('INSERT INTO user_table (ut_user_id, ut_password, ut_first_name, ut_last_name, ut_email) VALUES (?, ?, ?, ?, ?)',
-    //             [username, MD5(username + password), firstName, lastName, emailID],
-    //             (err3) => {
-    //               if (err3) {
-    //                 debug(err3);
-    //                 res.status(500).json({ message: 'Server error' });
-    //               }
-    //               res.status(201).send({ userID: username });
-    //             });
-    //         } else {
-    //           res.status(401).json({ message: 'Email or username already exists' });
-    //         }
-    //       });
-    //     }
-    //   });
-  
-    // userAccountRouter.route('/login')
-    //   .post((req, res, next) => {
-    //     console.log(req.body)
-    //     if (req.user) res.status(200).json({ message: 'User already logged in' });
-    //     else {
-    //       passport.authenticate('local', (err, user) => {
-    //         if (err) return res.status(500).json({ message: 'Server error', err });
-    //         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-    //         req.login(user, (err2) => {
-    //           if (err2) return res.status(500).json({ message: 'Server error', err });
-    //           return res.status(200).json({ message: 'user authenticated', user: user });
-    //         });
-    //       })(req, res, next);
-    //     }
-    //   });
-
     userAccountRouter.route('/register')
       .post((req, res, next) => {
         const { username, role, email } = req.body;
@@ -81,6 +22,19 @@ module.exports = function router() {
           } else {
             console.log('User already exists')
             res.status(401).json({ message: 'User already exists' });
+          }
+        })
+      })
+
+    userAccountRouter.route('/getAddr')
+      .get((req, res, next) => {
+        const { id } = req.body
+        db.query('select address from user where id=?', [id], (err, results) => {
+          if(results.length !== 0){
+            const userJSON = JSON.parse(JSON.stringify(results[0]));
+            const { address } = userJSON;
+            console.log('getAddr 200')
+            res.status(200).json({ message: 'Address found', address: address })
           }
         })
       })

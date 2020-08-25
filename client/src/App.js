@@ -34,7 +34,6 @@ class App extends Component {
         this.sql_name = null;
         this.id = null;
         this.password = null;
-        this.registration = this.registration.bind(this)
         this.updateUsername = this.updateUsername.bind(this)
         this.updatePassword = this.updatePassword.bind(this)
         this.addPatContractAddress = this.addPatContractAddress.bind(this)
@@ -72,6 +71,7 @@ class App extends Component {
     }
 
     logout() {
+        console.log('logout')
         this.props.auth.logout();
     }
 
@@ -124,23 +124,6 @@ class App extends Component {
             // Set web3, accounts, and contract to the state, and then proceed with an
             // example of interacting with the contract's methods.
             this.setState({ web3: this.web3, accounts, contractIns: instanceIns });
-            // $.ajax({
-            //     url:'http://localhost:4000/profile/loggedin',
-            //     type:'GET',
-            //     contentType: "application/json; charset=utf-8",
-            //     crossDomain: true,
-            //     dataType: 'json',
-            //     xhrFields: { withCredentials: true },
-            //     success: (data) => {
-            //         if (data.message === 'OK'){
-            //             this.sql_id = data.result.id
-            //             this.sql_role = data.result.role
-            //             this.setState({redirectRef: true});
-            //         } else {
-            //             this.setState({redirectRef: false});
-            //         }
-            //     }
-            // });
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
@@ -149,32 +132,6 @@ class App extends Component {
             console.error(error);
         }
     };
-
-    registration(username, role, email, callback) {
-        console.log('registering', username, role, email)
-        //todo write to the database a new user, including email, username, and role
-        $.ajax({
-            url: 'http://localhost:4000/profile/register',
-            type: 'POST',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            crossDomain: true,
-            dataType: 'json',
-            xhrFields: { withCredentials: true },
-            data: {
-                username: username,
-                role: role,
-                email: email
-            },
-            success: async (data) => {
-                //registered
-                console.log('sucess ajax:', data)
-                callback(true)
-            },
-            error: async (data) => {
-                callback(false)
-            }
-        })
-    }
 
     checkIfUserExists(em){
         let r = this.ajax_sql_login(em)
@@ -248,37 +205,6 @@ class App extends Component {
 
     render() {
         const { isAuthenticated } = this.props.auth;
-        // let portal = ''
-        // switch (this.state.signedInrole) {
-        //     case 'Patient': portal = <PatientApp
-        //         username={this.username}
-        //         accounts={this.state.accounts}
-        //         web3={this.state.web3}
-        //         patContractAddress={window.localStorage.getItem('patContractAddress')}
-        //         proContractAddress={window.localStorage.getItem('proContractAddress')}
-        //         proContract={this.state.providerContracts['UCSD Medical']}
-        //         insContract={this.state.contractIns} />
-        //         break;
-        //     case 'Provider': portal = <ProviderApp
-        //         username={this.username}
-        //         accounts={this.state.accounts}
-        //         web3={this.state.web3}
-        //         proContractAddress={window.localStorage.getItem('proContractAddress')}
-        //         insContract={this.state.contractIns}
-        //         addPatContractAddress={this.addPatContractAddress} />
-        //         break;
-        //     case 'Insurer': portal = <InsurerApp
-        //         username={this.username}
-        //         insContract={this.state.contractIns}
-        //         accounts={this.state.accounts}
-        //         web3={this.state.web3}
-        //         // proContract={this.state.providerContracts[this.username]}
-        //         addProContractAddress={this.addProContractAddress} />
-        //         break;
-        //     case '': portal = <RegisterForm />
-        //         break;
-        //     default: portal = <RegisterForm />
-        // }
         if (!this.state.web3) {
             return <div>Loading Web3, accounts, and contract...</div>;
         }
@@ -288,12 +214,12 @@ class App extends Component {
                     isAuthenticated() && (
                         <div>
                             <ReactNotification />
+                            <button onClick={() => this.logout()}>Logout</button>
                             <Portal
                                 web3={this.state.web3}
                                 accounts={this.state.accounts}
                                 insContract={this.state.contractIns}
                                 checkIfUserExists={this.checkIfUserExists}
-                                registration={this.registration}
                                 auth={this.props.auth}
                             />
                         </div>

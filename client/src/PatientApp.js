@@ -20,10 +20,10 @@ export class PatientApp extends Component {
         this.state = {
             web3: this.props.web3,
             accounts: this.props.accounts,
-            patContractAddress: this.props.patContractAddress, //this stores the address that will be used to create a contract
+            // patContractAddress: this.props.patContractAddress,
             patContract: null,
-            proContractAddress: this.props.proContractAddress,
-            insContract: this.props.insContract,
+            // proContractAddress: this.props.proContractAddress,
+            // insContract: this.props.insContract,
             unverifiedClaims: [],
             unclaimedServices: [],
             tokens: 0
@@ -38,7 +38,29 @@ export class PatientApp extends Component {
         this.getUnclaimedServices = this.getUnclaimedServices.bind(this)
         this.deleteClaimFromList = this.deleteClaimFromList.bind(this);
         this.updateTokens = this.updateTokens.bind(this)
+        this.getAddrInDB = this.getAddrInDB.bind(this)
     }
+
+    getAddrInDB(callback){
+        $.ajax({
+          url: 'http://localhost:4000/profile/getAddr',
+          type: 'POST',
+          contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+          crossDomain: true,
+          dataType: 'json',
+          xhrFields: { withCredentials: true },
+          data: {
+              id: this.props.username
+          },
+          success: (data) => {
+              console.log(data)
+              callback(data)
+          },
+          error: (data) => {
+              console.log(data)
+          }
+      });
+      }
 
     notification_patientCellCreated(patientname) {
         $.ajax({
@@ -118,12 +140,13 @@ export class PatientApp extends Component {
     componentDidMount = async () => {
         var _ = this;
         // var event = _.state.patContract.Claims();
-        console.log('patient contract address: ', this.state.patContractAddress)
-        const contract = new this.state.web3.eth.Contract(Patient.abi, this.state.patContractAddress);
-        console.log('localPatientContract', contract)
-        this.setState({patContract: contract})
-        console.log('patientId', _.patientId)
-        console.log('provider contract: ', _.state.proContractAddress)
+        this.getAddrInDB(async function(patContractAddress){
+            console.log('patient contract address: ', patContractAddress)
+            const contract = new this.state.web3.eth.Contract(Patient.abi, patContractAddress);
+            console.log('localPatientContract', contract)
+            this.setState({patContract: contract})
+            console.log('patientId', _.patientId)
+        })
         // console.log('patient contract: ', _.state.patContract)
         // if(_.state.patContract){
         //     _.getUnverifiedClaims();
