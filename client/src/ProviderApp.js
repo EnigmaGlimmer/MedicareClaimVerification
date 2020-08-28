@@ -187,11 +187,12 @@ export class ProviderApp extends Component {
 
   componentDidMount = async () => {
     const { accounts } = this.state;
+    //TODO: the app no longer uses variable this.state.proContractAddress to store the address for contract instantiation, need to find another way.
+    //      maybe write a function to extract address back from the SQL database for usage, but what if it does not exist in there yet? Where will it be created?
     this.getAddrInDB(async function(proContractAddress){
       const contract = new this.state.web3.eth.Contract(Provider.abi, proContractAddress);
       console.log('localProviderContract', contract)
       this.setState({ proContract: contract })
-      // console.log('provider contract', this.state.proContract)
       var p = await contract.methods.getInsAddr().call()
       console.log('insAddr', p);
       try {
