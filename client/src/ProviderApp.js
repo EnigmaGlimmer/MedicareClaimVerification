@@ -57,6 +57,7 @@ export class ProviderApp extends Component {
   }
 
   getAddrInDB(callback){
+    console.log('who am i', this.props.username)
     $.ajax({
       url: 'http://localhost:4000/profile/getAddr',
       type: 'POST',
@@ -69,7 +70,7 @@ export class ProviderApp extends Component {
       },
       success: (data) => {
           console.log(data)
-          callback(data)
+          callback(data.address)
       },
       error: (data) => {
           console.log(data)
@@ -189,35 +190,39 @@ export class ProviderApp extends Component {
     const { accounts } = this.state;
     //TODO: the app no longer uses variable this.state.proContractAddress to store the address for contract instantiation, need to find another way.
     //      maybe write a function to extract address back from the SQL database for usage, but what if it does not exist in there yet? Where will it be created?
-    this.getAddrInDB(async function(proContractAddress){
-      const contract = new this.state.web3.eth.Contract(Provider.abi, proContractAddress);
+    const _ = this
+    _.getAddrInDB(async function(proContractAddress){
+      console.log('returned proContractAddress', proContractAddress)
+      const contract = new _.state.web3.eth.Contract(Provider.abi, proContractAddress);
       console.log('localProviderContract', contract)
-      this.setState({ proContract: contract })
+      _.setState({ proContract: contract })
       var p = await contract.methods.getInsAddr().call()
       console.log('insAddr', p);
+      var patientAddrs = await contract.methods.getPatients().call();
+      console.log('patientAddrs.length', patientAddrs.length)
+      if (patientAddrs.length === 0) {
+        console.log('adding initial patient');
+        const addedPatient = await contract.methods.addPatient('Ken').send({ from: accounts[0] });
+        const newPatientAddress = await contract.methods.getNewPatient('Ken').call();
+        _.setAddrInDB('Ken', newPatientAddress, async function (data) {
+          patientAddrs = await contract.methods.getPatients().call();
+
+          console.log("Patients: ", patientAddrs);
+          var list = [];
+          for (var i = 0; i < patientAddrs.length; i++) {
+            var addr = patientAddrs[i];
+            var name = await contract.methods.getPatientName(addr).call();
+            list.push({ name, addr })
+          }
+          _.setState({ patients: list })
+          console.log(_.state.patients)
+      })
+        // console.log('New Patient Contract Address added', newPatientAddress)
+        // Send "Ken and newAddress back to App.js"
+        // this.props.addPatContractAddress(newPatientAddress)
+      }
       try {
-        var patientAddrs = await contract.methods.getPatients().call();
-        if (patientAddrs.length === 0) {
-          console.log('adding initial patient');
-          const addedPatient = await contract.methods.addPatient('Ken').send({ from: accounts[0] });
-          const newPatientAddress = await contract.methods.getNewPatient('Ken').call();
-          this.setAddrInDB('UCSD Medical', newPatientAddress, async function (data) {
-            patientAddrs = await contract.methods.getPatients().call();
-  
-            console.log("Patients: ", patientAddrs);
-            var list = [];
-            for (var i = 0; i < patientAddrs.length; i++) {
-              var addr = patientAddrs[i];
-              var name = await contract.methods.getPatientName(addr).call();
-              list.push({ name, addr })
-            }
-            this.setState({ patients: list })
-            console.log(this.state.patients)
-        })
-          // console.log('New Patient Contract Address added', newPatientAddress)
-          // Send "Ken and newAddress back to App.js"
-          // this.props.addPatContractAddress(newPatientAddress)
-        }
+
       }
       catch (error) {
         alert(

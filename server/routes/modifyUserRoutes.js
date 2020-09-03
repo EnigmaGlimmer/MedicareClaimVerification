@@ -11,6 +11,7 @@ module.exports = function router() {
       const {
         id, addr
       } = req.body;
+      console.log('req.body contents', id, addr)
       db.query('update user set address=? where id=?', [addr, id], (err, results) => {
         if (err) {
           debug(err);
@@ -18,10 +19,13 @@ module.exports = function router() {
         }
       })
       db.query('select id from user where address=?', [addr], (err, results) => {
-        if (results === 1) {
+        console.log('results query', results.length)
+        if (results.length === 1) {
           res.status(201).json({ message: 'Change successful', id: id, addr: addr });
         }
-        res.status(401).json({ message: 'Id not found' });
+        else{
+          res.status(401).json({ message: 'Id not found' });
+        }
       })
     });
 
@@ -33,9 +37,9 @@ module.exports = function router() {
           debug(err);
           res.status(500).json({ message: 'Server error' });
         }
-        if (results === 0) {
+        if (results.length === 0) {
           db.query('insert into user (id, name, email, role, address) values (?, ?, ?, ?, ?)', [id, id, null, 'Patient', addr], (err, results) => {
-            if (results === 1) {
+            if (results.length === 1) {
               res.status(201).json({ message: 'Change successful', id: id, addr: addr });
             }
             res.status(401).json({ message: 'Creation unsuccessful' });

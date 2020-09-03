@@ -31,6 +31,7 @@ export class InsurerApp extends Component {
     }
 
     setAddrInDB(id, addr, callback) {
+        console.log('in setAddrInDB')
         $.ajax({
             url: 'http://localhost:4000/modify/testOnly-updateUserContractAddressAfterRedeployment',
             type: 'POST',
@@ -42,7 +43,7 @@ export class InsurerApp extends Component {
                 id, addr
             },
             success: (data) => {
-                console.log(data)
+                console.log('set addr in db', data)
                 callback(data)
             },
             error: (data) => {
@@ -77,7 +78,11 @@ export class InsurerApp extends Component {
         var _ = this;
         const { accounts, insContract } = _.state;
         console.log('what is insContract in InsurerApp.js', insContract)
+        console.log('insurer contract address existence check:', insContract._address)
         console.log('accounts in InsurerApp.js', accounts)
+        this.setAddrInDB('CMS', insContract._address, function (data) {
+            console.log('updated addr in db', data)
+        })
         try {
             var providerAddrs = await insContract.methods.getProviders().call();
             console.log('insContract', insContract)

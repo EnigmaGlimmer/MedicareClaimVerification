@@ -27,8 +27,9 @@ module.exports = function router() {
       })
 
     userAccountRouter.route('/getAddr')
-      .get((req, res, next) => {
+      .post((req, res, next) => {
         const { id } = req.body
+        console.log('req.body', req.body)
         db.query('select address from user where id=?', [id], (err, results) => {
           if(results.length !== 0){
             const userJSON = JSON.parse(JSON.stringify(results[0]));

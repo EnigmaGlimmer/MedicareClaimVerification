@@ -54,7 +54,7 @@ export class PatientApp extends Component {
           },
           success: (data) => {
               console.log(data)
-              callback(data)
+              callback(data.address)
           },
           error: (data) => {
               console.log(data)
@@ -142,10 +142,9 @@ export class PatientApp extends Component {
         // var event = _.state.patContract.Claims();
         this.getAddrInDB(async function(patContractAddress){
             console.log('patient contract address: ', patContractAddress)
-            const contract = new this.state.web3.eth.Contract(Patient.abi, patContractAddress);
+            const contract = new _.state.web3.eth.Contract(Patient.abi, patContractAddress);
             console.log('localPatientContract', contract)
-            this.setState({patContract: contract})
-            console.log('patientId', _.patientId)
+            _.setState({patContract: contract})
         })
         // console.log('patient contract: ', _.state.patContract)
         // if(_.state.patContract){
