@@ -32,7 +32,7 @@
     "dotenv": "^8.0.0",
     "ethereumjs-tx": "^2.1.2",
     "ethers": "^4.0.43",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fs": "0.0.1-security",
     "jquery": "file:jquery",
     "md5-file": "^4.0.0",
